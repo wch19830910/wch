@@ -436,6 +436,7 @@
 		"1 0 * * * https://ghproxy.com/https://raw.githubusercontent.com/zZPiglet/Task/master/ZMTeacher/ZMTeacher.js, tag=掌门好老师, img-url=https://ghproxy.com/https://raw.githubusercontent.com/Orz-3/mini/master/Color/ZMTeacher.png, enabled=true",
 		"1 0 * * * https://ghproxy.com/https://raw.githubusercontent.com/zZPiglet/Task/master/elem/elemCheckIn.js, tag=饿了么-打卡领红包, img-url=https://ghproxy.com/https://raw.githubusercontent.com/Orz-3/mini/master/Color/elem.png, enabled=true",
 		"0 * * * * https://ghproxy.com/https://raw.githubusercontent.com/zZPiglet/Task/master/heybox/heybox.js, tag=小黑盒, img-url=https://ghproxy.com/https://raw.githubusercontent.com/Orz-3/mini/master/Color/heybox.png, enabled=true",
+	        "10 0 * * * https://raw.githubusercontent.com/chavyleung/scripts/master/ithome/ithome.js, tag=IT之家-签到",
 		"0 0 * * * https://ghproxy.com/https://raw.githubusercontent.com/zZPiglet/Task/master/umetrip/umetrip.js, tag=航旅纵横, img-url=https://ghproxy.com/https://raw.githubusercontent.com/Orz-3/mini/master/Color/umetrip.png, enabled=true",
 		"0 9 * * * https://ghproxy.com/https://raw.githubusercontent.com/58xinian/Surge/master/Script/huke.js, tag=虎课网, img-url=https://ghproxy.com/https://raw.githubusercontent.com/58xinian/icon/master/huke.png, enabled=true",
 		"30 8-20/1 * * * https://ghproxy.com/https://raw.githubusercontent.com/whyour/hundun/master/quanx/caiyun.js, tag=彩云天气, img-url=https://ghproxy.com/https://raw.githubusercontent.com/Orz-3/mini/master/Color/caiyun.png, enabled=true",
