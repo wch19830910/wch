@@ -66,7 +66,7 @@ https://r.51wnl-cq.com/Api/User/GetExtInfo url script-response-body https://raw.
 https?:\/\/biz\.caiyunapp\.com\/(membership_rights|v2\/user) url script-response-body https://raw.githubusercontent.com/ddgksf2013/Cuttlefish/master/Crack/caiyun.js
 
 #七猫小说解锁vip
-https://(.+)\.wtzw\.com/.+ url script-response-body https://raw.githubusercontent.com/sngxpro/QuantumultX/master/qimao/sngxqmxs.js
+https://(.+)\.wtzw\.com/.+ url script-response-body https://github.com/sngxpro/QuantumultX/raw/master/qimao/sngxqmxs.js
 
 #WPS解锁  超级会员、wps会员、稻壳会员 (By eHpo)
 ^https://account.wps.*/api/users/ url script-response-body https://raw.githubusercontent.com/NobyDa/Script/master/Surge/JS/Wps.js
