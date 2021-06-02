@@ -1,4 +1,4 @@
-hostname =  49.234.36.200:9091, www.52pojie.cn，*.amemv.com，passport.suning.com, luckman.suning.com, sign.suning.com, mobwsa.ximalaya.com，*.video.qq.com，gameapi.suning.com，tieba.baidu.com，ifac*.iqiyi.com，*.smzdm.com，xiaoshuo.qm989.com，*.csdn.net，activity-1.m.duiba.com.cn，daojia.jd.com，i.meituan.com，credits.bz.mgtv.com，music.163.com
+hostname =  49.234.36.200:9091, www.52pojie.cn，*.amemv.com，passport.suning.com, luckman.suning.com, sign.suning.com, mobwsa.ximalaya.com，*.video.qq.com，gameapi.suning.com，c.tieba.baidu.com，ifac*.iqiyi.com，*.smzdm.com，xiaoshuo.qm989.com，*.csdn.net，activity-1.m.duiba.com.cn，daojia.jd.com，i.meituan.com，credits.bz.mgtv.com，music.163.com
   
   
 
@@ -9,7 +9,7 @@ hostname =  49.234.36.200:9091, www.52pojie.cn，*.amemv.com，passport.suning.c
 https:\/\/www\.52pojie\.cn\/home\.php\? url script-request-header https://raw.githubusercontent.com/NobyDa/Script/master/52pojie-DailyBonus/52pojie.js
 
 #百度贴吧
-^https?:\/\/tieba\.baidu\.com\/?.? script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/tieba/tieba.cookie.js
+https?:\/\/c\.tieba\.baidu\.com\/c\/s\/login url script-request-header https://raw.githubusercontent.com/NobyDa/Script/master/BDTieBa-DailyBonus/TieBa.js
 
 #爱奇艺
 ^https?:\/\/iface(\d)?\.iqiyi\.com\/ url script-request-header https://raw.githubusercontent.com/NobyDa/Script/master/iQIYI-DailyBonus/iQIYI.js
