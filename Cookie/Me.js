@@ -49,7 +49,7 @@ https?:\/\/c\.tieba\.baidu\.com\/c\/s\/login url script-request-header https://r
 ^https:\/\/access.video.qq.com\/user\/auth_refresh url script-request-header https://raw.githubusercontent.com/chavyleung/scripts/master/videoqq/videoqq.cookie.js
 
 #喜马拉雅
-^https?:\/\/.*\/mobile\-user\/homePage\/.* url script-request-header https://raw.githubusercontent.com/chavyleung/scripts/master/ximalaya/ximalaya.cookie.js
+^https?:\/\/.*\/mobile\-user\/homePage\/.* url script-request-header https://raw.githubusercontent.com/sngxpro/AutoSyncScript/chavyleung/ximalaya/ximalaya.cookie.js
 
 #酸奶机场签到
 ^https://shyni.xyz/user/checkin url script-request-header https://raw.githubusercontent.com/sngxpro/scripts/main/snjc/jc.cookie.js
