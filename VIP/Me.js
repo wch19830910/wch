@@ -1,4 +1,4 @@
-hostname =  vip1.kuwo.cn，musicpay.kuwo.cn，note.youdao.com，*.snssdk.com，api1.dobenge.cn，newdrugs.dxy.cn，cn1.invit.vip，*.wtzw.com，account.wps.cn，*.amemv.com，gateway-api.*.com,api.*.com，biz.caiyunapp.com，
+hostname =  vip1.kuwo.cn，musicpay.kuwo.cn，note.youdao.com，*.snssdk.com，api1.dobenge.cn，newdrugs.dxy.cn，cn1.invit.vip，*.wtzw.com ，account.wps.cn ，*.amemv.com，gateway-api.*.com,api.*.com，biz.caiyunapp.com，
 
 #自用插件合辑 2021/5/30
 
