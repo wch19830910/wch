@@ -1,6 +1,7 @@
-hostname =  49.234.36.200:9091, www.52pojie.cn，nebula.kuaishou.com, activity.m.kuaishou.com, *.amemv.com，passport.suning.com, luckman.suning.com, sign.suning.com, mobwsa.ximalaya.com，*.video.qq.com，gameapi.suning.com，c.tieba.baidu.com，ifac*.iqiyi.com，*.smzdm.com，xiaoshuo.qm989.com，*.csdn.net，activity-1.m.duiba.com.cn，daojia.jd.com，i.meituan.com，credits.bz.mgtv.com，music.163.com
+hostname =  49.234.36.200:9091, napi.zuoyebang.com, www.52pojie.cn，nebula.kuaishou.com, activity.m.kuaishou.com, *.amemv.com，passport.suning.com, luckman.suning.com, sign.suning.com, mobwsa.ximalaya.com，*.video.qq.com，gameapi.suning.com，c.tieba.baidu.com，ifac*.iqiyi.com，*.smzdm.com，xiaoshuo.qm989.com，*.csdn.net，activity-1.m.duiba.com.cn，daojia.jd.com，i.meituan.com，credits.bz.mgtv.com，music.163.com
   
-  
+#作业帮学分签到
+https://napi.zuoyebang.com/napi/signin/signinpage url script-request-body https://raw.githubusercontent.com/photonmang/quantumultX/master/Task/zyb.js
 
 #威锋网-在威锋网APP下使用账号密码方式登录
 ^http:\/\/49.234.36.200:9091\/v1\/auth\/signin url script-request-body https://raw.githubusercontent.com/chavyleung/scripts/master/feng/feng.cookie.js
