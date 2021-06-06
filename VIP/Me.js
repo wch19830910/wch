@@ -1,4 +1,4 @@
-hostname =  vip1.kuwo.cn，note.youdao.com，api1.dobenge.cn，biz.caiyunapp.com，*.wtzw.com，account.wps.cn
+hostname =vip1.kuwo.cn，note.youdao.com，api1.dobenge.cn，biz.caiyunapp.com，*.wtzw.com，account.wps.cn
 
 #自用插件合辑 2021/5/30
 
