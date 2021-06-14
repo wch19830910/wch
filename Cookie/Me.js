@@ -87,7 +87,7 @@ luckycat/aweme/v1/task/done/read? url script-request-header https://raw.githubus
 luckycat/aweme/v1/task/walk/step_submit? - script-request-header https://raw.githubusercontent.com/Ariszy/Private-Script/master/Scripts/dyjsb.js
 
 #京喜农场
-^https\:\/\/wq\.jd\.com\/cubeactive\/farm\/dotask url script-request-header https://raw.githubusercontent.com/whyour/hundun/master/quanx/jx_nc.cookie.js
+^https\:\/\/wq\.jd\.com\/cubeactive\/farm\/dotask url script-request-header https://raw.githubusercontent.com/whyour/hundun/master/quanx/jx_tokens.js
 
 #快手视频
 https:\/\/activity\.m\.kuaishou\.com\/rest\/wd\/taskCenter\/\w+\/module\/list url script-request-header https://raw.githubusercontent.com/GoodHolidays/Scripts/master/Task/kuaishou.js
