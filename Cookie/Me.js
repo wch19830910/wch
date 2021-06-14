@@ -74,8 +74,6 @@ https://youhui.95516.com/newsign/public/app/index.html url script-request-header
 #腾讯视频，获取 Cookie:手机浏览器访问: https://film.qq.com/，随便选 1 部电影观看
 ^https:\/\/access.video.qq.com\/user\/auth_refresh url script-request-header https://raw.githubusercontent.com/chavyleung/scripts/master/videoqq/videoqq.cookie.js
 
-#京东赚赚
-^https\:\/\/api\.m\.jd\.com\/client\.action\?functionId\=interactIndex url script-request-header https://raw.githubusercontent.com/whyour/hundun/master/quanx/jdzz.cookie.js
 
 #喜马拉雅
 ^https?:\/\/.*\/mobile\-user\/homePage\/.* url script-request-header https://raw.githubusercontent.com/sngxpro/AutoSyncScript/chavyleung/ximalaya/ximalaya.cookie.js
