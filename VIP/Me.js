@@ -1,4 +1,4 @@
-hostname =vip1.kuwo.cn，note.youdao.com，api1.dobenge.cn，biz.caiyunapp.com，*.wtzw.com，account.wps.cn
+hostname =vip1.kuwo.cn，note.youdao.com，api1.dobenge.cn，biz.caiyunapp.com，*.wtzw.com，account.wps.cn，commerce-i18n-api.faceu.mobi,commerce-api.faceu.mobi
 
 #自用插件合辑 2021/5/30
 
@@ -20,3 +20,6 @@ https://(.+)\.wtzw\.com/.+ url script-response-body https://github.com/sngxpro/Q
 
 #WPS解锁  超级会员、wps会员、稻壳会员 (By eHpo)
 ^https?:\/\/account\.wps\.cn\/api\/users url script-response-body https://raw.githubusercontent.com/NobyDa/Script/master/Surge/JS/Wps.js
+
+#轻颜相机
+^https:\/\/commerce-.*api\.faceu\.mobi\/commerce\/v1\/subscription\/user_info url script-response-body https://raw.githubusercontent.com/songyangzz/QuantumultX/master/ulike/ulike.js
