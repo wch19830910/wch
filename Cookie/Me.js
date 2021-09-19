@@ -76,7 +76,7 @@ https://youhui.95516.com/newsign/public/app/index.html url script-request-header
 
 
 #喜马拉雅
-^https?:\/\/.*\/mobile\-user\/homePage\/.* url script-request-header https://raw.githubusercontent.com/sngxpro/AutoSyncScript/chavyleung/ximalaya/ximalaya.cookie.js
+^https?:\/\/.*\/mobile\-user\/homePage\/.* url script-request-header https://raw.githubusercontent.com/chavyleung/scripts/master/ximalaya/ximalaya.cookie.js
 
 #酸奶机场签到
 ^https://shyni.xyz/user/checkin url script-request-header https://raw.githubusercontent.com/sngxpro/scripts/main/snjc/jc.cookie.js
