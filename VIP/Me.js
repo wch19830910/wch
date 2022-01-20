@@ -9,9 +9,6 @@ hostname =vip1.kuwo.cn，note.youdao.com，api1.dobenge.cn，biz.caiyunapp.com�
 #有道云笔记VIP (ByAlex0510)
 https://note.youdao.com/yws/(mapi/payment|api/self) url script-response-body https://raw.githubusercontent.com/nzw9314/QuantumultX/master/Script/ydybj.js
 
-#水印精灵 vip (By Alex0510)
-^https:\/\/api1\.dobenge\.cn\/api\/user\/getuserinfo url script-response-body https://raw.githubusercontent.com/NobyDa/Script/master/Surge/JS/syjl.js
-
 #彩云天气 解锁会员权限（20201121）
 https?:\/\/biz\.caiyunapp\.com\/(membership_rights|v2\/user) url script-response-body https://raw.githubusercontent.com/ddgksf2013/Cuttlefish/master/Crack/caiyun.js
 
