@@ -28,9 +28,6 @@ https?:\/\/c\.tieba\.baidu\.com\/c\/s\/login url script-request-header https://r
 #饿了么Cookie获取, 打开APP,点击我的,点击左上角的签到,进入页面即可
 ^https:\/\/h5\.ele\.me\/restapi\/eus\/v\d\/current_user$ url script-request-header https://raw.githubusercontent.com/songyangzz/QuantumultX/master/elem/elemGetCookies.js
 
-#京东到家
-https:\/\/daojia\.jd\.com\/client\?_jdrandom=\d{13}&functionId=%2Fsignin url script-request-header https://raw.githubusercontent.com/Sunert/Scripts/master/Task/jddj.js
-
 #万达电影
 ^https:\/\/user-api-prd-mx\.wandafilm\.com url script-request-header https://raw.githubusercontent.com/chavyleung/scripts/master/wanda/wanda.cookie.js
 
