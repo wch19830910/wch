@@ -91,7 +91,7 @@ luckycat/aweme/v1/task/walk/step_submit? - script-request-header https://raw.git
 #获取挖矿Cookie
 ^https:\/\/operation-api\.jimistore\.com\/* url script-request-body https://raw.githubusercontent.com/yangtingxiao/QuantumultX/master/scripts/ttwk/ttwk.js
 
-#伊利乳品
+#伊利乳品-小程序
 https:\/\/club\.yili\.com\/MALLIFChe\/MCSWSIAPI\.asmx\/Call url script-request-body https://raw.githubusercontent.com/id77/QuantumultX/master/task/yiLi.cookie.js
 
 #途虎养车获取Cookie
