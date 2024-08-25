@@ -1,0 +1,7 @@
+http=192.168.50.77:58080, fast-open=false, udp-relay=false, server_check_url=http://interface3.music.163.com, tag=NeteaseMusic Unlock 1
+
+http=192.168.50.77:58080, over-tls=false, fast-open=false, udp-relay=false, server_check_url=http://interface3.music.163.com, tag=NeteaseMusic Unlock 2
+
+http=www.imerry.top:58080, fast-open=false, udp-relay=false, server_check_url=http://interface3.music.163.com, tag=NeteaseMusic Unlock 3
+
+http=www.imerry.top:58080, over-tls=false, fast-open=false, udp-relay=false, server_check_url=http://interface3.music.163.com, tag=NeteaseMusic Unlock 4
