@@ -1,0 +1,44 @@
+#!name=汽水音乐
+#!desc=从墨鱼官方汽水音乐规则转换为 Surge 原生模块；每 6 小时检查上游更新。需要 Surge iOS 5.14+ 或 Mac 5.9+，启用重写和 MITM 并信任证书；仅广告及推广净化，不解锁会员或音乐版权。
+#!author=ddgksf2013
+#!homepage=https://raw.githubusercontent.com/ddgksf2013/Rewrite/refs/heads/master/AdBlock/QiShuiMusicAds.conf
+#!category=AdBlock
+#!raw-url=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/SodaMusic.sgmodule
+
+# 上游：https://raw.githubusercontent.com/ddgksf2013/Rewrite/refs/heads/master/AdBlock/QiShuiMusicAds.conf
+# 上游版本：V1.0.6
+# 上游规则 SHA256：4754b7eeffc2c73b61b8abc23e4a2c3a51c3fdf63f1c374277c97625c6f0a150
+# 自动生成，请修改 Surge/scripts/build-soda-music.mjs；未知语法停止更新并保留旧版。
+# 按上游 @Attention 保留原作者出处；配置不包含远程 JavaScript。
+# 原作者使用提示：使用前请卸载汽水音乐，挂载模块后再安装使用；重装前请确认需要保留的下载与数据。
+# JQ Body Rewrite 需要 Surge iOS 5.14+ 或 Surge Mac 5.9+。
+# 上游规则保留位置隐私、TAGS/搜索推荐和推广界面净化，未添加会员或版权解锁。
+
+[Map Local]
+# > 视频广告@ddgksf2013
+^https:\/\/[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){1,3}\/luna\/media_ads data-type=text data="" status-code=200
+# > 通用广告@ddgksf2013
+^https:\/\/[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){1,3}\/luna\/ads data-type=text data="" status-code=200
+# > 位置隐私@ddgksf2013
+^https:\/\/[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){1,3}\/location\/info data-type=text data="" status-code=200
+# > 广告弹窗@ddgksf2013
+^https:\/\/[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){1,3}\/luna\/commerce data-type=text data="" status-code=200
+# > TAGS推荐@ddgksf2013
+^https:\/\/[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){1,3}\/luna\/hashtag\/recommend data-type=text data="" status-code=200
+# > DNS处理@ddgksf2013
+^https:\/\/tnc.*zijieapi\.com\/get_domains data-type=text data="" status-code=200
+
+[Body Rewrite]
+# > 我的页面推广@ddgksf2013
+http-response-jq ^https:\/\/[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){1,3}\/luna\/me\? 'del(.reward_ad_banner)'
+# > 会员免费听整月VIEW@ddgksf2013
+http-response-jq ^https:\/\/[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){1,3}\/luna\/card 'del(.preview_guide)'
+# > 热门搜索@ddgksf2013
+http-response-jq ^https:\/\/[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){1,3}\/luna\/search-block 'del(.search_chart_block)'
+# > 搜索界面活动@ddgksf2013
+http-response-jq ^https:\/\/[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){1,3}\/luna\/activities 'del(.activity_map)'
+# > 音乐流推广@ddgksf2013
+http-response-jq ^https:\/\/[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){1,3}\/luna\/feed\/song-tab '.items |= map(select(.type == "track"))'
+
+[MITM]
+hostname = %APPEND% beta-luna.douyin.com, api.qishui.com, tnc*-*.zijieapi.com

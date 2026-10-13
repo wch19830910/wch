@@ -1,0 +1,45 @@
+#!name=什么值得买
+#!desc=从墨鱼官方什么值得买规则自动转换；每 6 小时检查上游规则，响应脚本每 24 小时检查原作者分支更新。需启用重写、脚本及 MITM，并信任 MITM 证书；仅广告净化，不解锁会员。
+#!author=blackmatrix7, ddgksf2013
+#!homepage=https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/SmzdmAds.conf
+#!category=AdBlock
+#!raw-url=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Smzdm.sgmodule
+
+# 上游：https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/SmzdmAds.conf
+# 上游版本：V1.0.3
+# 上游规则 SHA256：1a7b0c4a4c4bcb6ab474c447f2def2b526fa60fec36e21cf4d10fe327fe7ba33
+# 自动生成，请修改 Surge/scripts/build-smzdm.mjs；未知语法停止更新并保留旧版。
+# 按原作者 @Attention 保留出处；JavaScript 仅远程引用，不复制脚本正文。
+# Map Local 的 text 需要 Surge iOS 5.9.1+ 或 Surge Mac 5.5.1+。
+
+[Map Local]
+# > 好价详情页去广告@blackmatrix7
+^https?:\/\/haojia\.m\.smzdm\.com\/detail_modul\/other_modul data-type=text data="" status-code=200
+# > 好价详情页红包小助手@blackmatrix7
+^https?:\/\/haojia\.m\.smzdm\.com\/detail_modul\/user_related_modul data-type=text data="" status-code=200
+# > Wiki@blackmatrix7
+^https?:\/\/haojia\.m\.smzdm\.com\/detail_modul\/wiki_related_modul data-type=text data="" status-code=200
+
+[Script]
+# > 搜索框填词@ddgksf2013
+smzdm_response_01 = type=http-response,pattern=^https?:\/\/s-api.smzdm\.com\/sou\/search_default_keyword,requires-body=true,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/refs/heads/master/smzdm_json.js
+# > 开屏去广告@blackmatrix7@ddgksf2013
+smzdm_response_02 = type=http-response,pattern=^https?:\/\/app-api\.smzdm\.com\/util\/loading,requires-body=true,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/refs/heads/master/smzdm_json.js
+smzdm_response_03 = type=http-response,pattern=^https?:\/\/.*zdmimg\.com\/cpm\/api\/v\d\/advert_distribution\/get_all_advertise,requires-body=true,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/refs/heads/master/smzdm_json.js
+# > 首页去广告@blackmatrix7@ddgksf2013
+smzdm_response_04 = type=http-response,pattern=^https?:\/\/homepage-api\.smzdm\.com\/v3\/home,requires-body=true,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/refs/heads/master/smzdm_json.js
+# > 好价去广告@blackmatrix7
+smzdm_response_05 = type=http-response,pattern=^https?:\/\/haojia-api\.smzdm\.com\/home\/list,requires-body=true,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/refs/heads/master/smzdm_json.js
+# > 好价详情页去广告@blackmatrix7
+smzdm_response_06 = type=http-response,pattern=^https?:\/\/haojia\.m\.smzdm\.com\/detail_modul\/article_releated_modul,requires-body=true,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/refs/heads/master/smzdm_json.js
+# > 百科去广告@blackmatrix7
+smzdm_response_07 = type=http-response,pattern=^https?:\/\/baike-api\.smzdm\.com\/home_v3\/list,requires-body=true,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/refs/heads/master/smzdm_json.js
+# > 搜索结果去广告@blackmatrix7
+smzdm_response_08 = type=http-response,pattern=^https?:\/\/s-api\.smzdm\.com\/sou\/list_v10,requires-body=true,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/refs/heads/master/smzdm_json.js
+# > 搜索标签去广告@blackmatrix7
+smzdm_response_09 = type=http-response,pattern=^https?:\/\/s-api\.smzdm\.com\/sou\/filter\/tags\/hot_tags,requires-body=true,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/refs/heads/master/smzdm_json.js
+# > 值会员权益中心banner广告@blackmatrix7
+smzdm_response_10 = type=http-response,pattern=^https?:\/\/zhiyou\.m\.smzdm\.com\/user\/vip\/ajax_get_banner,requires-body=true,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/refs/heads/master/smzdm_json.js
+
+[MITM]
+hostname = %APPEND% app-api.smzdm.com, *.zdmimg.com, homepage-api.smzdm.com, haojia-api.smzdm.com, haojia.m.smzdm.com, baike-api.smzdm.com, s-api.smzdm.com, zhiyou.m.smzdm.com
