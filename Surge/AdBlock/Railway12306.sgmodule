@@ -1,0 +1,21 @@
+#!name=铁路12306
+#!desc=从墨鱼官方铁路12306脚本自动转换；模块跟随上游规则，请求脚本每 24 小时检查原作者 master 更新。需启用脚本及 MITM，并信任 MITM 证书。
+#!author=ddgksf2013
+#!homepage=https://raw.githubusercontent.com/ddgksf2013/Scripts/master/12306.js
+#!category=AdBlock
+#!raw-url=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Railway12306.sgmodule
+
+# 上游：https://raw.githubusercontent.com/ddgksf2013/Scripts/master/12306.js
+# 上游版本：2024-08-24
+# 上游规则 SHA256：4723bc2236835eea0a8b79529c832a9af1cfd37fa1b160becb3a4b51f9067cd5
+# 自动生成，请修改 Surge/scripts/build-railway12306.mjs；遇到不支持的上游语法时停止更新并保留旧版。
+# 上游 script-analyze-echo-response 在请求阶段直接返回广告占位响应，故转换为 http-request。
+
+[Rule]
+DOMAIN,ad.12306.cn,DIRECT
+
+[Script]
+railway12306_request_01 = type=http-request,pattern=^https?:\/\/ad\.12306\.cn\/ad\/ser\/getAdList,requires-body=true,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/master/12306.js
+
+[MITM]
+hostname = %APPEND% ad.12306.cn
