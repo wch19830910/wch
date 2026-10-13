@@ -1,5 +1,5 @@
-#!name=高德地图
-#!desc=从墨鱼官方高德地图规则自动转换；模块跟随上游规则，响应脚本每 24 小时检查原作者分支更新。需启用重写、脚本及 MITM，并信任 MITM 证书。
+#!name=高德地图净化
+#!desc=使用前请卸载高德地图，挂载脚本然后使用。从墨鱼官方高德地图规则自动转换；模块跟随上游规则，响应脚本每 24 小时检查原作者分支更新。需启用重写、脚本及 MITM，并信任 MITM 证书。
 #!author=ddgksf2013
 #!homepage=https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/AmapAds.conf
 #!category=AdBlock
