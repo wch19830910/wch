@@ -1,0 +1,67 @@
+name: Update Amap
+
+on:
+  schedule:
+    - cron: '37 */6 * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - Surge/scripts/build-amap.mjs
+      - .github/workflows/update-amap.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: amap-update-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  update:
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: 读取默认分支
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+      - name: 准备 Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+      - name: 检查构建环境
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -n "$(git status --porcelain=v1 --untracked-files=all)" ]]; then
+            echo '工作目录包含非预期变更，停止更新。'
+            exit 1
+          fi
+          node --check Surge/scripts/build-amap.mjs
+          jq --version
+      - name: 从墨鱼官方源构建并验证
+        run: node Surge/scripts/build-amap.mjs
+      - name: 只发布通过验证的模块和上游快照
+        shell: bash
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          set -euo pipefail
+          while IFS= read -r change; do
+            [[ -z "$change" ]] && continue
+            case "${change:3}" in
+              Surge/AdBlock/Amap.sgmodule|Surge/upstream/AmapAds.conf) ;;
+              *) echo "发现非预期变更，停止发布：${change:3}"; exit 1 ;;
+            esac
+          done < <(git status --porcelain=v1 --untracked-files=all)
+          git add -- Surge/AdBlock/Amap.sgmodule Surge/upstream/AmapAds.conf
+          if git diff --cached --quiet; then
+            echo '上游内容无变化。'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'chore: sync Amap upstream'
+          git pull --rebase origin "${DEFAULT_BRANCH}"
+          git push origin "HEAD:${DEFAULT_BRANCH}"
