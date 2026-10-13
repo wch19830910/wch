@@ -1,0 +1,12 @@
+{
+  "source": "https://raw.githubusercontent.com/ddgksf2013/Scripts/master/coolapk.js",
+  "sha256": "79b28bcbeb4b7b150a21ed20d7d50d9cee2bb91ff5110e9f34dc3be54b0991e4",
+  "author": "ddgksf2013",
+  "version": "V1.0.12",
+  "updated": "2025-09-27",
+  "counts": {
+    "script-response-body": 6,
+    "reject-200": 1
+  },
+  "note": "仅记录来源元信息；原作者 JavaScript 不复制、不转载，仅通过模块远程引用。"
+}
