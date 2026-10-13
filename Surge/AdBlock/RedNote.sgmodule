@@ -1,0 +1,47 @@
+#!name=小红书
+#!desc=从墨鱼官方小红书去广告去水印规则自动转换；模块跟随上游规则，响应脚本每 24 小时检查原作者站点更新。需启用重写、脚本及 MITM，并信任 MITM 证书。
+#!author=ddgksf2013
+#!homepage=https://ddgksf2013.top/rewrite/XiaoHongShuAds.conf
+#!category=AdBlock
+#!raw-url=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/RedNote.sgmodule
+
+# 上游：https://ddgksf2013.top/rewrite/XiaoHongShuAds.conf
+# 上游更新时间：2026-01-31
+# 上游规则 SHA256：46c96fb5b9b640d2b51a0b6562b91237116c523bdca8ff3b17318c30799ab19e
+# 自动生成，请修改 Surge/scripts/build-rednote.mjs；遇到不支持的上游语法时停止更新并保留旧版。
+# 仅使用去广告去水印条目，不合入单独的首页视频屏蔽条目。
+# Surge 保持 MITM auto-quic-block 默认开启；本模块不全局丢弃 UDP 443。
+# 原作者脚本由其站点直接提供（需支持 Surge UA），不是 GitHub master 同名文件。
+# Map Local 的 text 需要 Surge iOS 5.9.1+ 或 Surge Mac 5.5.1+。
+
+[Map Local]
+^https?:\/\/[a-z]+\.xiaohongshu\.com\/api\/sns\/v\d+\/search\/notes\/recommend_info\? data-type=text data="" status-code=200
+^https?:\/\/[a-z]+\.xiaohongshu\.com\/api\/sns\/v\d+\/system_service\/splash data-type=text data="" status-code=200
+^https?:\/\/[a-z]+\.xiaohongshu\.com\/api\/gslb data-type=text data="" status-code=200
+^https?:\/\/[a-z]+\.xiaohongshu\.com\/api\/httpdns data-type=text data="" status-code=200
+^https?:\/\/[a-z]+\.xiaohongshu\.com\/api\/sns\/v\d+\/(tag\/)?ads data-type=text data="" status-code=200
+^https?:\/\/[a-z]+\.xiaohongshu\.com\/v\d+\/stateReport data-type=text data="" status-code=200
+^https?:\/\/[a-z]+\.xiaohongshu\.com\/data\/native\/matrix_switches data-type=text data="" status-code=200
+^https?:\/\/[a-z]+\.xiaohongshu\.com\/api\/sns\/v\d+\/user\/teenager\/status data-type=text data="" status-code=200
+^https?:\/\/[a-z]+\.xiaohongshu\.com\/api\/sns\/v\d+\/guide\/home_guide data-type=text data="" status-code=200
+
+[Script]
+rednote_response_01 = type=http-response,pattern=^https?:\/\/[a-z]+\.xiaohongshu\.com\/api\/sns\/v\d+\/note\/tabfeed,requires-body=true,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://ddgksf2013.top/scripts/redbook.ads.js
+rednote_response_02 = type=http-response,pattern=^https?:\/\/[a-z]+\.xiaohongshu\.com\/api\/sns\/v\d+\/note\/video\/save,requires-body=true,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://ddgksf2013.top/scripts/redbook.ads.js
+rednote_response_03 = type=http-response,pattern=^https?:\/\/[a-z]+\.xiaohongshu\.com\/api\/sns\/v\d+\/note\/live_photo\/save,requires-body=true,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://ddgksf2013.top/scripts/redbook.ads.js
+rednote_response_04 = type=http-response,pattern=^https?:\/\/[a-z]+\.xiaohongshu\.com\/api\/sns\/v\d+\/search\/notes\?,requires-body=true,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://ddgksf2013.top/scripts/redbook.ads.js
+rednote_response_05 = type=http-response,pattern=^https?:\/\/[a-z]+\.xiaohongshu\.com\/api\/sns\/v\d+\/note\/widgets,requires-body=true,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://ddgksf2013.top/scripts/redbook.ads.js
+rednote_response_06 = type=http-response,pattern=^https?:\/\/[a-z]+\.xiaohongshu\.com\/api\/sns\/v\d+\/note\/redtube\?,requires-body=true,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://ddgksf2013.top/scripts/redbook.ads.js
+rednote_response_07 = type=http-response,pattern=^https?:\/\/[a-z]+\.xiaohongshu\.com\/api\/sns\/v\d+\/note\/videofeed\?,requires-body=true,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://ddgksf2013.top/scripts/redbook.ads.js
+rednote_response_08 = type=http-response,pattern=^https?:\/\/[a-z]+\.xiaohongshu\.com\/api\/sns\/v\d+\/note\/feed\?,requires-body=true,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://ddgksf2013.top/scripts/redbook.ads.js
+rednote_response_09 = type=http-response,pattern=^https?:\/\/[a-z]+\.xiaohongshu\.com\/api\/sns\/v\d+\/note\/imagefeed,requires-body=true,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://ddgksf2013.top/scripts/redbook.ads.js
+rednote_response_10 = type=http-response,pattern=^https?:\/\/[a-z]+\.xiaohongshu\.com\/api\/sns\/v\d+\/system_service\/splash_config,requires-body=true,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://ddgksf2013.top/scripts/redbook.ads.js
+rednote_response_11 = type=http-response,pattern=^https?:\/\/[a-z]+\.xiaohongshu\.com\/api\/sns\/v\d+\/homefeed\?,requires-body=true,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://ddgksf2013.top/scripts/redbook.ads.js
+rednote_response_12 = type=http-response,pattern=^https?:\/\/[a-z]+\.xiaohongshu\.com\/api\/sns\/v\d+\/system_service\/config\?,requires-body=true,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://ddgksf2013.top/scripts/redbook.ads.js
+rednote_response_13 = type=http-response,pattern=^https?:\/\/[a-z]+\.xiaohongshu\.com\/api\/sns\/v\d+\/search\/hot_list,requires-body=true,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://ddgksf2013.top/scripts/redbook.ads.js
+rednote_response_14 = type=http-response,pattern=^https?:\/\/[a-z]+\.xiaohongshu\.com\/api\/sns\/v\d+\/search\/hint,requires-body=true,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://ddgksf2013.top/scripts/redbook.ads.js
+rednote_response_15 = type=http-response,pattern=^https?:\/\/[a-z]+\.xiaohongshu\.com\/api\/sns\/v\d+\/homefeed\/categories,requires-body=true,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://ddgksf2013.top/scripts/redbook.ads.js
+rednote_response_16 = type=http-response,pattern=^https?:\/\/[a-z]+\.xiaohongshu\.com\/api\/sns\/v\d+\/search\/trending,requires-body=true,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://ddgksf2013.top/scripts/redbook.ads.js
+
+[MITM]
+hostname = %APPEND% *.xiaohongshu.com
