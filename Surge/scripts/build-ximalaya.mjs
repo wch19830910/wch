@@ -173,7 +173,7 @@ function parseSource(source) {
 function renderModule(source, parsed) {
   const sourceHash = createHash('sha256').update(source).digest('hex');
   const lines = [
-    '#!name=喜马拉雅',
+    '#!name=喜马拉雅净化',
     '#!desc=从墨鱼官方喜马拉雅规则自动转换；模块跟随上游规则，响应脚本每 24 小时检查原作者 master 更新。需启用重写、脚本及 MITM，并信任 MITM 证书。如果广告仍然存在，请清除缓存或卸载应用重新安装。',
     '#!author=ddgksf2013',
     `#!homepage=${SOURCE_URL}`,
