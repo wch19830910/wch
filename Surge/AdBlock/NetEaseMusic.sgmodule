@@ -1,5 +1,5 @@
 #!name=网易云音乐
-#!desc=从墨鱼官方网易云音乐规则自动转换；每 6 小时同步规则和兼容脚本，Surge 每 24 小时检查脚本更新。需启用重写、脚本及 MITM，并信任 MITM 证书；仅广告净化，不解锁会员或音乐版权。
+#!desc=从墨鱼官方网易云音乐规则自动转换，兼容加密响应和明文 JSON；每 6 小时同步规则与兼容脚本，Surge 每 24 小时检查脚本更新。需启用重写、脚本及 MITM，并信任 MITM 证书；仅广告净化，不解锁会员或音乐版权。
 #!author=ddgksf2013
 #!homepage=https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/NeteaseAds.conf
 #!category=AdBlock
@@ -11,7 +11,7 @@
 # 上游规则 SHA256：3d09d41ed78536e091612afd10fc471455ae82b274bbbf2f0b37399078e1677b
 # 上游脚本 SHA256：6ba468eb994e3843d69563f8f3b31c2d63a62a68d60fc3a1fd61947c1546936f
 # 自动生成，请修改 Surge/scripts/build-netease-music.mjs；未知语法停止更新并保留旧版。
-# 原作者脚本使用加密二进制响应，已启用 binary-body-mode；只添加 IIFE 兼容外层。
+# 原作者脚本使用加密二进制响应，已启用 binary-body-mode；兼容层添加 IIFE 并恢复明文 JSON 输入类型，不改原文。
 # gzip 分支使用 TextEncoder，必须运行在 WebView 引擎；旧 macOS 10.15 及更早版本、tvOS 的纯 JSC 环境不支持。
 # 引用按上游 @Attention 保留出处；兼容脚本头部保留原文并附 CryptoJS/pako/zlib 许可。
 # 原作者提示：默认不去除底部“漫游”，可在侧栏设置中手动关闭。
