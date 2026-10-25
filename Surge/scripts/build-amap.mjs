@@ -160,8 +160,8 @@ function parseSource(source) {
 function renderModule(source, parsed) {
   const sourceHash = createHash('sha256').update(source).digest('hex');
   const lines = [
-    '#!name=高德地图净化',
-    '#!desc=使用前请卸载高德地图，挂载脚本然后使用。从墨鱼官方高德地图规则自动转换；模块跟随上游规则，响应脚本每 24 小时检查原作者分支更新。需启用重写、脚本及 MITM，并信任 MITM 证书。',
+    '#!name=高德地图（全净化）',
+    '#!desc=高德地图完整上游净化版：处理开屏、首页推广与信息流、路线规划下方广告、角标及搜索框热词，精简附近、打车和“我的”等页面，并保留上游 AMDC 调度处理及天气接口屏蔽，可能影响相关正常组件。原作者 ddgksf2013；规则每 6 小时检查上游，远程脚本每 24 小时检查原作者分支更新。需 Surge iOS 5.9.1+ / Mac 5.5.1+（Map Local），开启重写、脚本、MITM，并安装及信任 MITM 证书。保留原作者先启用模块再重装 App 的使用提示；重装前请确认账号及本地数据备份，功能异常请停用。全净化指保留完整上游功能，不保证清除所有广告；尚未在最新版 App 实机验证。',
     `#!author=${parsed.author}`,
     `#!homepage=${SOURCE_URL}`,
     '#!category=AdBlock',

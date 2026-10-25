@@ -137,8 +137,8 @@ function parseSource(source) {
 function renderModule(source, parsed) {
   const sourceHash = createHash('sha256').update(source).digest('hex');
   const lines = [
-    '#!name=小红书',
-    '#!desc=从墨鱼官方小红书去广告去水印规则自动转换；模块跟随上游规则，响应脚本每 24 小时检查原作者站点更新。需启用重写、脚本及 MITM，并信任 MITM 证书。',
+    '#!name=小红书（去广告与去水印）',
+    '#!desc=小红书上游净化与功能增强版：处理开屏、首页/视频/搜索等信息流广告、热搜热词及部分推广，按上游提供帖子图片、Live 图片和短视频保存去水印等功能；同时屏蔽部分统计、隐私及青少年状态请求，可能改变页面或相关功能，不合入另一个“屏蔽首页视频”条目。原作者 ddgksf2013；规则每 6 小时检查上游，远程脚本每 24 小时检查原作者站点更新，依赖作者站点继续提供脚本。需 Surge iOS 5.9.1+ / Mac 5.5.1+（Map Local），开启重写、脚本、MITM，安装及信任 MITM 证书，并保持 MITM auto-quic-block 默认开启。功能异常请停用；不保证清除所有广告或所有内容均可无水印保存，尚未在最新版 App 实机验证。',
     `#!author=${parsed.author}`,
     `#!homepage=${SOURCE_URL}`,
     '#!category=AdBlock',

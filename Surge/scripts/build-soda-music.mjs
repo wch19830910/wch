@@ -101,8 +101,8 @@ function parseSource(source) {
 
 function renderModule(source, parsed) {
   const lines = [
-    '#!name=汽水音乐',
-    '#!desc=从墨鱼官方汽水音乐规则转换为 Surge 原生模块；每 6 小时检查上游更新。需要 Surge iOS 5.14+ 或 Mac 5.9+，启用重写和 MITM 并信任证书；仅广告及推广净化，不解锁会员或音乐版权。',
+    '#!name=汽水音乐（广告与推广净化）',
+    '#!desc=汽水音乐广告与推广净化版：处理视频及通用广告、商业弹窗、TAGS 推荐，清理我的页面广告横幅、会员试听引导、热搜与搜索活动，并在歌曲流中仅保留歌曲条目；保留上游位置查询及 DNS 配置接口拦截。原作者 ddgksf2013；规则每 6 小时检查上游，无远程 JavaScript。需 Surge iOS 5.14+ / Mac 5.9+（原生 JQ）；开启重写、MITM，并安装及信任 MITM 证书。不解锁会员或音乐版权；可能影响定位、推荐和部分页面功能，异常时请停用。不保证移除所有广告；尚未在最新版汽水音乐实机验证。',
     `#!author=${parsed.author}`,
     `#!homepage=${SOURCE_URL}`,
     '#!category=AdBlock',

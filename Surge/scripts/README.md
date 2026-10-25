@@ -1,17 +1,17 @@
 # Build Scripts
 
-`build-ximalaya.mjs` 从墨鱼网站列出的官方 Ximalaya 规则生成 Surge 原生模块。
-`build-amap.mjs` 对应官方 AmapAds 规则，模块显示名称为“高德地图”。
-`build-railway12306.mjs` 读取官方 12306 脚本顶部注释中的圈 X 配置，转换为请求阶段脚本，模块显示名称为“铁路12306”。
-`build-rednote.mjs` 对应小红书去广告去水印条目，模块显示名称为“小红书”，不合入另一份屏蔽首页视频规则。
-`build-coolapk.mjs` 读取官方酷安脚本内嵌配置，模块显示名称为“酷安”；不转载其完整 JavaScript。
-`build-netease-music.mjs` 对应网易云音乐净化条目，模块显示名称为“网易云音乐”；同时生成原作者 Gist 脚本的最小 Surge 兼容副本。
-`build-cainiao.mjs` 对应菜鸟 App 和支付宝小程序净化条目，模块显示名称为“菜鸟”。
-`build-smzdm.mjs` 对应什么值得买净化条目，保留 blackmatrix7、ddgksf2013 双署名。
-`build-goofish.mjs` 对应闲鱼净化条目，模块显示名称为“闲鱼”，JQ 转为 Surge 原生 Body Rewrite。
-`build-soda-music.mjs` 对应汽水音乐净化条目，模块显示名称为“汽水音乐”，不使用远程 JavaScript，JQ 转为 Surge 原生 Body Rewrite。
-`build-didi.mjs` 对应墨鱼 GitHub 索引推荐的 ZenmoFeiShi 滴滴完整精简版，模块显示名称为“滴滴出行”。完整保留上游行为，包括隐藏安全中心入口、钱包与行程页面精简；不是保守去广告版。
-`build-weibo.mjs` 对应墨鱼微博及国际版/轻享版完整净化规则，模块显示名称为“微博”；完整保留原上游皮肤状态、视频预览和界面精简行为，不是账号会员开通，也不是仅去广告。
+`build-ximalaya.mjs` 从墨鱼网站列出的官方 Ximalaya 规则生成 Surge 原生模块，显示名称为“喜马拉雅（全净化）”。
+`build-amap.mjs` 对应官方 AmapAds 规则，显示名称为“高德地图（全净化）”。
+`build-railway12306.mjs` 读取官方 12306 脚本顶部注释中的圈 X 配置，转换为请求阶段脚本，显示名称为“铁路12306（开屏去广告）”。
+`build-rednote.mjs` 对应小红书去广告去水印条目，显示名称为“小红书（去广告与去水印）”，不合入另一份屏蔽首页视频规则。
+`build-coolapk.mjs` 读取官方酷安脚本内嵌配置，显示名称为“酷安（去广告）”；不转载其完整 JavaScript。
+`build-netease-music.mjs` 对应网易云音乐净化条目，显示名称为“网易云音乐（去广告与界面精简）”；同时生成原作者 Gist 脚本的最小 Surge 兼容副本。
+`build-cainiao.mjs` 对应菜鸟 App 和支付宝小程序净化条目，显示名称为“菜鸟（去广告与页面净化）”。
+`build-smzdm.mjs` 对应什么值得买净化条目，显示名称为“什么值得买（去广告）”，保留 blackmatrix7、ddgksf2013 双署名。
+`build-goofish.mjs` 对应闲鱼净化条目，显示名称为“闲鱼（全净化）”，JQ 转为 Surge 原生 Body Rewrite。
+`build-soda-music.mjs` 对应汽水音乐净化条目，显示名称为“汽水音乐（广告与推广净化）”，不使用远程 JavaScript，JQ 转为 Surge 原生 Body Rewrite。
+`build-didi.mjs` 对应墨鱼 GitHub 索引推荐的 ZenmoFeiShi 滴滴完整精简版，显示名称为“滴滴出行（全净化）”。完整保留上游行为，包括隐藏安全中心入口、钱包与行程页面精简；不是保守去广告版。
+`build-weibo.mjs` 对应墨鱼微博及国际版/轻享版完整净化规则，显示名称为“微博（全净化）”；完整保留原上游皮肤状态、视频预览和界面精简行为，不是账号会员开通，也不是仅去广告。
 `build-freshippo.mjs` 对应 zirawell 独立原生 Surge 盒马完整净化模块，模块显示名称为“盒马（全净化）”。保留全部 IP 拒绝、AMDC、页面及更新查询接口拦截和远程响应脚本；详细描述包含开屏、首页与二楼、我的、购物车推荐、小程序首页的处理范围及副作用，不是仅去开屏，也不保证移除所有广告。
 
 在仓库根目录运行，需要 Node.js 20+：
@@ -46,6 +46,8 @@ node Surge/scripts/build-freshippo.mjs
 盒马建议 Surge iOS 5.14.2+ / Mac 5.9+；其中 `pre-matching` 最低要求 iOS 5.14 / Mac 5.9。完整净化及全局 IP 拦截可能影响其他阿里系 App，详见模块目录说明；未进行最新版盒马实机验证。
 
 闲鱼、汽水音乐、滴滴出行和微博的构建环境需要 jq；输出原样保留上游 JQ 表达式，客户端需要 Surge iOS 5.14+ / Mac 5.9+。
+
+名称采用“软件名（实际功能类型）”，全净化不表示保证移除全部广告。各 `#!desc` 明确具体功能、作者、更新周期、客户端与证书要求、功能变化及未实机验证的边界。
 
 需要调整 Surge 内的显示名称或描述时，修改对应构建脚本中的 `#!name` / `#!desc` 文案，保留 JavaScript 引号和逗号。不要只修改自动生成的 `.sgmodule`，因为后续同步会覆盖它。
 

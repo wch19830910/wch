@@ -193,8 +193,8 @@ function renderScript(javascript) {
 
 function renderModule(source, javascript, parsed) {
   const lines = [
-    '#!name=网易云音乐',
-    '#!desc=从墨鱼官方网易云音乐规则自动转换，兼容加密响应和明文 JSON；每 6 小时同步规则与兼容脚本，Surge 每 24 小时检查脚本更新。需启用重写、脚本及 MITM，并信任 MITM 证书；仅广告净化，不解锁会员或音乐版权。',
+    '#!name=网易云音乐（去广告与界面精简）',
+    '#!desc=基于墨鱼网易云音乐规则：处理开屏、歌单顶部、评论区插入广告和活动推广；精简发现/推荐页、底部导航及侧栏推广，清理搜索默认填词、相关推荐、领 VIP/免费听歌弹窗、升级提示及部分优惠券和福利入口。默认保留底部“漫游”，可在 App 侧栏设置中手动关闭。兼容明文 JSON 与加密响应，不解锁会员或音乐版权。每 6 小时检查上游规则并同步兼容脚本，Surge 每 24 小时检查脚本更新。需 Surge iOS 5.9.1+ / Mac 5.5.1+，Mac 另需 macOS 11+；模块使用 WebView 引擎，启用重写、脚本与 MITM 并信任证书。部分入口会隐藏，异常时请停用；未在最新版 App 实机验证。',
     `#!author=${parsed.author}`,
     `#!homepage=${SOURCE_URL}`,
     '#!category=AdBlock',

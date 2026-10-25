@@ -104,8 +104,8 @@ function parseSource(source) {
 }
 function renderModule(source, parsed) {
   const lines = [
-    '#!name=闲鱼',
-    '#!desc=从墨鱼官方闲鱼规则自动转换；需要 Surge iOS 5.14+ 或 Mac 5.9+（原生 JQ）。模块跟随上游，AMDC 脚本每 24 小时检查原作者更新。需启用重写、脚本及 MITM 并信任证书。',
+    '#!name=闲鱼（全净化）',
+    '#!desc=闲鱼完整上游净化版：处理开屏广告、首页悬浮球与顶部 Tab，净化首页、本地、搜索结果及商品底部推荐流，清理搜索填词、“猜你可能找”、搜索发现、我的页面及推荐信息流；保留上游域名拦截与 AMDC 处理。原作者 ddgksf2013；规则每 6 小时检查上游，AMDC 脚本每 24 小时检查更新。需 Surge iOS 5.14+ / Mac 5.9+（原生 JQ）；开启重写、脚本、MITM，并安装及信任 MITM 证书。会隐藏部分非广告栏目；AMDC 处理也可能影响其他阿里系 App 的网络调度，异常时请停用。全净化指保留完整上游功能，不保证移除所有广告；尚未在最新版闲鱼实机验证。',
     '#!author=ddgksf2013',
     `#!homepage=${SOURCE_URL}`,
     '#!category=AdBlock',

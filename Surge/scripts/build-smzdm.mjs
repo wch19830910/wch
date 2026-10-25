@@ -102,8 +102,8 @@ function parseSource(source) {
 
 function renderModule(source, parsed) {
   const lines = [
-    '#!name=什么值得买',
-    '#!desc=从墨鱼官方什么值得买规则自动转换；每 6 小时检查上游规则，响应脚本每 24 小时检查原作者分支更新。需启用重写、脚本及 MITM，并信任 MITM 证书；仅广告净化，不解锁会员。',
+    '#!name=什么值得买（去广告）',
+    '#!desc=基于 blackmatrix7、墨鱼规则：处理开屏广告、首页横幅与信息流推广、好价和百科列表广告、搜索结果及标签红包推广、值会员权益页横幅，清空搜索框默认填词；同时处理好价详情广告、红包小助手和 Wiki 相关模块。部分推荐、活动及信息模块可能一并隐藏，不解锁值会员或付费权益。每 6 小时检查上游规则，Surge 每 24 小时检查原作者远程脚本更新。需 Surge iOS 5.9.1+ / Mac 5.5.1+，启用重写、脚本与 MITM 并信任证书；页面异常时请停用，未在最新版 App 实机验证。',
     `#!author=${parsed.authors.join(', ')}`,
     `#!homepage=${SOURCE_URL}`,
     '#!category=AdBlock',
