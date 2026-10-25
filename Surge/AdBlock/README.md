@@ -17,6 +17,7 @@
 | DiDi | [滴滴出行（全净化）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/DiDi.sgmodule) | [ZenmoFeiShi（怎么肥事）](https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Didichuxing.snippet) |
 | Weibo | [微博（全净化）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Weibo.sgmodule) | [ddgksf2013 / zmqcherish](https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/WeiboAds.conf) |
 | Freshippo | [盒马（全净化）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Freshippo.sgmodule) | [zirawell](https://raw.githubusercontent.com/zirawell/R-Store/main/Rule/Surge/Adblock/App/H/%E7%9B%92%E9%A9%AC/freshippo.sgmodule) |
+| Tieba | [百度贴吧（去广告与页面净化）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Tieba.sgmodule) | [app2smile](https://raw.githubusercontent.com/app2smile/rules/master/module/tieba.sgmodule) / [ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/TieBaAds.conf) |
 
 在 Surge 的模块页面选择“从 URL 安装”，粘贴 Raw 地址并启用。安装并信任 MITM 证书，开启 MITM、重写和脚本，然后完全退出 App 再打开。相同 App 只启用一份净化模块。
 
@@ -30,13 +31,14 @@
 - `Update DiDi` 每 6 小时检查 ZenmoFeiShi 的滴滴出行完整精简规则，保留上游全部分流、拒绝响应、JQ 和 MITM 配置。
 - `Update Weibo` 每 6 小时检查墨鱼微博规则，完整转换微博及国际版/轻享版的上游配置。
 - `Update Freshippo` 每 6 小时检查 zirawell 的盒马完整净化模块；响应脚本直接引用原作者 `main` 分支，Surge 每 24 小时检查脚本更新。
+- `Update Tieba` 每 6 小时检查 app2smile 官方贴吧配置、广告地址表和墨鱼页面精简规则，并编译检查两份远程脚本；测试通过后自动发布变化。两份脚本由 Surge 每 24 小时直接从 app2smile 检查更新。
 - 转换或语法检查失败时停止发布，保留仓库上次生成的模块和快照；没有变化不产生提交。直接引用的原作者脚本由 Surge 独立更新，这不是手机端脚本冻结或回滚保证。
 - Surge 自动检查通过 URL 安装的模块更新，检查周期由 Surge 控制。
 - 喜马拉雅、高德地图、铁路12306、酷安、菜鸟、什么值得买、闲鱼和微博的 JavaScript 直接引用原作者分支；小红书使用原作者站点的脚本。Surge 每 24 小时检查这些远程脚本更新。汽水音乐没有远程 JavaScript，直接使用原生 JQ 规则。
 - 网易云音乐使用本仓库的合并版 `Surge/Script/NetEaseMusic.js`：每 6 小时检查墨鱼配置/脚本及 Keywos 两份功能参考文件。四份源均有已审核 SHA256，发生变化时先停发布，须人工兼容审查及测试后才能接入；不是自动拼接两个完整脚本。Surge 每 24 小时检查合并脚本，原模块地址不变。
 - GitHub 定时任务可能延迟；公开仓库连续 60 天没有活动时可能自动停用，届时在 Actions 页面重新启用。
 
-除盒马外，规则和脚本来源是 [墨鱼网站](https://ddgksf2013.top/) 的对应 App 条目；滴滴使用[墨鱼 GitHub 官方索引](https://github.com/ddgksf2013)推荐的 ZenmoFeiShi（怎么肥事）规则，不冒称墨鱼自作。盒马使用 zirawell 的独立原生 Surge 模块，不冒称墨鱼规则。什么值得买保留 blackmatrix7、ddgksf2013 双署名，微博保留 ddgksf2013、zmqcherish、shiro 署名，其余为 ddgksf2013。保留作者原有净化逻辑；格式转换和语法检查不等于已在最新 App 实机验证。
+除盒马、贴吧外，规则和脚本来源是 [墨鱼网站](https://ddgksf2013.top/) 的对应 App 条目；滴滴使用[墨鱼 GitHub 官方索引](https://github.com/ddgksf2013)推荐的 ZenmoFeiShi（怎么肥事）规则，不冒称墨鱼自作。盒马使用 zirawell 的独立原生 Surge 模块，不冒称墨鱼规则。贴吧使用 app2smile 官方原生模块加墨鱼页面净化。什么值得买保留 blackmatrix7、ddgksf2013 双署名，微博保留 ddgksf2013、zmqcherish、shiro 署名，其余为 ddgksf2013。保留作者原有净化逻辑；格式转换和语法检查不等于已在最新 App 实机验证。
 
 Surge 内显示“中文软件名（功能类型）”，区分开屏去广告、去广告、去水印、界面精简与全净化，文件名和远程地址仍使用原来的常用英文名。全净化表示保留完整上游功能，不保证移除所有广告。各模块描述已列明具体处理范围、作者、更新周期、启用/版本要求及副作用；名称和描述可在对应生成脚本中修改，自动同步时会保留这些设置。
 
@@ -50,7 +52,7 @@ Surge 的 [MITM `auto-quic-block`](https://manual.nssurge.com/http/mitm.html) �
 
 酷安脚本按作者要求仅远程引用，不转载完整脚本；仓库仅保存转换后的配置和来源元信息。
 
-使用 Map Local 的空 200 响应需要 Surge iOS 5.9.1+ 或 Surge Mac 5.5.1+。使用原生 [JQ Body Rewrite](https://manual.nssurge.com/http/body-rewrite.html) 的闲鱼、汽水音乐、滴滴出行和微博还需要 Surge iOS 5.14+ 或 Surge Mac 5.9+；当前喜马拉雅模块未使用 JQ。
+使用 Map Local 的空 200 响应需要 Surge iOS 5.9.1+ 或 Surge Mac 5.5.1+。使用原生 [JQ Body Rewrite](https://manual.nssurge.com/http/body-rewrite.html) 的闲鱼、汽水音乐、滴滴出行、微博和贴吧还需要 Surge iOS 5.14+ 或 Surge Mac 5.9+；当前喜马拉雅模块未使用 JQ。
 
 菜鸟包含原作者的菜鸟 App 与支付宝小程序规则。菜鸟、闲鱼和汽水音乐如仍显示缓存广告，可先完全退出 App 后重开、清理缓存；原作者另有先启用模块再重装 App 的提示，重装前请自行确认账号及本地数据备份。
 
@@ -65,6 +67,8 @@ Surge 的 [MITM `auto-quic-block`](https://manual.nssurge.com/http/mitm.html) �
 网易云音乐的加密响应处理需要 [WebView 脚本引擎](https://manual.nssurge.com/scripting/overview.html)，模块已显式设置 `engine=webview`；Mac 需 macOS 11+，不适用于仅有 JSC 的旧 macOS 或 tvOS。
 
 网易云音乐现为自定义合并版：墨鱼广告处理主干加独立编写的底栏、九类首页卡片、评论装饰及未回关提示选项；不转载或执行 Keywos 原脚本。默认保留发现/漫游/笔记与九类卡片，评论精简开启、未回关提示关闭。真实会员信息与关注状态保留，不包含伪 VIP、HTTPDNS 全域拒绝、艺术家关注接口拦截或版权解锁。参数只控制服务器返回的项目，不能恢复 App 已不提供的栏目。安装、参数和更新说明见 [NetEaseMusic.md](NetEaseMusic.md)，只启用这一份网易云模块。
+
+贴吧使用 app2smile 广告处理主干，加入墨鱼搜索、侧栏及“我的”页面精简。默认保留普通视频帖，参数 `per_filter_video=1` 可隐藏推荐页视频帖；仍会沿用原作者对直播、商品推广及部分个人页分区的精简。旧 `getFeedAd` 拒绝规则由当前 protobuf 脚本统一接管，避免抢占。需 iOS 15+、Surge iOS 5.14+ / Mac 5.9+，未在最新版贴吧实机验证。[功能、参数及更新说明](Tieba.md)。
 
 ## Build
 
@@ -84,6 +88,7 @@ node Surge/scripts/build-soda-music.mjs
 node Surge/scripts/build-didi.mjs
 node Surge/scripts/build-weibo.mjs
 node Surge/scripts/build-freshippo.mjs
+node Surge/scripts/build-tieba.mjs
 ```
 
 - [Surge remote scripts](https://manual.nssurge.com/scripting/overview.html)
