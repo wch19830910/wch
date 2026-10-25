@@ -12,6 +12,7 @@
 `build-soda-music.mjs` 对应汽水音乐净化条目，模块显示名称为“汽水音乐”，不使用远程 JavaScript，JQ 转为 Surge 原生 Body Rewrite。
 `build-didi.mjs` 对应墨鱼 GitHub 索引推荐的 ZenmoFeiShi 滴滴完整精简版，模块显示名称为“滴滴出行”。完整保留上游行为，包括隐藏安全中心入口、钱包与行程页面精简；不是保守去广告版。
 `build-weibo.mjs` 对应墨鱼微博及国际版/轻享版完整净化规则，模块显示名称为“微博”；完整保留原上游皮肤状态、视频预览和界面精简行为，不是账号会员开通，也不是仅去广告。
+`build-freshippo.mjs` 对应 zirawell 独立原生 Surge 盒马完整净化模块，模块显示名称为“盒马”。保留全部 IP 拒绝、AMDC、页面及更新查询接口拦截和远程响应脚本，不是仅去开屏。
 
 在仓库根目录运行，需要 Node.js 20+：
 
@@ -28,6 +29,7 @@ node Surge/scripts/build-goofish.mjs
 node Surge/scripts/build-soda-music.mjs
 node Surge/scripts/build-didi.mjs
 node Surge/scripts/build-weibo.mjs
+node Surge/scripts/build-freshippo.mjs
 ```
 
 模块输出到 `Surge/AdBlock/Ximalaya.sgmodule`，原始规则快照输出到 `Surge/upstream/Ximalaya.conf`。
@@ -39,6 +41,9 @@ node Surge/scripts/build-weibo.mjs
 菜鸟、什么值得买、闲鱼、汽水音乐分别输出对应英文名的模块和 `CainiaoAds.conf`、`SmzdmAds.conf`、`GoofishAds.conf`、`QiShuiMusicAds.conf` 上游快照。
 滴滴出行输出 `Surge/AdBlock/DiDi.sgmodule` 和 `Surge/upstream/Didichuxing.snippet`；没有远程 JavaScript，保留 ZenmoFeiShi（怎么肥事）署名与墨鱼推荐来源。
 微博输出 `Surge/AdBlock/Weibo.sgmodule` 和 `Surge/upstream/WeiboAds.conf`；三个脚本均直接引用墨鱼 master 分支，其中两个 `.json` 后缀文件实际是 JavaScript，按 JavaScript 做语法校验。保留 ddgksf2013、zmqcherish、shiro 署名；选项由上游脚本固定，不使用另一个版本的 `weibo_config.js`。
+盒马输出 `Surge/AdBlock/Freshippo.sgmodule` 和逐字上游快照 `Surge/upstream/freshippo.sgmodule`；脚本直接引用 zirawell 的 `main` 分支。生成时仅规范不兼容的 `data-type=json` 为 text + JSON Content-Type、`max-size=0` 为官方不限值 `-1`，并显式设置 86400 秒脚本更新周期。原脚本正文和 ICU 原子组正则不变；Node 校验仅对已审核的原子组作检查副本，不修改输出正则。盒马相关源码及产物使用 [GPL-3.0](../licenses/zirawell-GPL-3.0.txt)，保留原作者和修改日期声明。
+
+盒马建议 Surge iOS 5.14.2+ / Mac 5.9+；其中 `pre-matching` 最低要求 iOS 5.14 / Mac 5.9。完整净化及全局 IP 拦截可能影响其他阿里系 App，详见模块目录说明；未进行最新版盒马实机验证。
 
 闲鱼、汽水音乐、滴滴出行和微博的构建环境需要 jq；输出原样保留上游 JQ 表达式，客户端需要 Surge iOS 5.14+ / Mac 5.9+。
 
