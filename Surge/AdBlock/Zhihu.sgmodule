@@ -1,0 +1,63 @@
+#!name=知乎（去广告与页面净化）
+#!desc=基于 zirawell / RuCu6 的知乎规则整理：处理开屏、悬浮、信息流、热榜、回答与文章推广、评论区顶部推广、搜索推荐及弹窗。默认保留普通视频、直播与付费内容；hideVideos=1 隐藏已识别的视频/直播项目，hidePaid=1 隐藏已识别的付费回答及盐选推荐。保留真实会员、会员入口、关注状态、消息计数及消息长连接；精简部分活动标签与推荐入口。规则每 6 小时检查上游，源范围或原脚本变化须审查后接入；本仓库兼容脚本每 24 小时检查更新。需 Surge iOS 5.14.2+ / Mac 5.9+，开启重写、脚本及 MITM，并安装及信任 MITM 证书。未在最新版知乎手机实测，不保证移除所有广告。
+#!arguments=hideVideos:0,hidePaid:0
+#!arguments-desc=hideVideos:0 保留视频和直播（默认）；1 在支持的列表中过滤已识别的视频与直播项目。\nhidePaid:0 保留付费回答与盐选内容（默认）；1 过滤已识别的付费项目。两个参数独立生效，不改变会员权益，也不解锁付费正文。
+#!author=zirawell, RuCu6（原始来源）；本仓库兼容整理
+#!category=AdBlock
+#!homepage=https://github.com/zirawell/R-Store
+#!raw-url=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Zhihu.sgmodule
+
+# SPDX-License-Identifier: GPL-3.0-only
+# 原作者 zirawell，保留原脚本的 RuCu6 来源声明；兼容修改日期 2026-10-26。
+# 许可：https://github.com/wch19830910/wch/blob/main/Surge/licenses/zirawell-GPL-3.0.txt；无任何保证。
+# 上游模块：https://raw.githubusercontent.com/zirawell/R-Store/main/Rule/Surge/Adblock/App/Z/%E7%9F%A5%E4%B9%8E/zhihu.sgmodule
+# 上游模块 SHA256：479049efc68c6ed47ca43f9e2c83a14c013a2d11fa9664769ff64e796e9ab951
+# 上游脚本参考：https://raw.githubusercontent.com/zirawell/R-Store/main/Res/Scripts/AntiAd/zhihu.js
+# 已审核原脚本 SHA256：ac5ba31a6f4f6c6cc3c5896f846ddb692268b3aa4c580c1b9996e9a786b44c23
+# 此模块由 build-zhihu.mjs 生成；显示名称和默认参数请在构建脚本修改。
+# 由本仓库自定义兼容脚本统一处理，修复重复名称、变量引用和遗漏接口；不直接执行原作者远程 JS。
+# 省略全局 AVOS*、共享 zxid SDK 和 mqtt 拒绝；保留消息长连接。
+# 不拦 unlimited/go/my_card、me/guides、通知计数和 drama/hot-drama-list；保留正常会员入口与卡片。
+# ad 接口增加路径边界；修正原 anwsers 拼写；搜索 JSON 交给响应脚本，不使用贪婪正则替换。
+# 视频/付费过滤默认关闭；保留未知结构、普通文章内容、视频 ID 与真实账号数据。
+
+[Rule]
+DOMAIN,appcloud.zhihu.com,REJECT,extended-matching,pre-matching
+DOMAIN,appcloud2.in.zhihu.com,REJECT,extended-matching,pre-matching
+DOMAIN,crash2.zhihu.com,REJECT,extended-matching,pre-matching
+DOMAIN,sugar.zhihu.com,REJECT,extended-matching,pre-matching
+IP-CIDR,103.41.167.237/32,REJECT,no-resolve,pre-matching
+IP-CIDR,118.89.204.198/32,REJECT,no-resolve,pre-matching
+IP-CIDR6,2402:4e00:1200:ed00:0:9089:6dac:96b6/128,REJECT,no-resolve,pre-matching
+
+[URL Rewrite]
+^https?:\/\/www\.zhihu\.com\/appview\/v\d\/zhmore - reject
+^https?:\/\/api\.zhihu\.com\/appview\/api\/v\d\/answers\/\d+\/recommendations - reject
+^https?:\/\/api\.zhihu\.com\/\w+\/\d+\/comments\/featured-comment-ad - reject
+^https?:\/\/api\.zhihu\.com\/ab\/api\/v\d\/products\/zhihu\/platforms\/ios\/config - reject
+^https?:\/\/www\.zhihu\.com\/api\/v\d\/hot_recommendation - reject
+^https?:\/\/www\.zhihu\.com\/api\/v\d\/mcn\/v\d\/linkcards\? - reject
+^https?:\/\/www\.zhihu\.com\/api\/v\d/(questions|answers)\/\d+/related-readings - reject
+^https?:\/\/www\.zhihu\.com\/commercial_api\/banners_v\d\/mobile_banner - reject
+^https?:\/\/zhuanlan\.zhihu\.com\/api\/articles\/\d+\/recommendation - reject
+^https?:\/\/zhstatic\.zhihu\.com\/brand-ad - reject
+
+[Map Local]
+^https?:\/\/api\.zhihu\.com\/commercial_api\/(banners_v\d\/app_topstory_banner|launch_v|real_time_launch_v) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/api\.zhihu\.com\/content-distribution-core\/bubble\/common\/settings data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/api\.zhihu\.com\/moments\/lastread data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/api\.zhihu\.com\/root\/window data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/api\.zhihu\.com\/feed\/render\/revisit\/current_reading data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/api\.zhihu\.com\/search\/preset_words data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/www\.zhihu\.com\/api\/v\d\/search\/related_queries\/(answer|article)\/\d+ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/api\.zhihu\.com\/comment_v\d\/answers\/\d+\/list-headers data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/api\.zhihu\.com\/v\d\.\d\/topics\/answer\/\d+\/relation data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/api\.zhihu\.com\/ad(?:\/|\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/appcloud2\.zhihu\.com\/v\d\/resource\?group_name=mp data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/api\.zhihu\.com\/distribute\/rhea\/qa_ad_card\/h5\/recommendation\? data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+[Script]
+zhihu_cleanup = type=http-response,pattern=(?:^https?:\/\/api\.zhihu\.com\/commercial_api\/app_float_layer|^https?:\/\/api\.zhihu\.com\/(moments_v\d|topstory\/recommend(_v\d)?)|^https?:\/\/api\.zhihu\.com\/v2\/topstory\/hot-lists\/everyone-seeing\?|^https?:\/\/api\.zhihu\.com\/next-(bff|data|render)\?|^https?:\/\/api\.zhihu\.com\/(v\d\/)?questions\/\d+\/(feeds|answers)\?|^https?:\/\/www\.zhihu\.com\/api\/v\d\/(answers|articles)\/\d+\/recommendations?|^https?:\/\/appcloud2\.zhihu\.com\/v\d\/config|^https?:\/\/m-cloud\.zhihu\.com\/api\/cloud\/config\/all\?|^https?:\/\/(?:api|page-info)\.zhihu\.com\/(?:answers|articles)\/v2\/\d+|^https?:\/\/api\.zhihu\.com\/root\/tab(?:\/v\d+)?(?:\?|$)|^https?:\/\/api\.zhihu\.com\/feed\/render\/tab\/config(?:\?|$)|^https?:\/\/api\.zhihu\.com\/bazaar\/vip_tab\/header(?:\?|$)|^https?:\/\/api\.zhihu\.com\/topstory\/hot-lists\/total(?:\?|$)|^https?:\/\/api\.zhihu\.com\/search\/recommend_query\/v2(?:\?|$)),requires-body=true,max-size=-1,timeout=30,script-update-interval=86400,script-path=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/Script/Zhihu.js,argument="hideVideos={{{hideVideos}}}&hidePaid={{{hidePaid}}}"
+
+[MITM]
+hostname = %APPEND% api.zhihu.com, www.zhihu.com, appcloud2.zhihu.com, m-cloud.zhihu.com, zhuanlan.zhihu.com, zhstatic.zhihu.com, page-info.zhihu.com

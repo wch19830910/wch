@@ -18,6 +18,7 @@
 | Weibo | [微博（全净化）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Weibo.sgmodule) | [ddgksf2013 / zmqcherish](https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/WeiboAds.conf) |
 | Freshippo | [盒马（全净化）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Freshippo.sgmodule) | [zirawell](https://raw.githubusercontent.com/zirawell/R-Store/main/Rule/Surge/Adblock/App/H/%E7%9B%92%E9%A9%AC/freshippo.sgmodule) |
 | Tieba | [百度贴吧（去广告与页面净化）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Tieba.sgmodule) | [app2smile](https://raw.githubusercontent.com/app2smile/rules/master/module/tieba.sgmodule) / [ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/TieBaAds.conf) |
+| Zhihu | [知乎（去广告与页面净化）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Zhihu.sgmodule) | [zirawell / RuCu6](https://raw.githubusercontent.com/zirawell/R-Store/main/Rule/Surge/Adblock/App/Z/知乎/zhihu.sgmodule) |
 
 在 Surge 的模块页面选择“从 URL 安装”，粘贴 Raw 地址并启用。安装并信任 MITM 证书，开启 MITM、重写和脚本，然后完全退出 App 再打开。相同 App 只启用一份净化模块。
 
@@ -32,13 +33,14 @@
 - `Update Weibo` 每 6 小时检查墨鱼微博规则，完整转换微博及国际版/轻享版的上游配置。
 - `Update Freshippo` 每 6 小时检查 zirawell 的盒马完整净化模块；响应脚本直接引用原作者 `main` 分支，Surge 每 24 小时检查脚本更新。
 - `Update Tieba` 每 6 小时检查 app2smile 官方贴吧配置、广告地址表和墨鱼页面精简规则，并编译检查两份远程脚本；测试通过后自动发布变化。两份脚本由 Surge 每 24 小时直接从 app2smile 检查更新。
+- `Update Zhihu` 每 6 小时检查 zirawell 知乎来源，生成带参数与兼容修复的本仓库脚本。原脚本内容变化或配置超出已审核范围时暂停发布，兼容审查及测试通过后接入；Surge 每 24 小时检查本仓库脚本更新。
 - 转换或语法检查失败时停止发布，保留仓库上次生成的模块和快照；没有变化不产生提交。直接引用的原作者脚本由 Surge 独立更新，这不是手机端脚本冻结或回滚保证。
 - Surge 自动检查通过 URL 安装的模块更新，检查周期由 Surge 控制。
 - 喜马拉雅、高德地图、铁路12306、酷安、菜鸟、什么值得买、闲鱼和微博的 JavaScript 直接引用原作者分支；小红书使用原作者站点的脚本。Surge 每 24 小时检查这些远程脚本更新。汽水音乐没有远程 JavaScript，直接使用原生 JQ 规则。
 - 网易云音乐使用本仓库的合并版 `Surge/Script/NetEaseMusic.js`：每 6 小时检查墨鱼配置/脚本及 Keywos 两份功能参考文件。四份源均有已审核 SHA256，发生变化时先停发布，须人工兼容审查及测试后才能接入；不是自动拼接两个完整脚本。Surge 每 24 小时检查合并脚本，原模块地址不变。
 - GitHub 定时任务可能延迟；公开仓库连续 60 天没有活动时可能自动停用，届时在 Actions 页面重新启用。
 
-除盒马、贴吧外，规则和脚本来源是 [墨鱼网站](https://ddgksf2013.top/) 的对应 App 条目；滴滴使用[墨鱼 GitHub 官方索引](https://github.com/ddgksf2013)推荐的 ZenmoFeiShi（怎么肥事）规则，不冒称墨鱼自作。盒马使用 zirawell 的独立原生 Surge 模块，不冒称墨鱼规则。贴吧使用 app2smile 官方原生模块加墨鱼页面净化。什么值得买保留 blackmatrix7、ddgksf2013 双署名，微博保留 ddgksf2013、zmqcherish、shiro 署名，其余为 ddgksf2013。保留作者原有净化逻辑；格式转换和语法检查不等于已在最新 App 实机验证。
+除盒马、贴吧、知乎外，规则和脚本来源是 [墨鱼网站](https://ddgksf2013.top/) 的对应 App 条目；滴滴使用[墨鱼 GitHub 官方索引](https://github.com/ddgksf2013)推荐的 ZenmoFeiShi（怎么肥事）规则，不冒称墨鱼自作。盒马使用 zirawell 的独立原生 Surge 模块，不冒称墨鱼规则。贴吧使用 app2smile 官方原生模块加墨鱼页面净化。知乎以 zirawell / RuCu6 来源整理，视频和付费内容过滤默认关闭，保留真实会员、会员入口及消息通道。什么值得买保留 blackmatrix7、ddgksf2013 双署名，微博保留 ddgksf2013、zmqcherish、shiro 署名，其余为 ddgksf2013。具体功能调整见各模块说明；格式转换和语法检查不等于已在最新 App 实机验证。
 
 Surge 内显示“中文软件名（功能类型）”，区分开屏去广告、去广告、去水印、界面精简与全净化，文件名和远程地址仍使用原来的常用英文名。全净化表示保留完整上游功能，不保证移除所有广告。各模块描述已列明具体处理范围、作者、更新周期、启用/版本要求及副作用；名称和描述可在对应生成脚本中修改，自动同步时会保留这些设置。
 
@@ -70,6 +72,8 @@ Surge 的 [MITM `auto-quic-block`](https://manual.nssurge.com/http/mitm.html) �
 
 贴吧使用 app2smile 广告处理主干，加入墨鱼搜索、侧栏及“我的”页面精简。默认保留普通视频帖，参数 `per_filter_video=1` 可隐藏推荐页视频帖；仍会沿用原作者对直播、商品推广及部分个人页分区的精简。旧 `getFeedAd` 拒绝规则由当前 protobuf 脚本统一接管，避免抢占。需 iOS 15+、Surge iOS 5.14+ / Mac 5.9+，未在最新版贴吧实机验证。[功能、参数及更新说明](Tieba.md)。
 
+知乎处理开屏、推荐、热榜、回答及评论区推广，精简搜索推荐和广告配置。`hideVideos=0`、`hidePaid=0` 默认保留普通视频、直播及付费内容，明确广告仍过滤；不会启用伪会员、清空通知角标或拦截消息长连接。响应脚本带兼容修复并由本仓库发布，已审核上游变化需先兼容审查。需 Surge iOS 5.14.2+ / Mac 5.9+，未手机实测。[功能、参数与更新说明](Zhihu.md)。
+
 ## Build
 
 在仓库根目录执行，需要 Node.js 20+；上游包含 JQ 规则时还需要 jq：
@@ -89,6 +93,7 @@ node Surge/scripts/build-didi.mjs
 node Surge/scripts/build-weibo.mjs
 node Surge/scripts/build-freshippo.mjs
 node Surge/scripts/build-tieba.mjs
+node Surge/scripts/build-zhihu.mjs
 ```
 
 - [Surge remote scripts](https://manual.nssurge.com/scripting/overview.html)
