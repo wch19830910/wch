@@ -16,6 +16,7 @@
 | SodaMusic | [Install / Raw](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/SodaMusic.sgmodule) | [ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Rewrite/refs/heads/master/AdBlock/QiShuiMusicAds.conf) |
 | DiDi | [Install / Raw](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/DiDi.sgmodule) | [ZenmoFeiShi（怎么肥事）](https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Didichuxing.snippet) |
 | Weibo | [Install / Raw](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Weibo.sgmodule) | [ddgksf2013 / zmqcherish](https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/WeiboAds.conf) |
+| Freshippo | [Install / Raw](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Freshippo.sgmodule) | [zirawell](https://raw.githubusercontent.com/zirawell/R-Store/main/Rule/Surge/Adblock/App/H/%E7%9B%92%E9%A9%AC/freshippo.sgmodule) |
 
 在 Surge 的模块页面选择“从 URL 安装”，粘贴 Raw 地址并启用。安装并信任 MITM 证书，开启 MITM、重写和脚本，然后完全退出 App 再打开。相同 App 只启用一份净化模块。
 
@@ -28,13 +29,14 @@
 - `Update Cainiao`、`Update Smzdm`、`Update Goofish`、`Update SodaMusic` 每 6 小时分别检查菜鸟、什么值得买、闲鱼和汽水音乐的上游来源。
 - `Update DiDi` 每 6 小时检查 ZenmoFeiShi 的滴滴出行完整精简规则，保留上游全部分流、拒绝响应、JQ 和 MITM 配置。
 - `Update Weibo` 每 6 小时检查墨鱼微博规则，完整转换微博及国际版/轻享版的上游配置。
-- 转换或语法检查失败时停止发布，保留上一个版本；没有变化不产生提交。
+- `Update Freshippo` 每 6 小时检查 zirawell 的盒马完整净化模块；响应脚本直接引用原作者 `main` 分支，Surge 每 24 小时检查脚本更新。
+- 转换或语法检查失败时停止发布，保留仓库上次生成的模块和快照；没有变化不产生提交。直接引用的原作者脚本由 Surge 独立更新，这不是手机端脚本冻结或回滚保证。
 - Surge 自动检查通过 URL 安装的模块更新，检查周期由 Surge 控制。
 - 喜马拉雅、高德地图、铁路12306、酷安、菜鸟、什么值得买、闲鱼和微博的 JavaScript 直接引用原作者分支；小红书使用原作者站点的脚本。Surge 每 24 小时检查这些远程脚本更新。汽水音乐没有远程 JavaScript，直接使用原生 JQ 规则。
 - 网易云音乐使用本仓库的最小兼容副本 `Surge/Script/NetEaseMusic.js`：每 6 小时检查原作者 Gist 更新并重新包装，Surge 每 24 小时检查此副本更新。保留原净化代码，添加外层函数包装、明文/二进制输入兼容与响应配置，不增加会员或版权解锁功能。
 - GitHub 定时任务可能延迟；公开仓库连续 60 天没有活动时可能自动停用，届时在 Actions 页面重新启用。
 
-规则和脚本来源是 [墨鱼网站](https://ddgksf2013.top/) 的对应 App 条目；滴滴使用[墨鱼 GitHub 官方索引](https://github.com/ddgksf2013)推荐的 ZenmoFeiShi（怎么肥事）规则，不冒称墨鱼自作。什么值得买保留 blackmatrix7、ddgksf2013 双署名，微博保留 ddgksf2013、zmqcherish、shiro 署名，其余为 ddgksf2013。保留作者原有净化逻辑；格式转换和语法检查不等于已在最新 App 实机验证。
+除盒马外，规则和脚本来源是 [墨鱼网站](https://ddgksf2013.top/) 的对应 App 条目；滴滴使用[墨鱼 GitHub 官方索引](https://github.com/ddgksf2013)推荐的 ZenmoFeiShi（怎么肥事）规则，不冒称墨鱼自作。盒马使用 zirawell 的独立原生 Surge 模块，不冒称墨鱼规则。什么值得买保留 blackmatrix7、ddgksf2013 双署名，微博保留 ddgksf2013、zmqcherish、shiro 署名，其余为 ddgksf2013。保留作者原有净化逻辑；格式转换和语法检查不等于已在最新 App 实机验证。
 
 Surge 内显示对应的中文 App 名称，文件名使用常用英文名。名称和描述可在各自的生成脚本中修改，自动同步时会保留这些设置。
 
@@ -56,6 +58,10 @@ Surge 的 [MITM `auto-quic-block`](https://manual.nssurge.com/http/mitm.html) �
 
 微博完整保留墨鱼上游逻辑，不是仅去广告：会精简发现页、推荐、打赏及个人页组件，包含原上游皮肤状态和视频预览限制相关响应修改，不是账号会员开通。主脚本选项目前在作者脚本内固定，不能用另一作者的 `weibo_config.js` 配置。两个 `.json` 后缀的搜索脚本实际也是 JavaScript，模块直接引用原地址。若页面或功能异常，请停用模块并完全退出 App 后重开；未保证最新微博实机兼容。
 
+盒马为完整上游净化版：保留全部 IP 拒绝、AMDC 处理、页面/推荐/更新查询接口拦截，以及首页、我的、购物车和小程序页面的原作者净化逻辑，不是只去开屏。12 条 `pre-matching` IP 拒绝优先于普通分流，且部分接口使用共享的淘宝域名，可能影响其他阿里系 App；不能靠普通前置 DIRECT 保证覆盖。若盒马购物功能或其他 App 异常，请先停用此模块并完全退出相关 App 后重开。先尝试重开和清缓存；上游另有可能需要重装的提示，重装前请自行备份本地数据。未保证最新版盒马实机效果。
+
+盒马建议 Surge iOS 5.14.2+（上游标注版本）或 Surge Mac 5.9+；`pre-matching` 本身最低要求 iOS 5.14 / Mac 5.9。为通过原生校验，将上游 5 条 `data-type=json` 规范为 `data-type=text` 并显式设置 JSON Content-Type；脚本 `max-size=0` 按官方手册改为 `-1`，保留原 ICU 原子组正则和脚本正文。模块、原始快照和盒马构建脚本按 GPL-3.0 发布，许可全文见 [zirawell-GPL-3.0.txt](../licenses/zirawell-GPL-3.0.txt)，无任何保证；其他独立模块的许可不因此改变。
+
 网易云音乐的加密响应处理需要 [WebView 脚本引擎](https://manual.nssurge.com/scripting/overview.html)，模块已显式设置 `engine=webview`；Mac 需 macOS 11+，不适用于仅有 JSC 的旧 macOS 或 tvOS。
 
 ## Build
@@ -75,6 +81,7 @@ node Surge/scripts/build-goofish.mjs
 node Surge/scripts/build-soda-music.mjs
 node Surge/scripts/build-didi.mjs
 node Surge/scripts/build-weibo.mjs
+node Surge/scripts/build-freshippo.mjs
 ```
 
 - [Surge remote scripts](https://manual.nssurge.com/scripting/overview.html)

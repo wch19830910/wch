@@ -1,0 +1,56 @@
+#!name=盒马
+#!desc=zirawell 完整净化版：包含开屏、首页、我的及购物车推荐精简，并保留上游 IP 预匹配拦截。非仅开屏，可能影响其他阿里请求；异常时请停用。每 6 小时检查规则，远程脚本每 24 小时检查更新。需启用重写、脚本与 MITM 并信任证书。
+#!openUrl=https://apps.apple.com/app/id1063183999
+#!bundleId=com.wdk.hmxs
+#!author=zirawell[https://github.com/zirawell]
+#!tag=去广告
+#!basedOn=iOS
+#!surge_version=5.14.2(Build3405,SDK18.2)
+#!homepage=https://github.com/zirawell/R-Store/tree/main/Rule/Surge/README.md
+#!icon=https://raw.githubusercontent.com/zirawell/R-Store/main/Res/Icon/App/freshippo.png
+#!date=2026-05-09
+#!raw-url=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Freshippo.sgmodule
+
+# SPDX-License-Identifier: GPL-3.0-only
+# 原作者：zirawell；本地兼容与远程同步修改日期：2026-10-25。
+# 许可证：https://github.com/wch19830910/wch/blob/main/Surge/licenses/zirawell-GPL-3.0.txt（仓库内 Surge/licenses/zirawell-GPL-3.0.txt）。
+# 无任何保证；配置检查不等于已在最新版盒马实机验证。
+# 上游：https://raw.githubusercontent.com/zirawell/R-Store/main/Rule/Surge/Adblock/App/H/%E7%9B%92%E9%A9%AC/freshippo.sgmodule
+# 上游规则 SHA256：3a8a44c3cdbbce82e2d205e093361f7a98e2362484917eb929b1993190d770f3
+# 自动生成；名称和描述请修改 Surge/scripts/build-freshippo.mjs，直接改成品会被同步覆盖。
+# 完整保留上游分流、URL Rewrite、Map Local、Script 与 MITM；远程 JS 直引原作者，构建时不复制或执行正文，Surge 客户端会按规则运行远程脚本。
+# Surge 兼容：data-type=json 改为 text + application/json；max-size=0 按官方不限响应大小写法规范为 -1。
+# IP pre-matching 可能在普通分流前生效；如其他阿里 App 或购物功能异常，请停用模块。
+# 上游标注测试 Surge iOS 5.14.2；建议 iOS 5.14.2+ / Mac 5.9+。不添加整域拒绝规则。
+
+[Rule]
+IP-CIDR, 59.82.14.1/32, REJECT, no-resolve, pre-matching
+IP-CIDR, 59.82.14.161/32, REJECT, no-resolve, pre-matching
+IP-CIDR, 59.82.34.147/32, REJECT, no-resolve, pre-matching
+IP-CIDR, 59.82.34.255/32, REJECT, no-resolve, pre-matching
+IP-CIDR, 59.82.113.219/32, REJECT, no-resolve, pre-matching
+IP-CIDR, 59.82.113.10/32, REJECT, no-resolve, pre-matching
+IP-CIDR, 139.95.0.151/32, REJECT, no-resolve, pre-matching
+IP-CIDR, 139.95.4.98/32, REJECT, no-resolve, pre-matching
+IP-CIDR, 47.246.103.9/32, REJECT, no-resolve, pre-matching
+IP-CIDR, 47.246.103.10/32, REJECT, no-resolve, pre-matching
+IP-CIDR, 203.119.238.164/32, REJECT, no-resolve, pre-matching
+IP-CIDR, 203.119.238.63/32, REJECT, no-resolve, pre-matching
+
+[URL Rewrite]
+^https?:\/\/amdc\.m\.taobao\.com\/amdc\/mobileDispatch\?appkey=23230111 - reject
+^https?:\/\/acs(\.|-)m\.(taobao|freshippo)\.com\/gw\/mtop\.wdk\.hippotown\.tabbar\.info - reject
+
+[Map Local]
+^https?:\/\/acs(\.|-)m\.(taobao|freshippo)\.com\/gw\/mtop\.alibaba\.emas\.publish\.update\.get data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/acs(\.|-)m\.(taobao|freshippo)\.com\/gw\/mtop\.wdk\.sg\.querysinglescene data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/acs(\.|-)m\.(taobao|freshippo)\.com\/gw\/mtop\.wdk\.render\.querysinglepage data-type=text data="" status-code=200
+^https?:\/\/acs(\.|-)m\.(taobao|freshippo)\.com\/gw\/mtop\.wdk\.fc\.recommend\.feedscommondservice data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/acs(\.|-)m\.(taobao|freshippo)\.com\/gw\/mtop\.wdk\.crm\.platform\.ma\.recommend data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/acs(\.|-)m\.(taobao|freshippo)\.com\/gw\/mtop\.wdk\.mimir\.recommend(?!\.hgitems) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+[Script]
+freshippo = type=http-response,pattern=^https?:\/\/acs(\.|-)m\.(taobao|freshippo)\.com\/gw\/mtop\.wdk\.render\.query(?>indexpage|mypage|tabfeedstream),requires-body=true,max-size=-1,script-update-interval=86400,script-path=https://raw.githubusercontent.com/zirawell/R-Store/main/Res/Scripts/AntiAd/freshippo.js
+
+[MITM]
+hostname= %APPEND% amdc.m.taobao.com, acs.m.taobao.com, acs-m.freshippo.com
