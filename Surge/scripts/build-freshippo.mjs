@@ -151,8 +151,8 @@ function parseSource(source) {
 function renderModule(source, parsed) {
   const metadata = {
     ...parsed.metadata,
-    name: '盒马',
-    desc: 'zirawell 完整净化版：包含开屏、首页、我的及购物车推荐精简，并保留上游 IP 预匹配拦截。非仅开屏，可能影响其他阿里请求；异常时请停用。每 6 小时检查规则，远程脚本每 24 小时检查更新。需启用重写、脚本与 MITM 并信任证书。',
+    name: '盒马（全净化）',
+    desc: '盒马完整净化版（非仅去开屏）：按上游规则处理开屏及页面推广接口，精简首页栏目与“二楼”、我的页面、购物车推荐信息流及小程序首页；拦截部分底栏配置、推荐及更新查询接口，保留 AMDC 处理和上游 IP 预匹配拒绝。原作者 zirawell；规则每 6 小时检查上游，远程脚本每 24 小时检查更新。建议 Surge iOS 5.14.2+ / Mac 5.9+；需开启重写、脚本、MITM，并安装及信任 MITM 证书。可能影响正常页面、更新查询或其他阿里系 App，异常时请停用。全净化指保留完整上游功能，不保证移除所有广告；尚未在最新版盒马实机验证。',
     'raw-url': RAW_URL,
   };
   return [
