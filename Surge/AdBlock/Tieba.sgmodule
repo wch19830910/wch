@@ -1,0 +1,67 @@
+#!name=百度贴吧（去广告与页面净化）
+#!desc=百度贴吧去广告与页面净化：由 app2smile 原生 JSON / Protobuf 脚本处理开屏、推荐和吧内信息流、帖内、看图及悬浮广告，移除部分直播、关联商品和吧头推广；补充墨鱼搜索推荐、进吧热搜、侧栏及“我的”页面净化。默认保留普通推荐视频帖，参数 per_filter_video=1 可隐藏；部分直播、商品及推广入口会被精简，不修改真实会员或关注状态。规则每 6 小时检查上游，未知格式或范围变化停止发布；远程脚本由 Surge 每 24 小时检查原作者更新。iOS 需系统 15+ 及 Surge 5.14+，Mac 需 Surge 5.9+（原生 JQ）；开启重写、脚本、MITM，并安装及信任 MITM 证书。未在最新版贴吧手机实测，不保证移除所有广告。
+#!arguments=per_filter_video:0
+#!arguments-desc=per_filter_video:0 保留普通推荐视频帖（默认）；1 隐藏推荐页视频帖。广告、直播及关联商品按原作者逻辑处理，开关不恢复这些内容。
+#!author=app2smile, ddgksf2013
+#!category=AdBlock
+#!homepage=https://raw.githubusercontent.com/app2smile/rules/master/module/tieba.sgmodule
+#!raw-url=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Tieba.sgmodule
+
+# 以下 MIT 许可适用于 app2smile 原生模块衍生内容；墨鱼规则按原作者要求保留出处。
+# 许可文件：https://github.com/wch19830910/wch/blob/main/Surge/licenses/app2smile-MIT.txt
+# MIT License
+# 
+# Copyright (c) 2023 app2smile
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+# app2smile 模块：https://raw.githubusercontent.com/app2smile/rules/master/module/tieba.sgmodule
+# app2smile 模块 SHA256：b20d792a1f4466e97103266942176d6db4579340ba201a4fa8db91da2adfda29
+# app2smile 分流表 SHA256：93599502d9498d4977f007d89511b2918afc6398dad5b8cece25057b2fbff7a3
+# 墨鱼页面净化：https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/TieBaAds.conf
+# 墨鱼版本：V1.0.03；日期：2025-05-13；SHA256：377b0d3379329cf29c52dc081c565b4d7efa190d5a54f2a035736297f412aaf4
+# 自动生成；名称、描述和转换请修改 Surge/scripts/build-tieba.mjs，直接改本文件会被更新覆盖。
+# 完整使用 app2smile 当前原生 JSON / Protobuf 接口；不重复墨鱼旧 protobuf 入口。
+# 墨鱼旧 getFeedAd 空 200 会抢先截断新版 protobuf 响应，故交由 app2smile 脚本处理；不保留旧拒绝。
+# 五类 JQ 页面精简保留原行为；profile 的 zone_info 仅在数组时过滤，缺失/null/未知结构保持原样。
+# 分流表内联并合并墨鱼重复 IP 规则；不拒绝 sync 接口。
+# 精确补充 c.tieba.baidu.com 的 MITM，以覆盖原脚本现有 HTTPS 主机；不增加通配主机。
+# app2smile JSON sync 会调整长连接策略，使请求走可处理接口；不整段屏蔽 sync。
+# 原作者脚本正文仅远程引用，不在本仓库转载；JS 直接随作者更新，与构建检查独立。
+
+[Rule]
+DOMAIN,180.76.76.200,REJECT-DROP
+IP-CIDR,180.76.76.200/32,REJECT-DROP,no-resolve
+
+[Body Rewrite]
+# > 首页搜索|进吧搜索@ddgksf2013
+http-response-jq ^https?:\/\/tieba(c)?\.baidu\.com\/c\/f\/search\/discover '.data.discover_list = []'
+# > 侧边抽屉栏@ddgksf2013
+http-response-jq ^https?:\/\/tieba(c)?\.baidu\.com\/c\/f\/sidebar\/home 'del(.game_center, .tools, .vip_banner, .task_list)'
+# > 我的页面@ddgksf2013
+http-response-jq ^https?:\/\/tieba(c)?\.baidu\.com\/c\/u\/user\/profile 'del(.duxiaoman, .namoaixud, .namoaixud_entry, .recom_naws_list, .duxiaoman_entry, .vip_banner) | if (.zone_info | type) == "array" then .zone_info |= map(select(.type == "common_func" or .type == "auxiliary_func")) else . end'
+# > 进吧Form@ddgksf2013
+http-response-jq ^https?:\/\/tieba(c)?\.baidu\.com\/c\/f\/forum\/forumGuide '.hot_search = []'
+# > 搜索推荐@@ddgksf2013
+http-response-jq ^https?:\/\/tieba(c)?\.baidu\.com\/mo\/q\/search\/startPage 'del(.data)'
+
+[Script]
+tieba_json = type=http-response,pattern=^https?:\/\/(tiebac|c\.tieba)\.baidu\.com\/(c\/(s\/sync|f\/(ad\/getSplashAd|frs\/(page|threadlist|generalTabList)|pb\/(pic)?page|excellent\/personalized))$|tiebaads\/commonbatch\?),requires-body=true,max-size=-1,timeout=30,script-update-interval=86400,script-path=https://raw.githubusercontent.com/app2smile/rules/master/js/tieba-json.js
+tieba_proto = type=http-response,pattern=^https?:\/\/(tiebac|c\.tieba)\.baidu\.com\/c\/(b\/ad\/adBid|f\/(frs\/(page|threadlist|generalTabList)|ad\/getFeedAd|pb\/page|excellent\/personalized))\?cmd,requires-body=true,binary-body-mode=true,max-size=-1,timeout=30,script-update-interval=86400,script-path=https://raw.githubusercontent.com/app2smile/rules/master/js/tieba-proto.js,argument=per_filter_video_thread={{{per_filter_video}}}
+
+[MITM]
+hostname = %APPEND% tiebac.baidu.com, c.tieba.baidu.com, tieba.baidu.com
