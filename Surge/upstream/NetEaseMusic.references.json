@@ -1,0 +1,25 @@
+{
+  "name": "NetEaseMusic merged customization",
+  "reviewedOn": "2026-10-25",
+  "mode": "ddgksf2013 backbone with independently implemented feature ideas",
+  "keywosNotice": "Reference only. Keywos source is not embedded, redistributed or executed. No license grant is assumed.",
+  "updatePolicy": "Check every six hours; any upstream hash change stops publishing until manual compatibility review and tests.",
+  "sources": [
+    {
+      "url": "https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/NeteaseAds.conf",
+      "sha256": "3d09d41ed78536e091612afd10fc471455ae82b274bbbf2f0b37399078e1677b"
+    },
+    {
+      "url": "https://gist.githubusercontent.com/ddgksf2013/4f53b7c6083678df25fecc8ff68b52c4/raw/netease.adblock.js",
+      "sha256": "6ba468eb994e3843d69563f8f3b31c2d63a62a68d60fc3a1fd61947c1546936f"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/Keywos/rule/refs/heads/main/script/wy/wy.sgmodule",
+      "sha256": "088b5d872f5c34ff79e6947a950d4d3093e6b91291a872eb7819f118ff434324"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/Keywos/rule/main/script/wy/js/wyres.js",
+      "sha256": "b729d3f27bcb4992b7dc8d82ef7563af7b2a1380976f55975166f68defe3c393"
+    }
+  ]
+}
