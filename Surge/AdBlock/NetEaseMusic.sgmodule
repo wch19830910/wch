@@ -1,83 +1,41 @@
-#!name=网易云音乐（去广告与界面精简）
-#!desc=基于墨鱼网易云音乐规则：处理开屏、歌单顶部、评论区插入广告和活动推广；精简发现/推荐页、底部导航及侧栏推广，清理搜索默认填词、相关推荐、领 VIP/免费听歌弹窗、升级提示及部分优惠券和福利入口。默认保留底部“漫游”，可在 App 侧栏设置中手动关闭。兼容明文 JSON 与加密响应，不解锁会员或音乐版权。每 6 小时检查上游规则并同步兼容脚本，Surge 每 24 小时检查脚本更新。需 Surge iOS 5.9.1+ / Mac 5.5.1+，Mac 另需 macOS 11+；模块使用 WebView 引擎，启用重写、脚本与 MITM 并信任证书。部分入口会隐藏，异常时请停用；未在最新版 App 实机验证。
-#!author=ddgksf2013
-#!homepage=https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/NeteaseAds.conf
+#!name=网易云音乐（自定义净化）
+#!desc=墨鱼广告处理与独立实现的自定义净化合一：处理开屏、搜索、歌单/评论广告、侧栏与活动推广；可分别隐藏底部发现/漫游/笔记及九类首页卡片，可选评论装饰精简与未回关提示。默认保留三类底栏和九类卡片，评论精简开启、未回关提示关闭；保留真实会员数据及关注关系，不包含伪 VIP 或音乐版权解锁。支持明文 JSON、AES 与 gzip，统一入口处理响应。每 6 小时检测双上游，源变化先停止发布等待兼容审查；远程脚本每 24 小时检查更新。需 Surge iOS 5.9.1+ / Mac 5.5.1+，Mac 另需 macOS 11+；开启重写、脚本与 MITM 并信任证书。界面可能因版本不同而变化，异常时请停用；未在最新版 App 实机验证。
+#!author=ddgksf2013；Keywos（功能设计参考，未转载其代码）
+#!homepage=https://github.com/wch19830910/wch/tree/main/Surge/AdBlock
 #!category=AdBlock
 #!raw-url=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/NetEaseMusic.sgmodule
+#!arguments=hideDiscover:0,hideRoam:0,hideNotes:0,hideGreeting:0,hideDailyRecommend:0,hidePlaylistRecommend:0,hideRecentPlayed:0,hideMusicPartner:0,hideRadar:0,hideRanking:0,hideMyPlaylist:0,hideCombinationPlaylist:0,cleanCommentDecorations:1,showNotFollowingBack:0
+#!arguments-desc=0=保留/关闭，1=隐藏/开启。名称为 hide 的选项控制隐藏对应栏目。\n默认保留发现、漫游、笔记及九类首页卡片；保留未知卡片，只清理已知广告横幅。\n默认开启评论装饰清理；未回关提示默认关闭；真实会员、版权和关注关系不改写。\nhideDiscover：隐藏底部发现（默认 0）\nhideRoam：隐藏底部漫游（默认 0）\nhideNotes：隐藏底部笔记（默认 0）\nhideGreeting：隐藏首页问候语（默认 0）\nhideDailyRecommend：隐藏每日推荐（默认 0）\nhidePlaylistRecommend：隐藏推荐歌单（默认 0）\nhideRecentPlayed：隐藏最近常听（默认 0）\nhideMusicPartner：隐藏音乐合伙人（默认 0）\nhideRadar：隐藏雷达歌单（默认 0）\nhideRanking：隐藏排行榜（默认 0）\nhideMyPlaylist：隐藏推荐专属歌单（默认 0）\nhideCombinationPlaylist：隐藏你的专属歌单（默认 0）\ncleanCommentDecorations：精简评论区头像挂件与装饰（保留会员及关注状态）（默认 1）\nshowNotFollowingBack：在关注列表显示未回关提示（默认 0）
 
-# 上游配置：https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/NeteaseAds.conf
-# 上游脚本：https://gist.githubusercontent.com/ddgksf2013/4f53b7c6083678df25fecc8ff68b52c4/raw/netease.adblock.js
-# 上游版本：V1.0.33
+# 墨鱼配置：https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/NeteaseAds.conf
+# 墨鱼脚本：https://gist.githubusercontent.com/ddgksf2013/4f53b7c6083678df25fecc8ff68b52c4/raw/netease.adblock.js
+# 功能参考：https://raw.githubusercontent.com/Keywos/rule/refs/heads/main/script/wy/wy.sgmodule
+# 本地自定义功能独立编写；不内嵌、转载或运行 Keywos 原脚本。
 # 上游规则 SHA256：3d09d41ed78536e091612afd10fc471455ae82b274bbbf2f0b37399078e1677b
 # 上游脚本 SHA256：6ba468eb994e3843d69563f8f3b31c2d63a62a68d60fc3a1fd61947c1546936f
-# 自动生成，请修改 Surge/scripts/build-netease-music.mjs；未知语法停止更新并保留旧版。
-# 原作者脚本使用加密二进制响应，已启用 binary-body-mode；兼容层添加 IIFE 并恢复明文 JSON 输入类型，不改原文。
-# gzip 分支使用 TextEncoder，必须运行在 WebView 引擎；旧 macOS 10.15 及更早版本、tvOS 的纯 JSC 环境不支持。
-# 引用按上游 @Attention 保留出处；兼容脚本头部保留原文并附 CryptoJS/pako/zlib 许可。
-# 原作者提示：默认不去除底部“漫游”，可在侧栏设置中手动关闭。
-# Map Local 的 text 需要 Surge iOS 5.9.1+ 或 Surge Mac 5.5.1+。
+# 四份上游源均按已审查 hash 保护；变化时停止自动发布，人工兼容审查并测试后才能更新。
+# 生成脚本：Surge/scripts/build-netease-music.mjs；自定义源码：netease-customize.mjs / netease-runtime.mjs。
+# 单个响应入口，统一解码/处理/编码；参数由 Surge 原生模块参数表保存。
+# 为保留真实会员数据，自定义层接管会员侧栏响应，不再将整个会员 data 清空。
+# 未合入 Keywos 的伪 VIP、HTTPDNS 全域拒绝和艺术家关注接口拦截。
+# 默认保留未知栏目；卡片结构或接口变化时可能不能完全净化，不保证去除全部广告。
 
 [Map Local]
 # > 活动推广@ddgksf2013
-^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/content\/activity\/music\/jar\/template\/list data-type=text data="" status-code=200
+^https?:\/\/(?:interface\d?|ipv4)\.music\.163\.com\/e?api\/content\/activity\/music\/jar\/template\/list data-type=text data="" status-code=200
 # > 启动领VIP弹窗@ddgksf2013
-^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/sp\/flow\/popup\/query data-type=text data="" status-code=200
+^https?:\/\/(?:interface\d?|ipv4)\.music\.163\.com\/e?api\/sp\/flow\/popup\/query data-type=text data="" status-code=200
 # > 优惠券@ddgksf2013
-^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/vipmall\/couponcfg\/get data-type=text data="" status-code=200
+^https?:\/\/(?:interface\d?|ipv4)\.music\.163\.com\/e?api\/vipmall\/couponcfg\/get data-type=text data="" status-code=200
 # > 活动推广@ddgksf2013
-^https?:\/\/interface(\d)?\.music\.163\.com\/w?eapi\/(resource-exposure\/)?activity data-type=text data="" status-code=200
+^https?:\/\/(?:interface\d?|ipv4)\.music\.163\.com\/w?eapi\/(resource-exposure\/)?activity data-type=text data="" status-code=200
 # > 评论区插入推广@ddgksf2013
-^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/comment\/feed\/inserted\/resources data-type=text data="" status-code=200
+^https?:\/\/(?:interface\d?|ipv4)\.music\.163\.com\/e?api\/comment\/feed\/inserted\/resources data-type=text data="" status-code=200
 # > 购买实体专辑@ddgksf2013
-^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/resource-exposure\/config data-type=text data="" status-code=200
+^https?:\/\/(?:interface\d?|ipv4)\.music\.163\.com\/e?api\/resource-exposure\/config data-type=text data="" status-code=200
 
 [Script]
-# > 底部Tab@ddgksf2013
-netease_music_response_01 = type=http-response,pattern=^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/link\/home\/framework\/tab,requires-body=true,binary-body-mode=true,engine=webview,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/Script/NetEaseMusic.js
-# > 发现页@ddgksf2013
-netease_music_response_02 = type=http-response,pattern=^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/link\/page\/discovery\/resource\/show,requires-body=true,binary-body-mode=true,engine=webview,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/Script/NetEaseMusic.js
-# > 首推荐页@ddgksf2013
-netease_music_response_03 = type=http-response,pattern=^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/link\/page\/rcmd\/resource\/show,requires-body=true,binary-body-mode=true,engine=webview,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/Script/NetEaseMusic.js
-# > 软件更新@ddgksf2013
-netease_music_response_04 = type=http-response,pattern=^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/ios\/upgrade\/get,requires-body=true,binary-body-mode=true,engine=webview,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/Script/NetEaseMusic.js
-# > 搜索默认填词@ddgksf2013
-netease_music_response_05 = type=http-response,pattern=^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/search\/default\/keyword\/list,requires-body=true,binary-body-mode=true,engine=webview,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/Script/NetEaseMusic.js
-# > 猜你喜欢@ddgksf2013
-netease_music_response_06 = type=http-response,pattern=^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/search\/rcmd\/keyword\/get,requires-body=true,binary-body-mode=true,engine=webview,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/Script/NetEaseMusic.js
-# > 搜索下方Chart@ddgksf2013
-netease_music_response_07 = type=http-response,pattern=^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/search\/chart\/list,requires-body=true,binary-body-mode=true,engine=webview,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/Script/NetEaseMusic.js
-# > 搜索Chart@ddgksf2013
-netease_music_response_08 = type=http-response,pattern=^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/search\/chart\/detail,requires-body=true,binary-body-mode=true,engine=webview,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/Script/NetEaseMusic.js
-# > 相关搜索@ddgksf2013
-netease_music_response_09 = type=http-response,pattern=^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/search\/suggest\/keyword\/get,requires-body=true,binary-body-mode=true,engine=webview,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/Script/NetEaseMusic.js
-# > 特殊词@ddgksf2013
-netease_music_response_10 = type=http-response,pattern=^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/search\/specialkeyword\/get,requires-body=true,binary-body-mode=true,engine=webview,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/Script/NetEaseMusic.js
-# > 广告加载@ddgksf2013
-netease_music_response_11 = type=http-response,pattern=^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/ad\/loading\/get,requires-body=true,binary-body-mode=true,engine=webview,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/Script/NetEaseMusic.js
-# > 广告实时@ddgksf2013
-netease_music_response_12 = type=http-response,pattern=^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/ad\/loading\/current,requires-body=true,binary-body-mode=true,engine=webview,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/Script/NetEaseMusic.js
-# > 广告Get@ddgksf2013
-netease_music_response_13 = type=http-response,pattern=^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/ad\/get,requires-body=true,binary-body-mode=true,engine=webview,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/Script/NetEaseMusic.js
-# > 插入广告@ddgksf2013
-netease_music_response_14 = type=http-response,pattern=^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/link\/position\/show\/resource,requires-body=true,binary-body-mode=true,engine=webview,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/Script/NetEaseMusic.js
-# > 歌单顶部广告@ddgksf2013
-netease_music_response_15 = type=http-response,pattern=^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/link\/scene\/show\/resource,requires-body=true,binary-body-mode=true,engine=webview,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/Script/NetEaseMusic.js
-# > 弹窗免费听歌@ddgksf2013
-netease_music_response_16 = type=http-response,pattern=^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/vip\/cashier\/tspopup\/get,requires-body=true,binary-body-mode=true,engine=webview,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/Script/NetEaseMusic.js
-# > 侧栏账户@ddgksf2013
-netease_music_response_17 = type=http-response,pattern=^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/vipnewcenter\/app\/resource\/newaccountpage,requires-body=true,binary-body-mode=true,engine=webview,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/Script/NetEaseMusic.js
-# > 侧栏推广@ddgksf2013
-netease_music_response_18 = type=http-response,pattern=^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/side-bar\/mini-program\/music-service\/account,requires-body=true,binary-body-mode=true,engine=webview,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/Script/NetEaseMusic.js
-# > 侧边VIP推广@ddgksf2013
-netease_music_response_19 = type=http-response,pattern=^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/delivery\/deliver,requires-body=true,binary-body-mode=true,engine=webview,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/Script/NetEaseMusic.js
-# > 侧边浮层@ddgksf2013
-netease_music_response_20 = type=http-response,pattern=^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/delivery\/batch-deliver,requires-body=true,binary-body-mode=true,engine=webview,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/Script/NetEaseMusic.js
-# > 侧边兑换黑胶Tips@ddgksf2013
-netease_music_response_21 = type=http-response,pattern=^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/yunbei\/account\/entrance\/get,requires-body=true,binary-body-mode=true,engine=webview,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/Script/NetEaseMusic.js
-# > 侧边创作福利@ddgksf2013
-netease_music_response_22 = type=http-response,pattern=^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/creator\/musician\/reminder\/message\/get,requires-body=true,binary-body-mode=true,engine=webview,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/Script/NetEaseMusic.js
-# > 评论区插入推广@ddgksf2013
-netease_music_response_23 = type=http-response,pattern=^https?:\/\/interface(\d)?\.music\.163\.com\/e?api\/batch,requires-body=true,binary-body-mode=true,engine=webview,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/Script/NetEaseMusic.js
+netease_music_merged = type=http-response,pattern=^https?:\/\/(?:interface\d?|ipv4)\.music\.163\.com\/e?api\/(?:link\/home\/framework\/tab|link\/page\/discovery\/resource\/show|link\/page\/rcmd\/resource\/show|ios\/upgrade\/get|search\/default\/keyword\/list|search\/rcmd\/keyword\/get|search\/chart\/list|search\/chart\/detail|search\/suggest\/keyword\/get|search\/specialkeyword\/get|ad\/loading\/get|ad\/loading\/current|ad\/get|link\/position\/show\/resource|link\/scene\/show\/resource|vip\/cashier\/tspopup\/get|vipnewcenter\/app\/resource\/newaccountpage|side-bar\/mini-program\/music-service\/account|delivery\/deliver|delivery\/batch-deliver|yunbei\/account\/entrance\/get|creator\/musician\/reminder\/message\/get|batch|homepage\/block\/page|link\/page\/rcmd\/block\/resource\/multi\/refresh|v\d\/resource\/comment\/floor\/get|user\/follow\/users\/mixed\/get(?:\/v\d+)?)(?:[/?]|$),requires-body=true,binary-body-mode=true,engine=webview,max-size=-1,timeout=60,script-update-interval=86400,script-path=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/Script/NetEaseMusic.js?v=merged-1,argument="hideDiscover={{{hideDiscover}}}&hideRoam={{{hideRoam}}}&hideNotes={{{hideNotes}}}&hideGreeting={{{hideGreeting}}}&hideDailyRecommend={{{hideDailyRecommend}}}&hidePlaylistRecommend={{{hidePlaylistRecommend}}}&hideRecentPlayed={{{hideRecentPlayed}}}&hideMusicPartner={{{hideMusicPartner}}}&hideRadar={{{hideRadar}}}&hideRanking={{{hideRanking}}}&hideMyPlaylist={{{hideMyPlaylist}}}&hideCombinationPlaylist={{{hideCombinationPlaylist}}}&cleanCommentDecorations={{{cleanCommentDecorations}}}&showNotFollowingBack={{{showNotFollowingBack}}}"
 
 [MITM]
-hostname = %APPEND% interface*.music.163.com
+hostname = %APPEND% interface*.music.163.com, ipv4.music.163.com
