@@ -1,0 +1,27 @@
+#!name=米家（开屏与推荐去广告）
+#!desc=基于奶思 fmz200 米家原生规则：处理开屏广告、推荐横幅、轮播及“我的”页面 myTab 推荐位，拦截小米广告 SDK 配置域名。只保留上游明确路径，不包含底栏或商城完整净化；规则未直接匹配设备控制、自动化或摄像头流接口，实际兼容性仍需试用。SDK 域名拒绝也作用于其他 App 对同一域名的请求。每 6 小时检查上游模块，验证通过后同步，无远程 JavaScript。需 Surge iOS 5.9.1+ / Mac 5.5.1+，开启重写与 MITM，并安装及信任 MITM 证书。可先完全退出米家并清理 App 缓存后重开；异常时停用。未在最新版米家手机实测，不保证移除所有广告。
+#!author=奶思（fmz200）
+#!category=AdBlock
+#!homepage=https://github.com/fmz200/wool_scripts
+#!raw-url=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/MiHome.sgmodule
+
+# SPDX-License-Identifier: GPL-3.0-only
+# 原作者：奶思 / fmz200；修改日期：2026-10-26。
+# 许可证：https://github.com/wch19830910/wch/blob/main/Surge/licenses/fmz200-GPL-3.0.txt；无任何保证。
+# 原始模块：https://raw.githubusercontent.com/fmz200/wool_scripts/main/Surge/module/split/partM/Mijia.sgmodule
+# 上游 SHA256：a84c5036b1089007377ceed27b4a95a9d24e486bffa423f3312acc71c9b1ee5f
+# 自动生成；显示名称和功能说明请修改 Surge/scripts/build-mihome.mjs，直接改成品会被同步覆盖。
+# 保留原作者 1 条广告配置域名拒绝、2 条本地空 JSON 响应和精确 MITM 主机；不依赖远程脚本。
+# 未扩展 recommendation 整个路径、设备控制、摄像头、账户或自动化接口。
+# 小米广告 SDK 域名是共享域名，域名规则并不限于米家进程；不把它描述成仅米家生效。
+# 源格式或规则范围变化须先核对；下载、解析或校验失败时不覆盖现有产物。
+
+[Rule]
+DOMAIN,sdkconfig.ad.xiaomi.com,REJECT
+
+[Map Local]
+^https?:\/\/home\.mi\.com\/cgi-op\/api\/v1\/recommendation\/(banner|carousel\/banners|myTab|openingBanner) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?:\/\/home\.mi\.com\/cgi-op\/api\/v1\/resource\/realtime\/openingBanner data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+[MITM]
+hostname = %APPEND% home.mi.com
