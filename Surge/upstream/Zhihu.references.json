@@ -1,0 +1,29 @@
+{
+  "author": "zirawell",
+  "originalReference": "RuCu6",
+  "license": "GPL-3.0-only",
+  "module": {
+    "url": "https://raw.githubusercontent.com/zirawell/R-Store/main/Rule/Surge/Adblock/App/Z/%E7%9F%A5%E4%B9%8E/zhihu.sgmodule",
+    "sha256": "479049efc68c6ed47ca43f9e2c83a14c013a2d11fa9664769ff64e796e9ab951",
+    "upstreamDate": "2026-05-11"
+  },
+  "originalScript": {
+    "url": "https://raw.githubusercontent.com/zirawell/R-Store/main/Res/Scripts/AntiAd/zhihu.js",
+    "auditedSha256": "ac5ba31a6f4f6c6cc3c5896f846ddb692268b3aa4c580c1b9996e9a786b44c23",
+    "policy": "Changes require compatibility review before publication; original JavaScript is compiled but never executed or redistributed by the builder."
+  },
+  "generatedScript": {
+    "url": "https://raw.githubusercontent.com/wch19830910/wch/main/Surge/Script/Zhihu.js",
+    "sha256": "6c8ee36eb421d247703dbd8b47c8592fdcc2c4aac9bd2cce94c7611863a19c7d"
+  },
+  "modifications": [
+    "single response entry",
+    "optional video and paid-content filters default off",
+    "preserve real membership and notifications",
+    "omit global AVOS/shared zxid/mqtt rejection",
+    "preserve member cards and ordinary drama feed",
+    "precise ad path boundary",
+    "repair answers typo and missing routes",
+    "guarded local JSON response processing"
+  ]
+}
