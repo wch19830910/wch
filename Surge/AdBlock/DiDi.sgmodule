@@ -1,5 +1,5 @@
-#!name=滴滴出行
-#!desc=墨鱼官方索引推荐的 ZenmoFeiShi 完整上游精简版；会隐藏安全中心，并改变钱包与行程组件，不是仅去广告。每 6 小时检查上游；需要 Surge iOS 5.14+ 或 Mac 5.9+（原生 JQ），开启重写及 MITM 并信任证书。
+#!name=滴滴出行（全净化）
+#!desc=ZenmoFeiShi（怎么肥事）完整上游净化版，来自墨鱼官方索引推荐：拦截活动、推广、推荐及部分配置接口，精简首页与底部导航、个人中心、优惠商城、钱包和资产页、行程组件，保留域名/IP 拒绝及上游 MITM 范围。会隐藏“安全中心”等入口、缩减钱包内容并改变行程界面，不是仅去广告，可能影响正常出行业务；需要受影响入口时请停用。规则每 6 小时检查上游，无远程 JavaScript。需 Surge iOS 5.14+ / Mac 5.9+（原生 JQ）；开启重写、MITM，并安装及信任 MITM 证书。全净化指保留完整上游功能，不保证移除所有广告；尚未在最新版滴滴出行实机验证。
 #!author=ZenmoFeiShi（怎么肥事）
 #!homepage=https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Didichuxing.snippet
 #!category=AdBlock

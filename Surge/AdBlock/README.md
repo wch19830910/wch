@@ -2,21 +2,21 @@
 
 ## AdBlock
 
-| App | Remote module | Upstream |
+| App | Remote module / Surge name | Upstream |
 | --- | --- | --- |
-| Ximalaya | [Install / Raw](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Ximalaya.sgmodule) | [ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/Ximalaya.conf) |
-| Amap | [Install / Raw](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Amap.sgmodule) | [ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/AmapAds.conf) |
-| Railway12306 | [Install / Raw](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Railway12306.sgmodule) | [ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Scripts/master/12306.js) |
-| RedNote | [Install / Raw](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/RedNote.sgmodule) | [ddgksf2013](https://ddgksf2013.top/rewrite/XiaoHongShuAds.conf) |
-| Coolapk | [Install / Raw](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Coolapk.sgmodule) | [ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Scripts/master/coolapk.js) |
-| NetEaseMusic | [Install / Raw](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/NetEaseMusic.sgmodule) | [ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/NeteaseAds.conf) |
-| Cainiao | [Install / Raw](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Cainiao.sgmodule) | [ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/CainiaoAds.conf) |
-| Smzdm | [Install / Raw](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Smzdm.sgmodule) | [blackmatrix7 / ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/SmzdmAds.conf) |
-| Goofish | [Install / Raw](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Goofish.sgmodule) | [ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Rewrite/refs/heads/master/AdBlock/GoofishAds.conf) |
-| SodaMusic | [Install / Raw](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/SodaMusic.sgmodule) | [ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Rewrite/refs/heads/master/AdBlock/QiShuiMusicAds.conf) |
-| DiDi | [Install / Raw](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/DiDi.sgmodule) | [ZenmoFeiShi（怎么肥事）](https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Didichuxing.snippet) |
-| Weibo | [Install / Raw](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Weibo.sgmodule) | [ddgksf2013 / zmqcherish](https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/WeiboAds.conf) |
-| Freshippo | [Install / Raw](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Freshippo.sgmodule) | [zirawell](https://raw.githubusercontent.com/zirawell/R-Store/main/Rule/Surge/Adblock/App/H/%E7%9B%92%E9%A9%AC/freshippo.sgmodule) |
+| Ximalaya | [喜马拉雅（全净化）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Ximalaya.sgmodule) | [ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/Ximalaya.conf) |
+| Amap | [高德地图（全净化）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Amap.sgmodule) | [ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/AmapAds.conf) |
+| Railway12306 | [铁路12306（开屏去广告）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Railway12306.sgmodule) | [ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Scripts/master/12306.js) |
+| RedNote | [小红书（去广告与去水印）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/RedNote.sgmodule) | [ddgksf2013](https://ddgksf2013.top/rewrite/XiaoHongShuAds.conf) |
+| Coolapk | [酷安（去广告）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Coolapk.sgmodule) | [ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Scripts/master/coolapk.js) |
+| NetEaseMusic | [网易云音乐（去广告与界面精简）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/NetEaseMusic.sgmodule) | [ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/NeteaseAds.conf) |
+| Cainiao | [菜鸟（去广告与页面净化）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Cainiao.sgmodule) | [ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/CainiaoAds.conf) |
+| Smzdm | [什么值得买（去广告）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Smzdm.sgmodule) | [blackmatrix7 / ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/SmzdmAds.conf) |
+| Goofish | [闲鱼（全净化）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Goofish.sgmodule) | [ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Rewrite/refs/heads/master/AdBlock/GoofishAds.conf) |
+| SodaMusic | [汽水音乐（广告与推广净化）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/SodaMusic.sgmodule) | [ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Rewrite/refs/heads/master/AdBlock/QiShuiMusicAds.conf) |
+| DiDi | [滴滴出行（全净化）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/DiDi.sgmodule) | [ZenmoFeiShi（怎么肥事）](https://raw.githubusercontent.com/ZenmoFeiShi/Qx/main/Didichuxing.snippet) |
+| Weibo | [微博（全净化）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Weibo.sgmodule) | [ddgksf2013 / zmqcherish](https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/WeiboAds.conf) |
+| Freshippo | [盒马（全净化）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Freshippo.sgmodule) | [zirawell](https://raw.githubusercontent.com/zirawell/R-Store/main/Rule/Surge/Adblock/App/H/%E7%9B%92%E9%A9%AC/freshippo.sgmodule) |
 
 在 Surge 的模块页面选择“从 URL 安装”，粘贴 Raw 地址并启用。安装并信任 MITM 证书，开启 MITM、重写和脚本，然后完全退出 App 再打开。相同 App 只启用一份净化模块。
 
@@ -38,7 +38,7 @@
 
 除盒马外，规则和脚本来源是 [墨鱼网站](https://ddgksf2013.top/) 的对应 App 条目；滴滴使用[墨鱼 GitHub 官方索引](https://github.com/ddgksf2013)推荐的 ZenmoFeiShi（怎么肥事）规则，不冒称墨鱼自作。盒马使用 zirawell 的独立原生 Surge 模块，不冒称墨鱼规则。什么值得买保留 blackmatrix7、ddgksf2013 双署名，微博保留 ddgksf2013、zmqcherish、shiro 署名，其余为 ddgksf2013。保留作者原有净化逻辑；格式转换和语法检查不等于已在最新 App 实机验证。
 
-Surge 内显示对应的中文 App 名称，文件名使用常用英文名。名称和描述可在各自的生成脚本中修改，自动同步时会保留这些设置。
+Surge 内显示“中文软件名（功能类型）”，区分开屏去广告、去广告、去水印、界面精简与全净化，文件名和远程地址仍使用原来的常用英文名。全净化表示保留完整上游功能，不保证移除所有广告。各模块描述已列明具体处理范围、作者、更新周期、启用/版本要求及副作用；名称和描述可在对应生成脚本中修改，自动同步时会保留这些设置。
 
 高德地图若仍显示旧广告，可先完全退出 App 后重开、清理 App 缓存；原作者另有先挂载模块再重新安装 App 的提示。
 
@@ -50,7 +50,7 @@ Surge 的 [MITM `auto-quic-block`](https://manual.nssurge.com/http/mitm.html) �
 
 酷安脚本按作者要求仅远程引用，不转载完整脚本；仓库仅保存转换后的配置和来源元信息。
 
-使用 Map Local 的空 200 响应需要 Surge iOS 5.9.1+ 或 Surge Mac 5.5.1+。使用原生 [JQ Body Rewrite](https://manual.nssurge.com/http/body-rewrite.html) 的喜马拉雅、闲鱼、汽水音乐、滴滴出行和微博还需要 Surge iOS 5.14+ 或 Surge Mac 5.9+。
+使用 Map Local 的空 200 响应需要 Surge iOS 5.9.1+ 或 Surge Mac 5.5.1+。使用原生 [JQ Body Rewrite](https://manual.nssurge.com/http/body-rewrite.html) 的闲鱼、汽水音乐、滴滴出行和微博还需要 Surge iOS 5.14+ 或 Surge Mac 5.9+；当前喜马拉雅模块未使用 JQ。
 
 菜鸟包含原作者的菜鸟 App 与支付宝小程序规则。菜鸟、闲鱼和汽水音乐如仍显示缓存广告，可先完全退出 App 后重开、清理缓存；原作者另有先启用模块再重装 App 的提示，重装前请自行确认账号及本地数据备份。
 

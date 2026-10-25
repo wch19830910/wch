@@ -1,5 +1,5 @@
-#!name=微博
-#!desc=墨鱼微博及轻享版完整上游精简版；包含上游皮肤状态及视频预览相关响应修改，不是账号会员开通。每 6 小时检查上游，远程脚本每 24 小时检查更新。需 Surge iOS 5.14+ 或 Mac 5.9+（原生 JQ），启用重写、脚本及 MITM 并信任证书。
+#!name=微博（全净化）
+#!desc=微博及国际版/轻享版完整上游净化版：处理开屏、信息流和评论区广告，精简发现页与热搜、推荐、个人页、直播签到、打赏及部分评论提示，移除部分 AI 总结并调整菜单；保留皮肤状态和视频预览限制相关响应修改，不是账号会员开通。作者 ddgksf2013，贡献者 zmqcherish、shiro；规则每 6 小时检查上游，远程脚本每 24 小时检查更新。需 Surge iOS 5.14+ / Mac 5.9+（原生 JQ）；开启重写、脚本、MITM，并安装及信任 MITM 证书。会隐藏非广告内容或改变页面功能；上游选项固定，不能用其他版本的配置脚本调整，异常时请停用。全净化指保留完整上游功能，不保证移除所有广告；尚未在最新版微博实机验证。
 #!author=ddgksf2013, zmqcherish, shiro
 #!homepage=https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/WeiboAds.conf
 #!category=AdBlock

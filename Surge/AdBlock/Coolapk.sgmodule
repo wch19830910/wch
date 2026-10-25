@@ -1,5 +1,5 @@
-#!name=酷安
-#!desc=从墨鱼官方酷安配置转换为原生 Surge 模块；模块跟随上游，响应脚本每 24 小时检查原作者 master 更新。需启用重写、脚本及 MITM，并信任 MITM 证书。
+#!name=酷安（去广告）
+#!desc=基于墨鱼酷安规则：处理开屏广告、首页信息流和推广卡片、评论区广告、动态详情商品推广及酷品页推广，屏蔽搜索热词。部分活动和推荐卡片可能一并隐藏；不提供会员或付费权益解锁。每 6 小时检查上游规则，Surge 每 24 小时检查原作者远程脚本更新。需 Surge iOS 5.9.1+ / Mac 5.5.1+，启用重写、脚本与 MITM 并信任证书；如页面异常请停用，未在最新版酷安实机验证。
 #!author=ddgksf2013
 #!homepage=https://raw.githubusercontent.com/ddgksf2013/Scripts/master/coolapk.js
 #!category=AdBlock

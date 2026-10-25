@@ -1,5 +1,5 @@
-#!name=铁路12306
-#!desc=从墨鱼官方铁路12306脚本自动转换；模块跟随上游规则，请求脚本每 24 小时检查原作者 master 更新。需启用脚本及 MITM，并信任 MITM 证书。
+#!name=铁路12306（开屏去广告）
+#!desc=铁路12306开屏及广告接口专用版：仅处理 ad.12306.cn/ad/ser/getAdList，在请求阶段按上游脚本返回开屏广告占位或空广告结果，并保留该广告域名 DIRECT 分流；不改写其他购票、订单或支付接口。原作者 ddgksf2013；规则每 6 小时检查上游，请求脚本每 24 小时检查原作者分支更新。建议使用最新版 Surge；需开启脚本、MITM，并安装及信任 MITM 证书。不代表所有版本的全部广告都能去除；若影响使用请停用，尚未在最新版 App 实机验证。
 #!author=ddgksf2013
 #!homepage=https://raw.githubusercontent.com/ddgksf2013/Scripts/master/12306.js
 #!category=AdBlock
