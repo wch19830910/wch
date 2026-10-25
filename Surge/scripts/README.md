@@ -5,7 +5,7 @@
 `build-railway12306.mjs` 读取官方 12306 脚本顶部注释中的圈 X 配置，转换为请求阶段脚本，显示名称为“铁路12306（开屏去广告）”。
 `build-rednote.mjs` 对应小红书去广告去水印条目，显示名称为“小红书（去广告与去水印）”，不合入另一份屏蔽首页视频规则。
 `build-coolapk.mjs` 读取官方酷安脚本内嵌配置，显示名称为“酷安（去广告）”；不转载其完整 JavaScript。
-`build-netease-music.mjs` 对应网易云音乐净化条目，显示名称为“网易云音乐（去广告与界面精简）”；同时生成原作者 Gist 脚本的最小 Surge 兼容副本。
+`build-netease-music.mjs` 生成“网易云音乐（自定义净化）”：墨鱼广告处理主干加独立实现的底栏/首页卡片/评论/未回关选项。Keywos 仅作功能参考，不内嵌、转载或执行其脚本；不含独立或批量伪 VIP 改写。
 `build-cainiao.mjs` 对应菜鸟 App 和支付宝小程序净化条目，显示名称为“菜鸟（去广告与页面净化）”。
 `build-smzdm.mjs` 对应什么值得买净化条目，显示名称为“什么值得买（去广告）”，保留 blackmatrix7、ddgksf2013 双署名。
 `build-goofish.mjs` 对应闲鱼净化条目，显示名称为“闲鱼（全净化）”，JQ 转为 Surge 原生 Body Rewrite。
@@ -37,7 +37,11 @@ node Surge/scripts/build-freshippo.mjs
 铁路12306分别输出到 `Surge/AdBlock/Railway12306.sgmodule` 和 `Surge/upstream/12306.js`。
 小红书输出 `Surge/AdBlock/RedNote.sgmodule` 和对应上游规则快照。
 酷安输出 `Surge/AdBlock/Coolapk.sgmodule` 和 `Surge/upstream/Coolapk.source.json` 来源元信息。
-网易云音乐输出 `Surge/AdBlock/NetEaseMusic.sgmodule`、上游规则快照及 `Surge/Script/NetEaseMusic.js`。兼容脚本在原文外包裹函数以支持顶层 return；输入为二进制但能严格解码为 JSON 对象时先转回文本，其他字节保持原样。模块启用二进制响应和 WebView 引擎；每次同步重新从官方 Gist 获取原文，保留原作者署名与第三方许可说明。
+网易云音乐输出 `Surge/AdBlock/NetEaseMusic.sgmodule`、`Surge/Script/NetEaseMusic.js`、墨鱼配置快照及 `Surge/upstream/NetEaseMusic.references.json`。`netease-runtime.mjs` 在已审核墨鱼源码的唯一解码和分派锚点接入自定义层；`netease-customize.mjs` 独立实现参数行为，接管布局路由，避免保留项先被原固定过滤删除。明文对象/数组 JSON 直接解析，其余走原 AES/gzip；缓存解码、原编码尾部和一次完成守卫。单一响应入口、14 项原生模块参数、WebView 和二进制模式；保留原作者及 CryptoJS/pako/zlib 许可。为保留真实会员数据，会员账户页不再整体清空。
+
+构建每 6 小时检测四份上游文件的已审核 SHA256；任一变化则停止发布，须人工兼容审查、更新测试和 hash 后再构建。Keywos 只保存参考地址与 hash 元信息，不保存其文件正文。不能把未审核的新上游直接覆盖合并版。[使用与参数说明](../AdBlock/NetEaseMusic.md)。
+
+网易云合并版测试：`node Surge/tests/netease-music.test.mjs`。用合成 JSON、独立 Node crypto/zlib AES/gzip 数据和隔离 VM 验证本仓库衍生代码，不访问业务 API；本机有 Surge CLI 时另做原生配置检查，CI 没有 CLI 时明确跳过该项。GitHub Actions 先构建再测试，失败不会提交发布。
 菜鸟、什么值得买、闲鱼、汽水音乐分别输出对应英文名的模块和 `CainiaoAds.conf`、`SmzdmAds.conf`、`GoofishAds.conf`、`QiShuiMusicAds.conf` 上游快照。
 滴滴出行输出 `Surge/AdBlock/DiDi.sgmodule` 和 `Surge/upstream/Didichuxing.snippet`；没有远程 JavaScript，保留 ZenmoFeiShi（怎么肥事）署名与墨鱼推荐来源。
 微博输出 `Surge/AdBlock/Weibo.sgmodule` 和 `Surge/upstream/WeiboAds.conf`；三个脚本均直接引用墨鱼 master 分支，其中两个 `.json` 后缀文件实际是 JavaScript，按 JavaScript 做语法校验。保留 ddgksf2013、zmqcherish、shiro 署名；选项由上游脚本固定，不使用另一个版本的 `weibo_config.js`。
@@ -51,4 +55,4 @@ node Surge/scripts/build-freshippo.mjs
 
 需要调整 Surge 内的显示名称或描述时，修改对应构建脚本中的 `#!name` / `#!desc` 文案，保留 JavaScript 引号和逗号。不要只修改自动生成的 `.sgmodule`，因为后续同步会覆盖它。
 
-GitHub Actions 会定期运行本脚本；上游脚本只做语法检查，不在构建中执行。
+GitHub Actions 会定期运行本脚本；下载的原作者脚本不在构建时直接执行。网易云另对本仓库生成的衍生脚本运行隔离合成样本测试，不请求业务接口；检查通过不等于最新版 App 实机验证。

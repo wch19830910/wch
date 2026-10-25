@@ -9,7 +9,7 @@
 | Railway12306 | [铁路12306（开屏去广告）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Railway12306.sgmodule) | [ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Scripts/master/12306.js) |
 | RedNote | [小红书（去广告与去水印）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/RedNote.sgmodule) | [ddgksf2013](https://ddgksf2013.top/rewrite/XiaoHongShuAds.conf) |
 | Coolapk | [酷安（去广告）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Coolapk.sgmodule) | [ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Scripts/master/coolapk.js) |
-| NetEaseMusic | [网易云音乐（去广告与界面精简）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/NetEaseMusic.sgmodule) | [ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/NeteaseAds.conf) |
+| NetEaseMusic | [网易云音乐（自定义净化）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/NetEaseMusic.sgmodule) | [ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/NeteaseAds.conf) / [Keywos（功能参考）](https://raw.githubusercontent.com/Keywos/rule/refs/heads/main/script/wy/wy.sgmodule) |
 | Cainiao | [菜鸟（去广告与页面净化）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Cainiao.sgmodule) | [ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/CainiaoAds.conf) |
 | Smzdm | [什么值得买（去广告）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Smzdm.sgmodule) | [blackmatrix7 / ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/SmzdmAds.conf) |
 | Goofish | [闲鱼（全净化）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Goofish.sgmodule) | [ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Rewrite/refs/heads/master/AdBlock/GoofishAds.conf) |
@@ -33,7 +33,7 @@
 - 转换或语法检查失败时停止发布，保留仓库上次生成的模块和快照；没有变化不产生提交。直接引用的原作者脚本由 Surge 独立更新，这不是手机端脚本冻结或回滚保证。
 - Surge 自动检查通过 URL 安装的模块更新，检查周期由 Surge 控制。
 - 喜马拉雅、高德地图、铁路12306、酷安、菜鸟、什么值得买、闲鱼和微博的 JavaScript 直接引用原作者分支；小红书使用原作者站点的脚本。Surge 每 24 小时检查这些远程脚本更新。汽水音乐没有远程 JavaScript，直接使用原生 JQ 规则。
-- 网易云音乐使用本仓库的最小兼容副本 `Surge/Script/NetEaseMusic.js`：每 6 小时检查原作者 Gist 更新并重新包装，Surge 每 24 小时检查此副本更新。保留原净化代码，添加外层函数包装、明文/二进制输入兼容与响应配置，不增加会员或版权解锁功能。
+- 网易云音乐使用本仓库的合并版 `Surge/Script/NetEaseMusic.js`：每 6 小时检查墨鱼配置/脚本及 Keywos 两份功能参考文件。四份源均有已审核 SHA256，发生变化时先停发布，须人工兼容审查及测试后才能接入；不是自动拼接两个完整脚本。Surge 每 24 小时检查合并脚本，原模块地址不变。
 - GitHub 定时任务可能延迟；公开仓库连续 60 天没有活动时可能自动停用，届时在 Actions 页面重新启用。
 
 除盒马外，规则和脚本来源是 [墨鱼网站](https://ddgksf2013.top/) 的对应 App 条目；滴滴使用[墨鱼 GitHub 官方索引](https://github.com/ddgksf2013)推荐的 ZenmoFeiShi（怎么肥事）规则，不冒称墨鱼自作。盒马使用 zirawell 的独立原生 Surge 模块，不冒称墨鱼规则。什么值得买保留 blackmatrix7、ddgksf2013 双署名，微博保留 ddgksf2013、zmqcherish、shiro 署名，其余为 ddgksf2013。保留作者原有净化逻辑；格式转换和语法检查不等于已在最新 App 实机验证。
@@ -63,6 +63,8 @@ Surge 的 [MITM `auto-quic-block`](https://manual.nssurge.com/http/mitm.html) �
 盒马建议 Surge iOS 5.14.2+（上游标注版本）或 Surge Mac 5.9+；`pre-matching` 本身最低要求 iOS 5.14 / Mac 5.9。为通过原生校验，将上游 5 条 `data-type=json` 规范为 `data-type=text` 并显式设置 JSON Content-Type；脚本 `max-size=0` 按官方手册改为 `-1`，保留原 ICU 原子组正则和脚本正文。模块、原始快照和盒马构建脚本按 GPL-3.0 发布，许可全文见 [zirawell-GPL-3.0.txt](../licenses/zirawell-GPL-3.0.txt)，无任何保证；其他独立模块的许可不因此改变。
 
 网易云音乐的加密响应处理需要 [WebView 脚本引擎](https://manual.nssurge.com/scripting/overview.html)，模块已显式设置 `engine=webview`；Mac 需 macOS 11+，不适用于仅有 JSC 的旧 macOS 或 tvOS。
+
+网易云音乐现为自定义合并版：墨鱼广告处理主干加独立编写的底栏、九类首页卡片、评论装饰及未回关提示选项；不转载或执行 Keywos 原脚本。默认保留发现/漫游/笔记与九类卡片，评论精简开启、未回关提示关闭。真实会员信息与关注状态保留，不包含伪 VIP、HTTPDNS 全域拒绝、艺术家关注接口拦截或版权解锁。参数只控制服务器返回的项目，不能恢复 App 已不提供的栏目。安装、参数和更新说明见 [NetEaseMusic.md](NetEaseMusic.md)，只启用这一份网易云模块。
 
 ## Build
 

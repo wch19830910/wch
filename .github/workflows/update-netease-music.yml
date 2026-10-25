@@ -7,6 +7,9 @@ on:
   push:
     paths:
       - Surge/scripts/build-netease-music.mjs
+      - Surge/scripts/netease-customize.mjs
+      - Surge/scripts/netease-runtime.mjs
+      - Surge/tests/netease-music.test.mjs
       - .github/workflows/update-netease-music.yml
 
 permissions:
@@ -39,8 +42,13 @@ jobs:
             exit 1
           fi
           node --check Surge/scripts/build-netease-music.mjs
-      - name: 从墨鱼官方源构建并验证
+          node --check Surge/scripts/netease-customize.mjs
+          node --check Surge/scripts/netease-runtime.mjs
+          node --check Surge/tests/netease-music.test.mjs
+      - name: 检查双上游已审核版本并构建
         run: node Surge/scripts/build-netease-music.mjs
+      - name: 验证编解码、自定义开关和真实会员数据保留
+        run: node Surge/tests/netease-music.test.mjs
       - name: 只发布通过验证的模块、兼容脚本和上游快照
         shell: bash
         env:
@@ -50,11 +58,11 @@ jobs:
           while IFS= read -r change; do
             [[ -z "$change" ]] && continue
             case "${change:3}" in
-              Surge/AdBlock/NetEaseMusic.sgmodule|Surge/Script/NetEaseMusic.js|Surge/upstream/NeteaseAds.conf) ;;
+              Surge/AdBlock/NetEaseMusic.sgmodule|Surge/Script/NetEaseMusic.js|Surge/upstream/NeteaseAds.conf|Surge/upstream/NetEaseMusic.references.json) ;;
               *) echo "发现非预期变更，停止发布：${change:3}"; exit 1 ;;
             esac
           done < <(git status --porcelain=v1 --untracked-files=all)
-          git add -- Surge/AdBlock/NetEaseMusic.sgmodule Surge/Script/NetEaseMusic.js Surge/upstream/NeteaseAds.conf
+          git add -- Surge/AdBlock/NetEaseMusic.sgmodule Surge/Script/NetEaseMusic.js Surge/upstream/NeteaseAds.conf Surge/upstream/NetEaseMusic.references.json
           if git diff --cached --quiet; then
             echo '上游内容无变化。'
             exit 0
