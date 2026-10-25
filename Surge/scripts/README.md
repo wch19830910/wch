@@ -15,6 +15,7 @@
 `build-freshippo.mjs` 对应 zirawell 独立原生 Surge 盒马完整净化模块，模块显示名称为“盒马（全净化）”。保留全部 IP 拒绝、AMDC、页面及更新查询接口拦截和远程响应脚本；详细描述包含开屏、首页与二楼、我的、购物车推荐、小程序首页的处理范围及副作用，不是仅去开屏，也不保证移除所有广告。
 `build-tieba.mjs` 合并 app2smile 官方原生贴吧广告模块和墨鱼五类 JQ 页面精简，显示名称为“百度贴吧（去广告与页面净化）”。默认保留普通视频帖；两个远程脚本直接引用 app2smile，每 24 小时更新。旧 `getFeedAd` 无条件拒绝由当前 protobuf 脚本接管，避免抢占广告处理。
 `build-zhihu.mjs` 从 zirawell 知乎来源生成“知乎（去广告与页面净化）”，由 `zhihu-runtime.mjs` 整理单一响应脚本；修复兼容问题，保留真实会员、会员入口与消息通道，视频/付费过滤参数默认关闭。
+`build-mihome.mjs` 同步奶思／fmz200 的原生米家规则，显示名称为“米家（开屏与推荐去广告）”。仅一条广告配置域名拒绝和两条 JSON 本地响应规则，不含 JavaScript 或 JQ。
 
 在仓库根目录运行，需要 Node.js 20+：
 
@@ -34,6 +35,7 @@ node Surge/scripts/build-weibo.mjs
 node Surge/scripts/build-freshippo.mjs
 node Surge/scripts/build-tieba.mjs
 node Surge/scripts/build-zhihu.mjs
+node Surge/scripts/build-mihome.mjs
 ```
 
 模块输出到 `Surge/AdBlock/Ximalaya.sgmodule`，原始规则快照输出到 `Surge/upstream/Ximalaya.conf`。
@@ -60,6 +62,8 @@ node Surge/scripts/build-zhihu.mjs
 知乎输出 `Surge/AdBlock/Zhihu.sgmodule`、`Surge/Script/Zhihu.js`、`Surge/upstream/Zhihu.sgmodule` 和 `Surge/upstream/Zhihu.references.json`。原始脚本只编译检查及核对已审核 SHA256，不执行；生成的响应脚本通过本仓库合成样本测试。源配置严格验证已审核的接口、主机、脚本与配置段，未知结构或脚本 hash 变化须先兼容审查；不是把原作者任意新脚本直接覆盖参数版。单入口避免重复脚本名，所有本地 JSON 响应规范为 text 加 Content-Type；搜索推荐交由本地响应脚本结构化清理，无 JQ 依赖。省略 MQTT、全局 AVOS、共享 SDK、会员卡片、整段个人页清空和整类视频榜单清空等规则，保留视频、直播和付费内容默认行为。[GPL-3.0 许可](../licenses/zirawell-GPL-3.0.txt)及来源与修改声明适用于相关代码。运行 `node Surge/tests/zhihu.test.mjs` 验证参数、广告过滤、错误回退、账户数据保留及可用时的 Surge CLI 配置检查；尚未手机实测。[详细说明](../AdBlock/Zhihu.md)。
 
 名称采用“软件名（实际功能类型）”，全净化不表示保证移除全部广告。各 `#!desc` 明确具体功能、作者、更新周期、客户端与证书要求、功能变化及未实机验证的边界。
+
+米家输出 `Surge/AdBlock/MiHome.sgmodule` 和逐字原始快照 `Surge/upstream/MiHome.sgmodule`。构建只接受已审核的配置段、一个 SDK 域名及两条广告路径，未知动作、主机或扩大范围时停止，保留已有成品；`--check` 只检查不写文件。每 6 小时检查上游，通过 `node Surge/tests/mihome.test.mjs` 的范围及失败保护检查后再发布。模块、快照、构建和测试保留奶思署名并按 [GPL-3.0](../licenses/fmz200-GPL-3.0.txt) 发布，无远程脚本；需要 Surge iOS 5.9.1+ / Mac 5.5.1+。设备接口未直接匹配不等于实机兼容保证，广告配置域名规则对其他 App 的相同请求也生效。[使用说明](../AdBlock/MiHome.md)。
 
 需要调整 Surge 内的显示名称或描述时，修改对应构建脚本中的 `#!name` / `#!desc` 文案，保留 JavaScript 引号和逗号。不要只修改自动生成的 `.sgmodule`，因为后续同步会覆盖它。
 
