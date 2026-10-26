@@ -1,0 +1,24 @@
+#!name=风鸟（首页广告与推荐精简）
+#!desc=依据可莉来源、QingRex转换配置中的两个已审核接口，处理首页轮播图和热门企业推荐：仅对m.riskbird.com指定路径返回空JSON。热门企业是推荐内容精简，并非仅删除付费广告。只追加一个精确MITM主机，无远程JavaScript、JQ或整域拒绝；未接入推荐老板脚本，不处理“我的”页面横幅，也不声明去开屏或全净化。每6小时检查已审核来源，路径/动作/主机变化先审查，失败保留旧成品。需Surge iOS 5.9.1+ / Mac 5.5.1+，开启重写和MITM并安装及信任证书。未在最新版风鸟手机实测，不能保证广告效果及业务兼容；异常时停用模块并重开App。
+#!author=可莉（接口来源）；QingRex（转换参考）；本仓库范围整理
+#!category=AdBlock
+#!homepage=https://github.com/QingRex/LoonKissSurge
+#!raw-url=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/RiskBird.sgmodule
+
+# 整理日期：2026-10-26；仅依据已公开接口事实独立整理有限配置。
+# 来源与复用边界：https://github.com/wch19830910/wch/blob/main/Surge/licenses/RiskBird-NOTICE.txt
+# 配置参考：https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/%E9%A3%8E%E9%B8%9F%E5%8E%BB%E5%B9%BF%E5%91%8A.sgmodule
+# 参考配置 SHA256：a32eb330553fb8fe73b2adbdcfc409722df50201b5d49f11ae32c473e83cacb7
+# 自动生成；显示名称和功能说明请修改 Surge/scripts/build-riskbird.mjs，直接修改成品会被同步覆盖。
+# 两个路径增加端点边界，保留同端点查询参数；不匹配相似主机或路径后缀。
+# personRecommend推荐老板需另行确认响应结构；当前完全不加载该远程脚本。
+# 这是首页轮播与热门企业推荐精简，不是开屏广告或全部页面净化。
+
+[Map Local]
+# 首页轮播图
+^https:\/\/m\.riskbird\.com\/prod-qbb-api\/user\/getBannerList(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+# 首页热门企业推荐
+^https:\/\/m\.riskbird\.com\/prod-qbb-api\/searchHotEnt(?:\?|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+[MITM]
+hostname = %APPEND% m.riskbird.com

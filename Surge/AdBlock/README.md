@@ -21,6 +21,7 @@
 | Zhihu | [知乎（去广告与页面净化）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Zhihu.sgmodule) | [zirawell / RuCu6](https://raw.githubusercontent.com/zirawell/R-Store/main/Rule/Surge/Adblock/App/Z/知乎/zhihu.sgmodule) |
 | MiHome | [米家（开屏与推荐去广告）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/MiHome.sgmodule) | [奶思 / fmz200](https://raw.githubusercontent.com/fmz200/wool_scripts/main/Surge/module/split/partM/Mijia.sgmodule) |
 | WeChat | [微信（公众号推广与部分小程序去广告）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/WeChat.sgmodule) | [墨鱼基础规则](https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/Applet.conf) / [可莉来源接口参考](https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/Beta/微信小程序去广告.beta.sgmodule) / 本仓库独立扩展 |
+| RiskBird | [风鸟（首页广告与推荐精简）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/RiskBird.sgmodule) | [可莉 / QingRex 转换配置参考](https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/风鸟去广告.sgmodule) |
 
 在 Surge 的模块页面选择“从 URL 安装”，粘贴 Raw 地址并启用。安装并信任 MITM 证书，开启 MITM、重写和脚本，然后完全退出 App 再打开。相同 App 只启用一份净化模块。
 
@@ -38,13 +39,14 @@
 - `Update Zhihu` 每 6 小时检查 zirawell 知乎来源，生成带参数与兼容修复的本仓库脚本。原脚本内容变化或配置超出已审核范围时暂停发布，兼容审查及测试通过后接入；Surge 每 24 小时检查本仓库脚本更新。
 - `Update MiHome` 每 6 小时检查奶思原生米家模块，验证并测试通过后发布；没有远程 JavaScript，扩大规则范围时须先审核。
 - `Update WeChat` 每 6 小时检查墨鱼及已审核小程序配置，测试通过后发布模块、来源记录和本仓库独立响应脚本；脚本由 Surge 每 24 小时检查更新。新增全家、EMS、COCO、青桔可分别关闭，公众号结构化清理实验默认关闭；旧字符串替换和外链提示跳过不启用。
+- `Update RiskBird` 每 6 小时检查已审核的风鸟来源配置，验证与测试后仅发布两条首页本地响应和来源元信息；不下载或执行推荐老板脚本。
 - 转换或语法检查失败时停止发布，保留仓库上次生成的模块和快照；没有变化不产生提交。直接引用的原作者脚本由 Surge 独立更新，这不是手机端脚本冻结或回滚保证。
 - Surge 自动检查通过 URL 安装的模块更新，检查周期由 Surge 控制。
 - 喜马拉雅、高德地图、铁路12306、酷安、菜鸟、什么值得买、闲鱼和微博的 JavaScript 直接引用原作者分支；小红书使用原作者站点的脚本。Surge 每 24 小时检查这些远程脚本更新。汽水音乐没有远程 JavaScript，直接使用原生 JQ 规则。
 - 网易云音乐使用本仓库的合并版 `Surge/Script/NetEaseMusic.js`：每 6 小时检查墨鱼配置/脚本及 Keywos 两份功能参考文件。四份源均有已审核 SHA256，发生变化时先停发布，须人工兼容审查及测试后才能接入；不是自动拼接两个完整脚本。Surge 每 24 小时检查合并脚本，原模块地址不变。
 - GitHub 定时任务可能延迟；公开仓库连续 60 天没有活动时可能自动停用，届时在 Actions 页面重新启用。
 
-除盒马、贴吧、知乎、米家外，规则和脚本来源是 [墨鱼网站](https://ddgksf2013.top/) 的对应 App 条目；滴滴使用[墨鱼 GitHub 官方索引](https://github.com/ddgksf2013)推荐的 ZenmoFeiShi（怎么肥事）规则，不冒称墨鱼自作。盒马使用 zirawell 的独立原生 Surge 模块，不冒称墨鱼规则。贴吧使用 app2smile 官方原生模块加墨鱼页面净化。知乎以 zirawell / RuCu6 来源整理，视频和付费内容过滤默认关闭，保留真实会员、会员入口及消息通道。米家使用奶思／fmz200 的精确广告接口规则。什么值得买保留 blackmatrix7、ddgksf2013 双署名，微博保留 ddgksf2013、zmqcherish、shiro 署名，其余为 ddgksf2013。具体功能调整见各模块说明；格式转换和语法检查不等于已在最新 App 实机验证。
+除盒马、贴吧、知乎、米家、微信、风鸟外，规则和脚本来源是 [墨鱼网站](https://ddgksf2013.top/) 的对应 App 条目；滴滴使用[墨鱼 GitHub 官方索引](https://github.com/ddgksf2013)推荐的 ZenmoFeiShi（怎么肥事）规则，不冒称墨鱼自作。盒马使用 zirawell 的独立原生 Surge 模块，不冒称墨鱼规则。贴吧使用 app2smile 官方原生模块加墨鱼页面净化。知乎以 zirawell / RuCu6 来源整理，视频和付费内容过滤默认关闭，保留真实会员、会员入口及消息通道。米家使用奶思／fmz200 的精确广告接口规则。微信另有本仓库独立扩展及可莉、NobyDa、Belcheck接口或设计参考；风鸟参考可莉规则的QingRex转换配置，只接入两项首页接口。什么值得买保留 blackmatrix7、ddgksf2013 双署名，微博保留 ddgksf2013、zmqcherish、shiro 署名，其余为 ddgksf2013。具体功能调整见各模块说明；格式转换和语法检查不等于已在最新 App 实机验证。
 
 Surge 内显示“中文软件名（功能类型）”，区分开屏去广告、去广告、去水印、界面精简与全净化，文件名和远程地址仍使用原来的常用英文名。全净化表示保留完整上游功能，不保证移除所有广告。各模块描述已列明具体处理范围、作者、更新周期、启用/版本要求及副作用；名称和描述可在对应生成脚本中修改，自动同步时会保留这些设置。
 
@@ -82,6 +84,8 @@ Surge 的 [MITM `auto-quic-block`](https://manual.nssurge.com/http/mitm.html) �
 
 微信保留公众号带货、相关搜索词与便利蜂、顺丰、掌上公交，新增全家横幅、EMS广告模块、COCO背景/底部横幅、青桔横幅，四项默认开启且可分别关闭。公众号广告字段清理为默认关闭的兼容性实验。八个精确 MITM 主机；扩展由本仓库独立脚本处理，保留非目标正文文本和大整数，不复制或加载可莉/Belcheck原脚本。需 Surge iOS 5.10+ / Mac 5.6+，开启脚本。未手机实测，不覆盖朋友圈、视频号或全部小程序五秒开屏。[功能、参数与更新说明](WeChat.md)。
 
+风鸟仅处理首页轮播图和热门企业推荐，后者属于正常推荐内容精简；没有推荐老板脚本、专用开屏或“我的”横幅处理。两条精确本地 JSON 响应，一个 MITM 主机，需 Surge iOS 5.9.1+ / Mac 5.5.1+，无 JavaScript／JQ。未手机实测。[功能与更新说明](RiskBird.md)。
+
 ## Build
 
 在仓库根目录执行，需要 Node.js 20+；上游包含 JQ 规则时还需要 jq：
@@ -104,6 +108,7 @@ node Surge/scripts/build-tieba.mjs
 node Surge/scripts/build-zhihu.mjs
 node Surge/scripts/build-mihome.mjs
 node Surge/scripts/build-wechat.mjs
+node Surge/scripts/build-riskbird.mjs
 ```
 
 - [Surge remote scripts](https://manual.nssurge.com/scripting/overview.html)
