@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "url": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/%E9%A3%8E%E9%B8%9F%E5%8E%BB%E5%B9%BF%E5%91%8A.sgmodule",
+    "sha256": "a32eb330553fb8fe73b2adbdcfc409722df50201b5d49f11ae32c473e83cacb7",
+    "metadata": {
+      "name": "风鸟去广告",
+      "desc": "移除首页信息流和轮播图",
+      "author": "可莉🅥[https://github.com/luestr/ProxyResource/blob/main/README.md]",
+      "icon": "https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/RiskBird.png",
+      "category": "iKeLee",
+      "openUrl": "https://apps.apple.com/app/id1528682937",
+      "tag": "去广告",
+      "loon_version": "3.2.4(787)",
+      "homepage": "https://hub.kelee.one",
+      "date": "2025-05-13 15:17:08"
+    }
+  },
+  "attribution": {
+    "interfaceSource": "可莉 / iKeLee",
+    "conversionReference": "QingRex/LoonKissSurge",
+    "notice": "https://github.com/wch19830910/wch/blob/main/Surge/licenses/RiskBird-NOTICE.txt"
+  },
+  "selected": [
+    {
+      "sourceLine": 13,
+      "host": "m.riskbird.com",
+      "path": "/prod-qbb-api/user/getBannerList",
+      "purpose": "首页轮播图",
+      "originalPattern": "^https:\\/\\/m\\.riskbird\\.com\\/prod-qbb-api\\/user\\/getBannerList",
+      "response": {
+        "status": 200,
+        "body": {},
+        "contentType": "application/json"
+      }
+    },
+    {
+      "sourceLine": 15,
+      "host": "m.riskbird.com",
+      "path": "/prod-qbb-api/searchHotEnt",
+      "purpose": "首页热门企业推荐",
+      "originalPattern": "^https:\\/\\/m\\.riskbird\\.com\\/prod-qbb-api\\/searchHotEnt",
+      "response": {
+        "status": 200,
+        "body": {},
+        "contentType": "application/json"
+      }
+    }
+  ],
+  "excluded": [
+    {
+      "name": "移除推荐老板",
+      "pattern": "^https:\\/\\/m\\.riskbird\\.com\\/prod-qbb-api\\/query\\/person\\/personRecommend",
+      "url": "https://kelee.one/Resource/JavaScript/RiskBird/RiskBird_remove_ads.js",
+      "enabled": false,
+      "reason": "仅接入已确认的两个首页接口。推荐老板脚本在2026-10-26审查时下载返回403，未确认响应字段；不下载、不执行、不发布原脚本。"
+    }
+  ],
+  "generatedScope": {
+    "mapLocal": [
+      "^https:\\/\\/m\\.riskbird\\.com\\/prod-qbb-api\\/user\\/getBannerList(?:\\?|$) data-type=text data=\"{}\" status-code=200 header=\"Content-Type:application/json\"",
+      "^https:\\/\\/m\\.riskbird\\.com\\/prod-qbb-api\\/searchHotEnt(?:\\?|$) data-type=text data=\"{}\" status-code=200 header=\"Content-Type:application/json\""
+    ],
+    "mitmHosts": [
+      "m.riskbird.com"
+    ],
+    "scripts": [],
+    "domainRejects": []
+  },
+  "policy": "只保存公开接口事实与来源元信息，不镜像完整原插件或脚本正文；原许可和归属不能因转换而自动改变。",
+  "modifications": [
+    "只保留两个明确首页目标",
+    "为原路径增加端点边界",
+    "保持空JSON成功响应及单个精确MITM主机",
+    "完全排除未确认的推荐老板脚本",
+    "不加入开屏、我的页面、账号或会员处理"
+  ],
+  "testingLimit": "只作配置及合成路由验证，尚未在最新版风鸟手机实测。"
+}
