@@ -16,6 +16,7 @@
 `build-tieba.mjs` 合并 app2smile 官方原生贴吧广告模块和墨鱼五类 JQ 页面精简，显示名称为“百度贴吧（去广告与页面净化）”。默认保留普通视频帖；两个远程脚本直接引用 app2smile，每 24 小时更新。旧 `getFeedAd` 无条件拒绝由当前 protobuf 脚本接管，避免抢占广告处理。
 `build-zhihu.mjs` 从 zirawell 知乎来源生成“知乎（去广告与页面净化）”，由 `zhihu-runtime.mjs` 整理单一响应脚本；修复兼容问题，保留真实会员、会员入口与消息通道，视频/付费过滤参数默认关闭。
 `build-mihome.mjs` 同步奶思／fmz200 的原生米家规则，显示名称为“米家（开屏与推荐去广告）”。仅一条广告配置域名拒绝和两条 JSON 本地响应规则，不含 JavaScript 或 JQ。
+`build-wechat.mjs` 整理墨鱼公众号带货、相关搜索词，以及便利蜂、顺丰、掌上公交指定小程序广告，显示名称为“微信（公众号推广与部分小程序去广告）”。使用原生空响应和正文替换，无远程 JavaScript。
 
 在仓库根目录运行，需要 Node.js 20+：
 
@@ -36,6 +37,7 @@ node Surge/scripts/build-freshippo.mjs
 node Surge/scripts/build-tieba.mjs
 node Surge/scripts/build-zhihu.mjs
 node Surge/scripts/build-mihome.mjs
+node Surge/scripts/build-wechat.mjs
 ```
 
 模块输出到 `Surge/AdBlock/Ximalaya.sgmodule`，原始规则快照输出到 `Surge/upstream/Ximalaya.conf`。
@@ -64,6 +66,8 @@ node Surge/scripts/build-mihome.mjs
 名称采用“软件名（实际功能类型）”，全净化不表示保证移除全部广告。各 `#!desc` 明确具体功能、作者、更新周期、客户端与证书要求、功能变化及未实机验证的边界。
 
 米家输出 `Surge/AdBlock/MiHome.sgmodule` 和逐字原始快照 `Surge/upstream/MiHome.sgmodule`。构建只接受已审核的配置段、一个 SDK 域名及两条广告路径，未知动作、主机或扩大范围时停止，保留已有成品；`--check` 只检查不写文件。每 6 小时检查上游，通过 `node Surge/tests/mihome.test.mjs` 的范围及失败保护检查后再发布。模块、快照、构建和测试保留奶思署名并按 [GPL-3.0](../licenses/fmz200-GPL-3.0.txt) 发布，无远程脚本；需要 Surge iOS 5.9.1+ / Mac 5.5.1+。设备接口未直接匹配不等于实机兼容保证，广告配置域名规则对其他 App 的相同请求也生效。[使用说明](../AdBlock/MiHome.md)。
+
+微信输出 `Surge/AdBlock/WeChat.sgmodule` 和 `Surge/upstream/WeChat.sources.json` 来源元信息。只接入五个已审核的 URL 目标及四个精确 MITM 主机，掌上公交两项广告字段行为改用原生 Body Rewrite；上游脚本只静态检查，不执行或转载正文。旧 `getappmsgad` 图文替换已被作者标注失效，外链提示跳过在合集里禁用，通用 WordPress 脚本还有隐藏内容逻辑，均不默认接入本广告模块。未知来源范围或处理变化须先审核，`--check` 不写入；每 6 小时构建，通过 `node Surge/tests/wechat.test.mjs` 后仅发布模块和元信息。需 Surge iOS 5.10+ / Mac 5.6+，无 JQ、远程脚本及手机实测保证。保留墨鱼署名和[原作者声明](../licenses/ddgksf2013-WeChat-NOTICE.txt)，不将上游未声明许可的代码改称开源许可。[使用说明](../AdBlock/WeChat.md)。
 
 需要调整 Surge 内的显示名称或描述时，修改对应构建脚本中的 `#!name` / `#!desc` 文案，保留 JavaScript 引号和逗号。不要只修改自动生成的 `.sgmodule`，因为后续同步会覆盖它。
 
