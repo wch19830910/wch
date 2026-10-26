@@ -1,49 +1,70 @@
 # 微信（公众号推广与部分小程序去广告）
 
-[安装远程模块](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/WeChat.sgmodule)
+[安装／更新远程模块](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/WeChat.sgmodule)
 
-基于墨鱼／ddgksf2013 的去开屏合集和微信小程序规则，整理为原生 Surge 模块。文件名为 `WeChat.sgmodule`，显示中文名称。使用本地空响应和正文替换，不下载或执行远程 JavaScript。
+保留原有公众号推广及三个小程序的广告处理，加入全家、EMS、COCO、青桔的指定广告项，并提供默认关闭的公众号广告字段兼容性实验。原有规则使用 Surge 原生本地响应和正文替换；新增处理由本仓库独立编写的一个响应脚本完成，不下载或执行可莉、Belcheck 的原脚本。
 
 ## 功能范围
 
-| 功能 | 处理方式 |
-|---|---|
-| 公众号文章带货商品信息 | 仅对 `mp.weixin.qq.com/mp/cps_product_info` 返回空 HTTP 200 |
-| 公众号文章相关搜索词 | 仅对 `mp.weixin.qq.com/mp/relatedsearchword` 返回空 HTTP 200 |
-| 便利蜂小程序横幅广告 | 仅对 `api.blibee.com` 的指定 banner 版本接口返回空 HTTP 200 |
-| 顺丰速运小程序信息流广告 | 仅对 `ucmp.sf-express.com` 的指定广告查询接口返回空 HTTP 200 |
-| 掌上公交小程序广告标记 | 仅在 `wx.mygolbs.com/WxBusServer/ApiData.do` 响应中，将完整字段 `Ad`、`Ad_ab` 的数字值 1 改为 0 |
+| 项目 | 处理内容 | 默认状态 |
+|---|---|---|
+| 公众号推广 | 带货商品信息、文章相关搜索词接口返回空 HTTP 200 | 开启 |
+| 便利蜂小程序 | 指定 banner 版本接口返回空 HTTP 200 | 开启 |
+| 顺丰速运小程序 | 指定信息流广告查询接口返回空 HTTP 200 | 开启 |
+| 掌上公交小程序 | 指定接口中完整 Ad、Ad_ab 字段的数字 1 改为 0 | 开启 |
+| 全家微会员小程序 | 只删除 data.topBanner | 开启，可关闭 |
+| EMS 小程序 | 只过滤 info.moduleJson 字符串数组内名称包含“广告”的对象 | 开启，可关闭 |
+| COCO 点单小程序 | 只删除 data.top_background_url、data.bottom_banner_list | 开启，可关闭 |
+| 青桔小程序 | 仅 api=hm.fa.homeConfig 接口删除 data.bannerInfoConfig | 开启，可关闭 |
+| 公众号广告字段清理 | 对可识别成功响应中的根级广告数量／列表尝试清理 | **关闭，兼容性实验** |
 
-共五个 URL 目标，MITM 只追加上述四个精确主机。广告接口匹配使用路径边界，不拦截微信或小程序整个域名。未直接匹配聊天、登录、支付、朋友圈、视频号及普通文章 URL；这只是规则范围验证，尚未在最新版微信手机实测。
+共十个明确 URL 目标，其中公众号实验默认不修改响应；MITM 仅追加八个精确主机，不包含整域拒绝、图片降质、DNS／支付分流或外链安全提示跳过。公众号和小程序的普通业务路径没有直接纳入处理范围，相同服务接口若被其他入口共用仍会受到对应规则作用。
 
-它只处理表内的推广和三个小程序的指定广告接口，不能去除所有小程序的五秒开屏、朋友圈或视频号广告。顺丰、便利蜂的接口域名可能被其他入口共用，相同 URL 的请求也会受这些规则影响。
+本模块不覆盖朋友圈、视频号及所有小程序五秒开屏。规则检查和合成样本测试不能代替手机实测，未保证最新版微信或所有小程序兼容。
 
-## 上游旧功能的处理
+## 参数
 
-墨鱼的 `WeChat.conf` 已明确标注旧 `getappmsgad` 公众号图文去广告规则失效，本模块没有启用或将它宣传为有效功能。它在去开屏和小程序合集里的重复配置也不重复接入。
+在 Surge 的模块列表中编辑本模块参数，使用 `true` 开启、`false` 关闭：
 
-去开屏合集中的 `WeChat110` 外链提示处理保持未启用。通用 WordPress 小程序脚本匹配任意域名，并包含直接查看隐藏内容的逻辑，本模块没有引入。公众号带货和相关搜索词是独立接口处理，不能等同公众号广告全面清除。
+| 参数 | 默认值 | 功能 |
+|---|---|---|
+| `familyMart` | `true` | 全家横幅 |
+| `ems` | `true` | EMS 名称明确包含“广告”的模块 |
+| `coco` | `true` | COCO 背景和底部横幅 |
+| `qingju` | `true` | 青桔横幅 |
+| `officialAccountExperimental` | `false` | 公众号广告字段兼容性实验 |
 
-## 安装与使用
+原有公众号推广、便利蜂、顺丰及掌上公交处理仍随模块开关启停。参数只控制新增五项；关闭参数不删除账号或业务数据。关闭公众号实验时脚本原样透传该接口，但同一脚本还服务其他新增小程序，仍可能被加载和缓冲响应。
 
-需要 **Surge iOS 5.10+ 或 Surge Mac 5.6+**。在 Surge 的模块页面选择从 URL 安装，粘贴上方地址并启用。开启重写及 MITM，安装并信任 MITM 证书，再完全退出微信并打开目标公众号文章或小程序。这个模块不依赖脚本开关或 JQ。
+## 公众号实验的边界
 
-如已启用其他微信去广告模块，先停用其中重叠的规则，避免重复响应处理。出现文章或小程序页面异常时，可停用本模块并重开对应页面，检查是否恢复。
+实验仍使用旧 getappmsgad 接口线索，不代表已经适配当前微信所有公众号广告。只有手动开启后，且响应为可识别的成功 JSON、根级广告数量是非负整数、广告列表是数组时，才尝试把数量改为 0、列表清空。
 
-## 远程更新
+它保留 appid、未知字段、嵌套同名字段和其他正文文本。错误响应、未知类型、重复键、过深或过大的 JSON 均原样放行；未找到目标字段或已经没有广告时也不重写。数据保留指 Surge 交给脚本的正文文本，不指压缩报文或 HTTP 头。
 
-- GitHub Actions 的 **Update WeChat** 每六小时检查已接入的墨鱼公开来源，构建和测试通过后发布变更。
-- 只同步已审核范围。新增主机、扩大路径、新执行脚本或已审核处理发生变化时停止发布，等待兼容审查，保留仓库现有模块。
-- Surge 按远程模块机制更新，也可在模块页面手动更新。没有额外的远程脚本更新。
-- GitHub 定时任务可能延迟，公开仓库长期无活动时可能被 GitHub 暂停，届时在 Actions 页面重新启用。
-- 修改显示名称或描述，请编辑 `Surge/scripts/build-wechat.mjs` 后运行对应工作流。直接修改自动生成的模块会被下次同步覆盖。
+墨鱼已标失效的 advertisement 字符串替换没有恢复。公众号新实验为本仓库独立实现，与该旧规则分开标注。启用实验后应分别确认广告、空白占位、正文图片、链接和留言是否正常；异常时先把实验参数恢复为 `false`。
+
+## 正常内容保留
+
+独立实现按 JSON 源文本位置修改目标字段，不把整份响应解析后重新序列化，避免改变其他字段的空白、顺序、字符串转义或大整数。EMS 只重编码 moduleJson 那一个字符串字段，内部非广告对象、未知成员和数字原文保留。
+
+脚本只有五个新目标的处理入口，不请求网络、不发通知、不读写持久化存储。遇到未知响应保留原文，完成回调只调用一次。微信外链处理、任意域名 WordPress 隐藏内容脚本和原合集的服务入口精简均未接入。
+
+## 安装与更新
+
+需要 **Surge iOS 5.10+ 或 Surge Mac 5.6+**。从上方 URL 安装或更新，开启重写、脚本和 MITM，安装并信任 MITM 证书。完全退出微信后重新打开目标文章或小程序。本版没有 JQ／WebView 引擎依赖。
+
+已经安装旧版时使用原订阅地址更新即可，新增四项默认开启，公众号实验默认关闭。相同接口的多个响应脚本可能互相抢占，使用本模块时停用其他模块中对应的重复规则。
+
+GitHub Actions 的 **Update WeChat** 每六小时读取墨鱼与已审核的小程序配置来源；通过构建和测试后，自动发布模块、独立脚本及来源记录。新增域名、配置目标或已审核行为变化需要先审查，失败保留已有成品。可莉脚本当前下载受限，构建不下载它们，也不自动继承其新逻辑。
+
+Surge 按远程模块机制更新；本仓库脚本设置为每24小时检查一次，也可手动更新。GitHub 定时任务可能延迟，长期无活动时可能暂停。修改显示名称或描述，请编辑 `Surge/scripts/build-wechat.mjs`；直接改生成文件会被后续同步覆盖。
 
 ## 来源与验证
 
-- [墨鱼去开屏 2.0](https://ddgksf2013.top/rewrite/StartUpAds.conf)：公众号带货、相关搜索词。
-- [墨鱼微信小程序规则](https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/Applet.conf)：便利蜂、顺丰和掌上公交入口。
-- [掌上公交原处理说明](https://raw.githubusercontent.com/ddgksf2013/Scripts/master/zhangshanggongjiao.js)：只参考其中两项广告字段行为，不发布或运行原脚本。
-- [已标失效的旧公众号规则](https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/WeChat.conf)：用于记录排除原因。
-- [来源与原作者声明](../licenses/ddgksf2013-WeChat-NOTICE.txt)。来源元信息保存在 `Surge/upstream/WeChat.sources.json`，未将上游未声明许可的代码改称某种开源许可。
+- [墨鱼去开屏](https://ddgksf2013.top/rewrite/StartUpAds.conf)、[小程序规则](https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/Applet.conf)、[掌上公交行为参考](https://raw.githubusercontent.com/ddgksf2013/Scripts/master/zhangshanggongjiao.js)。
+- [可莉来源的 QingRex 小程序配置](https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/Beta/微信小程序去广告.beta.sgmodule)：仅作四个接口及字段行为参考，不转载原 JavaScript。
+- [NobyDa 公众号接口线索](https://raw.githubusercontent.com/NobyDa/Script/master/QuantumultX/File/Wechat.js)、[Belcheck 数据保留与实验边界说明](https://github.com/belcheckyoung/Belcheck-QX-AdBlock/blob/main/Docs/WeChatAdClean.md)：只作参考，响应代码独立实现。
+- [来源与原作者声明](../licenses/ddgksf2013-WeChat-NOTICE.txt)。来源元信息位于 `Surge/upstream/WeChat.sources.json`，不保存上述受限制的完整脚本正文。
 
-构建仅读取公开源文件，不访问微信账号、小程序业务接口或个人数据。合成样本验证五个目标的匹配范围、正常功能路径不匹配、公交广告字段修改、未知上游拒绝接入以及失败时保留旧文件。本机安装 Surge CLI 时另做原生配置检查，Linux CI 明确跳过这项本机检查；这些验证不能替代手机实测。
+验证使用合成响应和地址，覆盖开关默认值、字段范围、错误回退、文本／大整数保留、EMS 内层字符串、匹配边界、更新失败保护及本地可用时的 Surge CLI 原生配置检查。CI 不访问微信账号、聊天、订单、支付或实际小程序业务接口。

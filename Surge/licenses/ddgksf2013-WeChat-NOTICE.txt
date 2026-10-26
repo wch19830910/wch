@@ -13,7 +13,7 @@ The upstream rule headers request attribution when quoting or referencing them.
 The original bus-script notice states:
 “本腳本僅供學習交流使用，禁止轉載售賣”
 
-This integration expresses the selected advertising behavior using native Surge
+The original integration expresses selected behavior using native Surge
 Map Local and Body Rewrite configuration. It does not redistribute or execute
 the original bus JavaScript, general WordPress mini-program JavaScript, or
 WeChat110 redirect JavaScript.
@@ -25,4 +25,25 @@ or relicense upstream material. Other independent modules retain their own
 licenses and notices.
 
 The old getappmsgad rule is marked invalid by its original author and is not
-enabled. Scope and device compatibility are documented in Surge/AdBlock/WeChat.md.
+enabled. A separately implemented, default-off structured response experiment
+is documented in Surge/AdBlock/WeChat.md; it does not restore that string rule.
+
+2026-10-26 independently implemented extension
+
+Interface and field-behavior references: 可莉 / iKeLee, as indexed by QingRex:
+https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/Beta/微信小程序去广告.beta.sgmodule
+The added FamilyMart, EMS, COCO and Qingju transforms are independently written
+in Surge/scripts/wechat-runtime.mjs and built into Surge/Script/WeChat.js.
+No original JavaScript from these references is embedded, mirrored or executed.
+Only selected public configuration facts, reference URLs and reviewed hashes
+are recorded; readability does not imply a new right to relicense upstream code.
+
+Official-account endpoint and experimental design references:
+https://raw.githubusercontent.com/NobyDa/Script/master/QuantumultX/File/Wechat.js
+https://github.com/belcheckyoung/Belcheck-QX-AdBlock/blob/main/Docs/WeChatAdClean.md
+NobyDa provides the public endpoint and field clues; Belcheck's published
+discussion informs the experimental boundary and preservation goals. Their
+implementation is not copied, embedded, mirrored or executed by this extension.
+The repository's own parser/editor preserves non-target response text and
+fails open on unknown data. This is not a claim of current phone verification
+or upstream endorsement. The experiment is disabled by default.

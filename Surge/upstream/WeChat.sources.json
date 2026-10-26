@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 1,
-  "author": "ddgksf2013 / 墨鱼",
+  "schemaVersion": 2,
+  "author": "ddgksf2013 / 墨鱼（基础）；本仓库独立扩展",
   "notice": "https://github.com/wch19830910/wch/blob/main/Surge/licenses/ddgksf2013-WeChat-NOTICE.txt",
   "sources": {
     "startup": {
@@ -96,6 +96,76 @@
         }
       ],
       "policy": "仅静态核对两次替换；不执行、不保存或发布原脚本。"
+    },
+    "miniPrograms": {
+      "url": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/Beta/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%8E%BB%E5%B9%BF%E5%91%8A.beta.sgmodule",
+      "sha256": "20a50ebaba240046aa550688eaf56781021f4bc9c5e1e47883a48164ad75719c",
+      "selected": [
+        {
+          "key": "familyMart",
+          "title": "全家微会员去广告",
+          "line": 244,
+          "text": "全家微会员去广告 = type=http-response, pattern=^https:\\/\\/minifm\\.maxxipoint\\.com\\/banner\\/list, script-path=https://kelee.one/Resource/JavaScript/WexinMiniPrograms/FamilyMart/FamilyMart.js, requires-body=true",
+          "host": "minifm.maxxipoint.com",
+          "path": "/banner/list",
+          "behavior": "仅删除对象 data 的 topBanner 自有字段",
+          "referenceUrl": "https://kelee.one/Resource/JavaScript/WexinMiniPrograms/FamilyMart/FamilyMart.js",
+          "reviewedSha256": "e25457f43eacfbf27ca8229445e69f60f7562ece723b5ebaf07969c0ebf75e1c",
+          "reviewDate": "2026-10-26",
+          "referenceOnly": true
+        },
+        {
+          "key": "ems",
+          "title": "EMS中国邮政物流速递去广告",
+          "line": 240,
+          "text": "EMS中国邮政物流速递去广告 = type=http-response, pattern=^https:\\/\\/ump\\.ems\\.com\\.cn\\/new-generation-extend\\/redis\\/pageInfoByChannel, script-path=https://kelee.one/Resource/JavaScript/WexinMiniPrograms/ems/ems.js, requires-body=true",
+          "host": "ump.ems.com.cn",
+          "path": "/new-generation-extend/redis/pageInfoByChannel",
+          "behavior": "仅在 info.moduleJson 的 JSON 字符串数组中移除 moduleName 字符串含广告的对象，其余项保留",
+          "referenceUrl": "https://kelee.one/Resource/JavaScript/WexinMiniPrograms/ems/ems.js",
+          "reviewedSha256": "2208e4945d8781e5bc9d20a436fc141629a7e4dc9fd516f9fe917196010cf5bc",
+          "reviewDate": "2026-10-26",
+          "referenceOnly": true
+        },
+        {
+          "key": "coco",
+          "title": "COCO点单去广告",
+          "line": 250,
+          "text": "COCO点单去广告 = type=http-response, pattern=^https:\\/\\/coco-com\\.e\\.verystar\\.net\\/v1\\/home\\/info, script-path=https://kelee.one/Resource/JavaScript/WexinMiniPrograms/coco/coco.js, requires-body=true",
+          "host": "coco-com.e.verystar.net",
+          "path": "/v1/home/info",
+          "behavior": "仅删除对象 data 的 top_background_url 与 bottom_banner_list 自有字段",
+          "referenceUrl": "https://kelee.one/Resource/JavaScript/WexinMiniPrograms/coco/coco.js",
+          "reviewedSha256": "dc9a1915eed8f6f760a8f3a03f5e2f5a0f346373693ae4ac2e0c5dbd90fd46b3",
+          "reviewDate": "2026-10-26",
+          "referenceOnly": true
+        },
+        {
+          "key": "qingju",
+          "title": "滴滴青桔去广告",
+          "line": 252,
+          "text": "滴滴青桔去广告 = type=http-response, pattern=^https:\\/\\/htwkop\\.xiaojukeji\\.com\\/gateway\\?api=hm\\.fa\\.homeConfig, script-path=https://kelee.one/Resource/JavaScript/WexinMiniPrograms/qingju/qingju.js, requires-body=true",
+          "host": "htwkop.xiaojukeji.com",
+          "path": "/gateway",
+          "api": "hm.fa.homeConfig",
+          "behavior": "仅删除对象 data 的 bannerInfoConfig 自有字段，要求唯一 api 参数精确匹配",
+          "referenceUrl": "https://kelee.one/Resource/JavaScript/WexinMiniPrograms/qingju/qingju.js",
+          "reviewedSha256": "8664e7a22b21aaa8546ec167e3a43fee7ebd2c00552a126212720b09a4819bf8",
+          "reviewDate": "2026-10-26",
+          "referenceOnly": true
+        }
+      ],
+      "policy": "只监测四条已审核配置；不下载、执行或发布可莉脚本，独立实现不自动继承原脚本变化。"
+    },
+    "officialAccountExperiment": {
+      "referenceOnly": true,
+      "urls": [
+        "https://raw.githubusercontent.com/NobyDa/Script/master/QuantumultX/File/Wechat.js",
+        "https://github.com/belcheckyoung/Belcheck-QX-AdBlock/blob/main/Docs/WeChatAdClean.md"
+      ],
+      "implementation": "独立编写JSON span编辑；不复制、不下载参考实现。",
+      "defaultEnabled": false,
+      "limitation": "同一旧接口的兼容性实验，尚未手机验证。"
     }
   },
   "generatedScope": {
@@ -134,18 +204,35 @@
       "mp.weixin.qq.com",
       "api.blibee.com",
       "ucmp.sf-express.com",
-      "wx.mygolbs.com"
-    ]
+      "wx.mygolbs.com",
+      "minifm.maxxipoint.com",
+      "ump.ems.com.cn",
+      "coco-com.e.verystar.net",
+      "htwkop.xiaojukeji.com"
+    ],
+    "ownScript": {
+      "url": "https://raw.githubusercontent.com/wch19830910/wch/main/Surge/Script/WeChat.js",
+      "pattern": "^https:\\/\\/(?:minifm\\.maxxipoint\\.com\\/banner\\/list(?:\\?[^#]*)?|ump\\.ems\\.com\\.cn\\/new-generation-extend\\/redis\\/pageInfoByChannel(?:\\?[^#]*)?|coco-com\\.e\\.verystar\\.net\\/v1\\/home\\/info(?:\\?[^#]*)?|htwkop\\.xiaojukeji\\.com\\/gateway\\?(?:[^#&]*&)*api=hm\\.fa\\.homeConfig(?:&[^#]*)?|mp\\.weixin\\.qq\\.com\\/mp\\/getappmsgad(?:\\?[^#]*)?)$",
+      "options": {
+        "familyMart": true,
+        "ems": true,
+        "coco": true,
+        "qingju": true,
+        "officialAccountExperimental": false
+      },
+      "sha256": "13ad0e01a623f87db4a6460b620f60bfc785829ddbf7833f143991001d27f8a6"
+    }
   },
   "modifications": [
-    "合并后仅5个URL目标、4个精确主机",
-    "四条reject-200转换为空HTTP200本地响应",
+    "保留原5个目标，增加4项可关闭的小程序精确处理及默认关闭公众号实验",
+    "原四条reject-200转换为空HTTP200本地响应",
     "公众号与公交URL增加端点边界",
     "公交完整JSON键及数字1边界替代原宽泛替换",
-    "保留普通数据、登录、聊天、支付、会员与外链安全提醒",
-    "去除失效与重复getappmsgad",
+    "独立JSON span编辑保留其他原始文本和大整数；EMS只重编码目标字符串字段",
+    "保留登录、聊天、支付、会员与外链安全提醒",
+    "旧getappmsgad字符串替换保持排除；新结构化实验明确区分且默认关闭",
     "不引入WordPress隐藏内容脚本",
-    "不执行、保存或发布上游JavaScript正文"
+    "不执行或发布上游JavaScript正文；扩展脚本仅来自本仓库独立实现"
   ],
   "testingLimit": "配置与合成样本测试，不代表最新版微信或所有小程序的设备实测结果。"
 }

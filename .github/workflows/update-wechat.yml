@@ -7,7 +7,9 @@ on:
   push:
     paths:
       - Surge/scripts/build-wechat.mjs
+      - Surge/scripts/wechat-runtime.mjs
       - Surge/tests/wechat.test.mjs
+      - Surge/tests/wechat-runtime.test.mjs
       - .github/workflows/update-wechat.yml
 
 permissions:
@@ -40,12 +42,16 @@ jobs:
             exit 1
           fi
           node --check Surge/scripts/build-wechat.mjs
+          node --check Surge/scripts/wechat-runtime.mjs
           node --check Surge/tests/wechat.test.mjs
-      - name: 检查墨鱼微信来源并原生构建
+          node --check Surge/tests/wechat-runtime.test.mjs
+      - name: 检查微信已审核来源并构建
         run: node Surge/scripts/build-wechat.mjs
       - name: 验证广告范围与更新保护
-        run: node Surge/tests/wechat.test.mjs
-      - name: 只发布通过验证的模块和来源记录
+        run: |
+          node Surge/tests/wechat-runtime.test.mjs
+          node Surge/tests/wechat.test.mjs
+      - name: 只发布通过验证的模块脚本和来源记录
         shell: bash
         env:
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
@@ -54,11 +60,11 @@ jobs:
           while IFS= read -r change; do
             [[ -z "$change" ]] && continue
             case "${change:3}" in
-              Surge/AdBlock/WeChat.sgmodule|Surge/upstream/WeChat.sources.json) ;;
+              Surge/AdBlock/WeChat.sgmodule|Surge/upstream/WeChat.sources.json|Surge/Script/WeChat.js) ;;
               *) echo "发现非预期变更，停止发布：${change:3}"; exit 1 ;;
             esac
           done < <(git status --porcelain=v1 --untracked-files=all)
-          git add -- Surge/AdBlock/WeChat.sgmodule Surge/upstream/WeChat.sources.json
+          git add -- Surge/AdBlock/WeChat.sgmodule Surge/upstream/WeChat.sources.json Surge/Script/WeChat.js
           if git diff --cached --quiet; then
             echo '上游内容无变化。'
             exit 0

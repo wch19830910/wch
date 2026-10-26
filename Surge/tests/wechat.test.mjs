@@ -7,9 +7,9 @@ import { mkdtemp, readFile, writeFile, stat, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { SOURCE_URLS, parseStartupSource, parseAppletSource, validateBusScript, parseSources, main } from '../scripts/build-wechat.mjs';
+import { SOURCE_URLS, OPTION_DEFAULTS, parseStartupSource, parseAppletSource, parseMiniProgramSource, validateBusScript, parseSources, main } from '../scripts/build-wechat.mjs';
 
-const OUTPUTS = [new URL('../AdBlock/WeChat.sgmodule', import.meta.url), new URL('../upstream/WeChat.sources.json', import.meta.url)];
+const OUTPUTS = [new URL('../AdBlock/WeChat.sgmodule', import.meta.url), new URL('../upstream/WeChat.sources.json', import.meta.url), new URL('../Script/WeChat.js', import.meta.url)];
 const [moduleSource, snapshotText] = await Promise.all(OUTPUTS.map((url) => readFile(url, 'utf8')));
 const sourceSnapshot = JSON.parse(snapshotText);
 const SURGE_CLI = '/Applications/Surge.app/Contents/Applications/surge-cli';
@@ -44,6 +44,14 @@ hostname = api.blibee.com, ucmp.sf-express.com, www.bbkj.work, wx.wxqqurl.cn, wp
 ^(https?://)?([a-zA-Z0-9]+(-[a-zA-Z0-9]+)*\.)+[a-zA-Z]{2,}(:\d+)?/wp-json/[a-zA-Z0-9_-]+/(mp\/)?v\d/posts url script-response-body https://raw.githubusercontent.com/ddgksf2013/Scripts/refs/heads/master/applet.js
 `,
   bus: String.raw`var body = $response.body.replace(/Ad":1/g, 'Ad":0').replace(/Ad_ab":1/g, 'Ad_ab":0'); $done({ body });`,
+  miniPrograms: String.raw`#!name=微信小程序去广告
+#!author=可莉
+[Script]
+全家微会员去广告 = type=http-response, pattern=^https:\/\/minifm\.maxxipoint\.com\/banner\/list, script-path=https://kelee.one/Resource/JavaScript/WexinMiniPrograms/FamilyMart/FamilyMart.js, requires-body=true
+EMS中国邮政物流速递去广告 = type=http-response, pattern=^https:\/\/ump\.ems\.com\.cn\/new-generation-extend\/redis\/pageInfoByChannel, script-path=https://kelee.one/Resource/JavaScript/WexinMiniPrograms/ems/ems.js, requires-body=true
+COCO点单去广告 = type=http-response, pattern=^https:\/\/coco-com\.e\.verystar\.net\/v1\/home\/info, script-path=https://kelee.one/Resource/JavaScript/WexinMiniPrograms/coco/coco.js, requires-body=true
+滴滴青桔去广告 = type=http-response, pattern=^https:\/\/htwkop\.xiaojukeji\.com\/gateway\?api=hm\.fa\.homeConfig, script-path=https://kelee.one/Resource/JavaScript/WexinMiniPrograms/qingju/qingju.js, requires-body=true
+`,
 };
 
 function mockedSources(raw = SOURCE_FIXTURES) {
@@ -78,7 +86,9 @@ const busRules = sectionLines('Body Rewrite').map((line) => {
     replacements: [[words[2], JSON.parse(words[3])], [words[4], JSON.parse(words[5])]],
   };
 });
-const matches = (url) => [...localPatterns, ...busRules.map((rule) => rule.pattern)].filter((pattern) => pattern.test(url));
+const scriptLines = sectionLines('Script');
+const scriptPatterns = scriptLines.map((line) => new RegExp(line.match(/\bpattern=(.+?),requires-body=/)[1]));
+const matches = (url) => [...localPatterns, ...busRules.map((rule) => rule.pattern), ...scriptPatterns].filter((pattern) => pattern.test(url));
 function busBody(body) {
   return busRules[0].replacements.reduce((result, [find, replacement]) => result.replace(new RegExp(find, 'g'), replacement), body);
 }
@@ -92,7 +102,7 @@ async function unchanged(before) {
   }
 }
 
-test('module: only four precise local responses, one bus rewrite and four exact MITM hosts are enabled', () => {
+test('module: original native rules and one own script use eight exact MITM hosts and an off-by-default experiment', () => {
   assert.match(moduleSource, /^#!name=.*微信/m);
   assert.match(moduleSource, /ddgksf2013|墨鱼/);
   assert.equal(mapLines.length, 4);
@@ -102,13 +112,17 @@ test('module: only four precise local responses, one bus rewrite and four exact 
   const mitm = sectionLines('MITM');
   assert.equal(mitm.length, 1);
   const hosts = mitm[0].replace(/^hostname\s*=\s*%APPEND%\s*/, '').split(',').map((host) => host.trim());
-  assert.deepEqual(hosts.sort(), ['api.blibee.com', 'mp.weixin.qq.com', 'ucmp.sf-express.com', 'wx.mygolbs.com'].sort());
-  assert.equal(new Set(hosts).size, 4);
+  assert.deepEqual(hosts.sort(), ['api.blibee.com', 'mp.weixin.qq.com', 'ucmp.sf-express.com', 'wx.mygolbs.com', 'minifm.maxxipoint.com', 'ump.ems.com.cn', 'coco-com.e.verystar.net', 'htwkop.xiaojukeji.com'].sort());
+  assert.equal(new Set(hosts).size, 8);
   assert.deepEqual(sectionLines('Rule'), []);
-  assert.deepEqual(sectionLines('Script'), []);
+  assert.equal(scriptLines.length, 1);
   assert.deepEqual(sectionLines('URL Rewrite'), []);
   assert.deepEqual(sectionLines('Header Rewrite'), []);
-  assert.ok(!moduleSource.includes('script-path='));
+  assert.match(scriptLines[0], /script-path=https:\/\/raw\.githubusercontent\.com\/wch19830910\/wch\/main\/Surge\/Script\/WeChat\.js,/);
+  assert.match(scriptLines[0], /max-size=1048576/);
+  assert.match(moduleSource, /^#!arguments=.*officialAccountExperimental:false/m);
+  assert.deepEqual(OPTION_DEFAULTS, { familyMart: true, ems: true, coco: true, qingju: true, officialAccountExperimental: false });
+  assert.ok(!scriptLines[0].includes('kelee.one'));
 });
 
 test('routing: five advertised endpoints match once, preserving the two upstream query-free anchors', () => {
@@ -139,7 +153,6 @@ test('routing: ordinary WeChat, payment, mini-program business and safety pages 
     'https://mp.weixin.qq.com/s/normal-article',
     'https://mp.weixin.qq.com/mp/appmsg_search?action=search',
     'https://mp.weixin.qq.com/cgi-bin/searchbiz',
-    'https://mp.weixin.qq.com/mp/getappmsgad?f=json',
     'https://mp.weixin.qq.com/mp/cps_product_info-extra',
     'https://mp.weixin.qq.com/mp/relatedsearchwordExtra',
     'https://weixin.qq.com/cgi-bin/micromsg-bin/newsendmsg',
@@ -171,6 +184,11 @@ test('routing: ordinary WeChat, payment, mini-program business and safety pages 
   for (const url of untouched) assert.equal(matches(url).length, 0, url);
 });
 
+test('routing: four extensions and the isolated experiment match only precise HTTPS endpoints', () => {
+  for (const url of ['https://minifm.maxxipoint.com/banner/list', 'https://minifm.maxxipoint.com/banner/list?a=1', 'https://ump.ems.com.cn/new-generation-extend/redis/pageInfoByChannel?test=1', 'https://coco-com.e.verystar.net/v1/home/info', 'https://htwkop.xiaojukeji.com/gateway?api=hm.fa.homeConfig', 'https://htwkop.xiaojukeji.com/gateway?x=1&api=hm.fa.homeConfig&y=2', 'https://mp.weixin.qq.com/mp/getappmsgad?f=json']) assert.equal(matches(url).length, 1, url);
+  for (const url of ['http://minifm.maxxipoint.com/banner/list', 'https://minifm.maxxipoint.com/banner/listExtra', 'https://minifm.maxxipoint.com/order/pay', 'https://ump.ems.com.cn/new-generation-extend/redis/pageInfoByChannelExtra', 'https://coco-com.e.verystar.net/v1/home/infoExtra', 'https://coco-com.e.verystar.net/v1/order/create', 'https://htwkop.xiaojukeji.com/gateway?api=hm.fa.homeConfigExtra', 'https://htwkop.xiaojukeji.com/gateway?api=hm.fa.pay', 'https://mp.weixin.qq.com/mp/getappmsgadExtra', 'https://minifm.maxxipoint.com.example.org/banner/list']) assert.equal(matches(url).length, 0, url);
+});
+
 test('bus response: only complete Ad and Ad_ab keys with numeric value 1 become zero', () => {
   const payload = {
     Ad: 1, Ad_ab: 1,
@@ -192,15 +210,27 @@ test('bus response: only complete Ad and Ad_ab keys with numeric value 1 become 
   assert.equal(busBody('{"route":"normal","arrivals":[1,10,11]}'), '{"route":"normal","arrivals":[1,10,11]}');
 });
 
-test('source merge: reviewed fixtures select four local responses, one native bus operation and exact hosts', () => {
+test('source merge: selected configuration facts add four references without distributing upstream JavaScript', () => {
   const parsed = parseSources(SOURCE_FIXTURES);
   assert.equal(parsed.mapLocal.length, 4);
   assert.equal(parsed.bodyRewrite.replacements.length, 2);
-  assert.deepEqual([...parsed.hosts].sort(), ['api.blibee.com', 'mp.weixin.qq.com', 'ucmp.sf-express.com', 'wx.mygolbs.com'].sort());
+  assert.equal(parsed.hosts.length, 8);
+  assert.equal(parsed.miniPrograms.selected.length, 4);
+  assert.equal(sourceSnapshot.schemaVersion, 2);
+  assert.equal(sourceSnapshot.generatedScope.ownScript.options.officialAccountExperimental, false);
   assert.ok(sourceSnapshot && typeof sourceSnapshot === 'object');
   assert.ok(!JSON.stringify(parsed.mapLocal).includes('getappmsgad'));
   assert.ok(!JSON.stringify(parsed.mapLocal).includes('wp-json'));
   assert.ok(!JSON.stringify(parsed.mapLocal).includes('weixin110'));
+});
+
+test('extension source guard rejects changed hosts, scripts or duplicates while ignoring unrelated projects', () => {
+  assert.doesNotThrow(() => parseMiniProgramSource(SOURCE_FIXTURES.miniPrograms));
+  for (const source of [SOURCE_FIXTURES.miniPrograms.replace('minifm\\.maxxipoint\\.com', '.*\\.maxxipoint\\.com'), SOURCE_FIXTURES.miniPrograms.replace('/FamilyMart/FamilyMart.js', '/FamilyMart/new.js'), SOURCE_FIXTURES.miniPrograms + SOURCE_FIXTURES.miniPrograms]) {
+    assert.notEqual(source, SOURCE_FIXTURES.miniPrograms);
+    assert.throws(() => parseMiniProgramSource(source));
+  }
+  assert.doesNotThrow(() => parseMiniProgramSource(SOURCE_FIXTURES.miniPrograms + '\nUnrelated = type=http-response,pattern=^https://example.org,script-path=https://example.org/a.js\n'));
 });
 
 test('source guard: new selected domains, scripts and broad paths require review before publication', () => {
@@ -263,7 +293,8 @@ test('check-only mode validates changed metadata without writing either publishe
 });
 
 test('native Surge CLI accepts the module as a complete temporary profile', { skip: !existsSync(SURGE_CLI) && 'Surge CLI is not installed on this host' }, async () => {
-  const profile = moduleSource.replace(/hostname\s*=\s*%APPEND%\s*/g, 'hostname = ') + '\n[Rule]\nFINAL,DIRECT\n';
+  let profile = moduleSource.replace(/hostname\s*=\s*%APPEND%\s*/g, 'hostname = ') + '\n[Rule]\nFINAL,DIRECT\n';
+  for (const [key, value] of Object.entries(OPTION_DEFAULTS)) profile = profile.replaceAll(`{{{${key}}}}`, String(value));
   const directory = await mkdtemp(join(tmpdir(), 'wechat-profile-'));
   const path = join(directory, 'profile.conf');
   try {
