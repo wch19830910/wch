@@ -18,6 +18,8 @@
 `build-mihome.mjs` 同步奶思／fmz200 的原生米家规则，显示名称为“米家（开屏与推荐去广告）”。仅一条广告配置域名拒绝和两条 JSON 本地响应规则，不含 JavaScript 或 JQ。
 `build-wechat.mjs` 保留墨鱼公众号推广、便利蜂、顺丰、掌上公交，并加入全家、EMS、COCO、青桔指定广告和默认关闭的公众号实验，显示名称为“微信（公众号推广与部分小程序去广告）”。基础使用原生空响应/正文替换；`wechat-runtime.mjs` 独立实现新增五个目标的响应处理，不复制第三方脚本。
 
+`build-riskbird.mjs` 参考可莉风鸟规则的 QingRex 转换配置，仅生成首页轮播图与热门企业推荐两项，名称“风鸟（首页广告与推荐精简）”。推荐老板脚本不接入，无远程 JavaScript 或 JQ。
+
 在仓库根目录运行，需要 Node.js 20+：
 
 ```sh
@@ -38,6 +40,7 @@ node Surge/scripts/build-tieba.mjs
 node Surge/scripts/build-zhihu.mjs
 node Surge/scripts/build-mihome.mjs
 node Surge/scripts/build-wechat.mjs
+node Surge/scripts/build-riskbird.mjs
 ```
 
 模块输出到 `Surge/AdBlock/Ximalaya.sgmodule`，原始规则快照输出到 `Surge/upstream/Ximalaya.conf`。
@@ -68,6 +71,8 @@ node Surge/scripts/build-wechat.mjs
 米家输出 `Surge/AdBlock/MiHome.sgmodule` 和逐字原始快照 `Surge/upstream/MiHome.sgmodule`。构建只接受已审核的配置段、一个 SDK 域名及两条广告路径，未知动作、主机或扩大范围时停止，保留已有成品；`--check` 只检查不写文件。每 6 小时检查上游，通过 `node Surge/tests/mihome.test.mjs` 的范围及失败保护检查后再发布。模块、快照、构建和测试保留奶思署名并按 [GPL-3.0](../licenses/fmz200-GPL-3.0.txt) 发布，无远程脚本；需要 Surge iOS 5.9.1+ / Mac 5.5.1+。设备接口未直接匹配不等于实机兼容保证，广告配置域名规则对其他 App 的相同请求也生效。[使用说明](../AdBlock/MiHome.md)。
 
 微信输出 `Surge/AdBlock/WeChat.sgmodule`、`Surge/Script/WeChat.js` 和 `Surge/upstream/WeChat.sources.json`。保留原五个目标，新增四个可关闭小程序广告项及一个默认关闭的公众号实验，八个精确 MITM 主机；单一新增响应入口与原公交规则不重叠。独立 JSON span 编辑只改变目标字段，保留其他正文文本／大整数；EMS 内层数组的未知成员保留，仅重编码目标字符串。公众号仍是旧接口兼容性实验，不恢复已失效的字符串替换，不默认启用。构建只监测 QingRex 四个已审核配置行，不下载可莉或 Belcheck 的原脚本，也不自动继承它们的新逻辑。每六小时构建，通过 `node Surge/tests/wechat-runtime.test.mjs` 和 `node Surge/tests/wechat.test.mjs` 后仅发布三个生成文件；`--check` 不写入。Surge每24小时检查本仓库独立脚本更新。需 Surge iOS 5.10+ / Mac 5.6+，无JQ/WebView依赖，未手机实测。保留[作者及接口参考声明](../licenses/ddgksf2013-WeChat-NOTICE.txt)。[功能与参数说明](../AdBlock/WeChat.md)。
+
+风鸟输出 `Surge/AdBlock/RiskBird.sgmodule` 和 `Surge/upstream/RiskBird.sources.json`。仅两项 HTTPS 完整路径的空 JSON 本地响应、一个精确 MITM 主机；来源中推荐老板执行脚本明确排除，不下载或镜像其正文。元信息保留作者、转换参考、hash、所选接口及排除原因，不将索引或模板许可扩大到其他插件代码。未知域名、路径、动作、配置段或新增脚本变化须先审查，失败保留已有产物，`--check` 不写入。每六小时检查上游，通过 `node Surge/tests/riskbird.test.mjs` 后只发布模块和来源记录；无远程脚本更新链。需 Surge iOS 5.9.1+ / Mac 5.5.1+，未手机实测。[使用说明](../AdBlock/RiskBird.md)及[署名声明](../licenses/RiskBird-NOTICE.txt)。
 
 需要调整 Surge 内的显示名称或描述时，修改对应构建脚本中的 `#!name` / `#!desc` 文案，保留 JavaScript 引号和逗号。不要只修改自动生成的 `.sgmodule`，因为后续同步会覆盖它。
 
