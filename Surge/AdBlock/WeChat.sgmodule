@@ -1,0 +1,34 @@
+#!name=微信（公众号推广与部分小程序去广告）
+#!desc=整合墨鱼已审核规则：处理公众号带货商品信息和相关搜索词、便利蜂小程序横幅、顺丰速运小程序信息流广告，以及掌上公交小程序 Ad/Ad_ab 广告标志。4条本地空HTTP 200响应与1条原生正文重写，无远程脚本。未启用已标失效的公众号图文广告旧替换、微信外链安全提示跳过及通用隐藏内容脚本；不覆盖朋友圈、视频号和全部小程序5秒开屏。每6小时检查上游，范围变化经审核后接入；需Surge iOS 5.10+ / Mac 5.6+，开启重写与MITM并安装及信任证书。未在最新版微信手机实测，不保证移除所有广告。
+#!author=ddgksf2013（墨鱼）；本仓库原生兼容整理
+#!category=AdBlock
+#!homepage=https://github.com/ddgksf2013/Rewrite
+#!raw-url=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/WeChat.sgmodule
+
+# 原作者：ddgksf2013 / 墨鱼；兼容整理日期：2026-10-26。
+# 来源署名及限制：https://github.com/wch19830910/wch/blob/main/Surge/licenses/ddgksf2013-WeChat-NOTICE.txt
+# 去开屏来源：https://ddgksf2013.top/rewrite/StartUpAds.conf
+# 小程序来源：https://raw.githubusercontent.com/ddgksf2013/Rewrite/refs/heads/master/AdBlock/Applet.conf
+# 公交行为参考：https://raw.githubusercontent.com/ddgksf2013/Scripts/refs/heads/master/zhangshanggongjiao.js（仅静态审查，不发布原脚本）
+# 来源SHA256：startup=9a3443554fe38d94c1b65d648c89f408c87574c674d4a7f4550c758d5d75639b；applet=6259647585e993f4b28897e8cba3b96366a775ed8f897b87d6cf8547e7ae28f0；bus=0a2ebfbf41ed4b7dbd39f4aa50616ac42cd59d5eb0baa026fc1b98e7a4f5a8bb
+# 自动生成；显示名称和说明请修改 Surge/scripts/build-wechat.mjs，直接改成品会被同步覆盖。
+# 仅保留5个明确URL目标与4个精确MITM主机；没有整域拒绝、脚本执行、会员或隐藏内容处理。
+# 公交仅将完整JSON键 Ad / Ad_ab 的数字1改为0；保留10、其他键、字符串和未知字段。
+# 不启用旧 getappmsgad、WeChat110 或 WordPress 通用脚本；参考记录见 Surge/upstream/WeChat.sources.json。
+# 下载、解析或范围验证失败时不发布新成品。
+
+[Map Local]
+# 公众号带货商品信息
+^https?:\/\/mp\.weixin\.qq\.com\/mp\/cps_product_info(?:\?|$) data-type=text data="" status-code=200
+# 公众号相关搜索词
+^https?:\/\/mp\.weixin\.qq\.com\/mp\/relatedsearchword(?:\?|$) data-type=text data="" status-code=200
+# 便利蜂小程序横幅
+^https?:\/\/api\.blibee\.com\/cvsnotify-api\/cvs\/notify\/app\/banner\/v\d+$ data-type=text data="" status-code=200
+# 顺丰速运小程序信息流广告
+^https?:\/\/ucmp\.sf-express\.com\/proxy\/operation-platform\/info-flow-adver\/query$ data-type=text data="" status-code=200
+
+[Body Rewrite]
+http-response ^https?:\/\/wx\.mygolbs\.com\/WxBusServer\/ApiData\.do(?:\?|$) (?<!\\)\x22Ad\x22\s*:\s*1(?=\s*[,}]) "\"Ad\":0" (?<!\\)\x22Ad_ab\x22\s*:\s*1(?=\s*[,}]) "\"Ad_ab\":0"
+
+[MITM]
+hostname = %APPEND% mp.weixin.qq.com, api.blibee.com, ucmp.sf-express.com, wx.mygolbs.com

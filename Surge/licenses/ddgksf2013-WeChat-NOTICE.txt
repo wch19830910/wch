@@ -1,0 +1,28 @@
+WeChat Surge module — upstream attribution and notices
+
+Original rule author: ddgksf2013 / Cuttlefish / 墨鱼手记.
+Integration and native Surge conversion: wch19830910/wch, 2026-10-26.
+
+Sources:
+https://ddgksf2013.top/rewrite/StartUpAds.conf
+https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/Applet.conf
+https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/WeChat.conf
+https://raw.githubusercontent.com/ddgksf2013/Scripts/master/zhangshanggongjiao.js
+
+The upstream rule headers request attribution when quoting or referencing them.
+The original bus-script notice states:
+“本腳本僅供學習交流使用，禁止轉載售賣”
+
+This integration expresses the selected advertising behavior using native Surge
+Map Local and Body Rewrite configuration. It does not redistribute or execute
+the original bus JavaScript, general WordPress mini-program JavaScript, or
+WeChat110 redirect JavaScript.
+
+The reviewed upstream Rewrite and Scripts repositories did not declare a
+repository-wide LICENSE at the time of integration. This notice records the
+original author and statements; it does not grant additional upstream rights
+or relicense upstream material. Other independent modules retain their own
+licenses and notices.
+
+The old getappmsgad rule is marked invalid by its original author and is not
+enabled. Scope and device compatibility are documented in Surge/AdBlock/WeChat.md.

@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "author": "ddgksf2013 / 墨鱼",
+  "notice": "https://github.com/wch19830910/wch/blob/main/Surge/licenses/ddgksf2013-WeChat-NOTICE.txt",
+  "sources": {
+    "startup": {
+      "url": "https://ddgksf2013.top/rewrite/StartUpAds.conf",
+      "sha256": "9a3443554fe38d94c1b65d648c89f408c87574c674d4a7f4550c758d5d75639b",
+      "metadata": {
+        "ScriptName": "墨鱼去开屏𝐕𝟐.𝟎",
+        "Author": "@ddgksf2013",
+        "UpdateTime": "2026-08-29"
+      },
+      "selected": [
+        {
+          "title": "weixindaihuo",
+          "line": 796,
+          "text": "^https?:\\/\\/mp\\.weixin\\.qq\\.com\\/mp\\/cps_product_info url reject-200"
+        },
+        {
+          "title": "WeChat",
+          "line": 798,
+          "text": "^https?:\\/\\/mp\\.weixin\\.qq\\.com\\/mp\\/relatedsearchword url reject-200"
+        }
+      ],
+      "excluded": [
+        {
+          "title": "WeChat",
+          "line": 799,
+          "text": "^https?:\\/\\/mp\\.weixin\\.qq\\.com\\/mp\\/getappmsgad url response-body advertisement response-body ddgksf2013",
+          "reason": "公众号 getappmsgad 文本替换在独立 WeChat.conf 中被原作者标为已失效，未启用。",
+          "noticeUrl": "https://raw.githubusercontent.com/ddgksf2013/Rewrite/refs/heads/master/AdBlock/WeChat.conf"
+        },
+        {
+          "title": "WeChat110",
+          "line": 794,
+          "text": ";^https\\:\\/\\/(weixin110\\.qq|security.wechat)\\.com\\/cgi-bin\\/mmspamsupport-bin\\/newredirectconfirmcgi\\? url script-response-body https://raw.githubusercontent.com/ddgksf2013/Scripts/master/weixin110.js",
+          "reason": "上游禁用的外链安全提示处理，保持排除。"
+        }
+      ],
+      "policy": "只审查微信条目；其他App增删不影响范围验证。"
+    },
+    "applet": {
+      "url": "https://raw.githubusercontent.com/ddgksf2013/Rewrite/refs/heads/master/AdBlock/Applet.conf",
+      "sha256": "6259647585e993f4b28897e8cba3b96366a775ed8f897b87d6cf8547e7ae28f0",
+      "metadata": {
+        "ScriptName": "微信小程序去除广告[墨鱼版]",
+        "Author": "ddgksf2013",
+        "UpdateTime": "2023-09-13"
+      },
+      "selected": [
+        {
+          "title": "小程序_便利蜂@ddgksf2013",
+          "line": 29,
+          "text": "^https?:\\/\\/api\\.blibee\\.com\\/cvsnotify-api\\/cvs\\/notify\\/app\\/banner\\/v\\d+$ url reject-200"
+        },
+        {
+          "title": "小程序_顺丰速运@ddgksf2013",
+          "line": 31,
+          "text": "^https?:\\/\\/ucmp\\.sf-express\\.com\\/proxy\\/operation-platform\\/info-flow-adver\\/query$ url reject-200"
+        },
+        {
+          "title": "小程序_掌上公交@ddgksf2013",
+          "line": 35,
+          "text": "^https?:\\/\\/wx\\.mygolbs\\.com\\/WxBusServer\\/ApiData\\.do url script-response-body https://raw.githubusercontent.com/ddgksf2013/Scripts/refs/heads/master/zhangshanggongjiao.js"
+        }
+      ],
+      "excluded": [
+        {
+          "title": "公众号_图文去广告@ddgksf2013",
+          "line": 33,
+          "text": "^(http|https):\\/\\/mp\\.weixin\\.qq\\.com\\/mp\\/getappmsgad url response-body advertisement response-body ddgksf2013",
+          "reason": "与去开屏中的旧 getappmsgad 规则重复，且独立规则已标失效；未启用。",
+          "noticeUrl": "https://raw.githubusercontent.com/ddgksf2013/Rewrite/refs/heads/master/AdBlock/WeChat.conf"
+        },
+        {
+          "title": "小程序_去广告@ddgksf2013",
+          "line": 37,
+          "text": "^(https?://)?([a-zA-Z0-9]+(-[a-zA-Z0-9]+)*\\.)+[a-zA-Z]{2,}(:\\d+)?/wp-json/[a-zA-Z0-9_-]+/(mp\\/)?v\\d/posts url script-response-body https://raw.githubusercontent.com/ddgksf2013/Scripts/refs/heads/master/applet.js",
+          "reason": "通用 WordPress 文章处理含隐藏内容访问行为，超出本模块广告范围；未引入。"
+        }
+      ],
+      "policy": "审核全部5条原规则和主机集合，仅启用3项选择。"
+    },
+    "bus": {
+      "url": "https://raw.githubusercontent.com/ddgksf2013/Scripts/refs/heads/master/zhangshanggongjiao.js",
+      "sha256": "0a2ebfbf41ed4b7dbd39f4aa50616ac42cd59d5eb0baa026fc1b98e7a4f5a8bb",
+      "originalReplacements": [
+        {
+          "find": "Ad\":1",
+          "replacement": "Ad\":0"
+        },
+        {
+          "find": "Ad_ab\":1",
+          "replacement": "Ad_ab\":0"
+        }
+      ],
+      "policy": "仅静态核对两次替换；不执行、不保存或发布原脚本。"
+    }
+  },
+  "generatedScope": {
+    "mapLocal": [
+      {
+        "name": "公众号带货商品信息",
+        "pattern": "^https?:\\/\\/mp\\.weixin\\.qq\\.com\\/mp\\/cps_product_info(?:\\?|$)"
+      },
+      {
+        "name": "公众号相关搜索词",
+        "pattern": "^https?:\\/\\/mp\\.weixin\\.qq\\.com\\/mp\\/relatedsearchword(?:\\?|$)"
+      },
+      {
+        "name": "便利蜂小程序横幅",
+        "pattern": "^https?:\\/\\/api\\.blibee\\.com\\/cvsnotify-api\\/cvs\\/notify\\/app\\/banner\\/v\\d+$"
+      },
+      {
+        "name": "顺丰速运小程序信息流广告",
+        "pattern": "^https?:\\/\\/ucmp\\.sf-express\\.com\\/proxy\\/operation-platform\\/info-flow-adver\\/query$"
+      }
+    ],
+    "bodyRewrite": {
+      "url": "^https?:\\/\\/wx\\.mygolbs\\.com\\/WxBusServer\\/ApiData\\.do(?:\\?|$)",
+      "replacements": [
+        {
+          "find": "(?<!\\\\)\\x22Ad\\x22\\s*:\\s*1(?=\\s*[,}])",
+          "replacement": "\"Ad\":0"
+        },
+        {
+          "find": "(?<!\\\\)\\x22Ad_ab\\x22\\s*:\\s*1(?=\\s*[,}])",
+          "replacement": "\"Ad_ab\":0"
+        }
+      ]
+    },
+    "mitmHosts": [
+      "mp.weixin.qq.com",
+      "api.blibee.com",
+      "ucmp.sf-express.com",
+      "wx.mygolbs.com"
+    ]
+  },
+  "modifications": [
+    "合并后仅5个URL目标、4个精确主机",
+    "四条reject-200转换为空HTTP200本地响应",
+    "公众号与公交URL增加端点边界",
+    "公交完整JSON键及数字1边界替代原宽泛替换",
+    "保留普通数据、登录、聊天、支付、会员与外链安全提醒",
+    "去除失效与重复getappmsgad",
+    "不引入WordPress隐藏内容脚本",
+    "不执行、保存或发布上游JavaScript正文"
+  ],
+  "testingLimit": "配置与合成样本测试，不代表最新版微信或所有小程序的设备实测结果。"
+}
