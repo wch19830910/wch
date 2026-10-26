@@ -20,6 +20,7 @@
 | Tieba | [百度贴吧（去广告与页面净化）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Tieba.sgmodule) | [app2smile](https://raw.githubusercontent.com/app2smile/rules/master/module/tieba.sgmodule) / [ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/TieBaAds.conf) |
 | Zhihu | [知乎（去广告与页面净化）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Zhihu.sgmodule) | [zirawell / RuCu6](https://raw.githubusercontent.com/zirawell/R-Store/main/Rule/Surge/Adblock/App/Z/知乎/zhihu.sgmodule) |
 | MiHome | [米家（开屏与推荐去广告）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/MiHome.sgmodule) | [奶思 / fmz200](https://raw.githubusercontent.com/fmz200/wool_scripts/main/Surge/module/split/partM/Mijia.sgmodule) |
+| WeChat | [微信（公众号推广与部分小程序去广告）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/WeChat.sgmodule) | [墨鱼 / ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/Applet.conf) |
 
 在 Surge 的模块页面选择“从 URL 安装”，粘贴 Raw 地址并启用。安装并信任 MITM 证书，开启 MITM、重写和脚本，然后完全退出 App 再打开。相同 App 只启用一份净化模块。
 
@@ -36,6 +37,7 @@
 - `Update Tieba` 每 6 小时检查 app2smile 官方贴吧配置、广告地址表和墨鱼页面精简规则，并编译检查两份远程脚本；测试通过后自动发布变化。两份脚本由 Surge 每 24 小时直接从 app2smile 检查更新。
 - `Update Zhihu` 每 6 小时检查 zirawell 知乎来源，生成带参数与兼容修复的本仓库脚本。原脚本内容变化或配置超出已审核范围时暂停发布，兼容审查及测试通过后接入；Surge 每 24 小时检查本仓库脚本更新。
 - `Update MiHome` 每 6 小时检查奶思原生米家模块，验证并测试通过后发布；没有远程 JavaScript，扩大规则范围时须先审核。
+- `Update WeChat` 每 6 小时检查墨鱼已审核的公众号和小程序来源，测试通过后发布原生模块；未启用已标失效的旧公众号图文替换、外链提示跳过或通用隐藏内容脚本。
 - 转换或语法检查失败时停止发布，保留仓库上次生成的模块和快照；没有变化不产生提交。直接引用的原作者脚本由 Surge 独立更新，这不是手机端脚本冻结或回滚保证。
 - Surge 自动检查通过 URL 安装的模块更新，检查周期由 Surge 控制。
 - 喜马拉雅、高德地图、铁路12306、酷安、菜鸟、什么值得买、闲鱼和微博的 JavaScript 直接引用原作者分支；小红书使用原作者站点的脚本。Surge 每 24 小时检查这些远程脚本更新。汽水音乐没有远程 JavaScript，直接使用原生 JQ 规则。
@@ -78,6 +80,8 @@ Surge 的 [MITM `auto-quic-block`](https://manual.nssurge.com/http/mitm.html) �
 
 米家为奶思原生规则同步版：处理开屏、推荐横幅、轮播与 `myTab` 推荐位，不含远程脚本或完整界面重做。保留 `sdkconfig.ad.xiaomi.com` 拒绝，该域名规则也会影响其他 App 对它的请求；未直接匹配设备控制、自动化和摄像头接口，未实机验证。[详细说明](MiHome.md)。
 
+微信处理公众号文章的带货商品信息与相关搜索词，以及便利蜂、顺丰速运、掌上公交三个小程序的指定广告接口。四个精确 MITM 主机、无远程 JavaScript，需 Surge iOS 5.10+ / Mac 5.6+。不覆盖朋友圈、视频号或全部小程序五秒开屏，旧图文广告接口已被上游标注失效并排除；未手机实测。[功能范围与更新说明](WeChat.md)。
+
 ## Build
 
 在仓库根目录执行，需要 Node.js 20+；上游包含 JQ 规则时还需要 jq：
@@ -99,6 +103,7 @@ node Surge/scripts/build-freshippo.mjs
 node Surge/scripts/build-tieba.mjs
 node Surge/scripts/build-zhihu.mjs
 node Surge/scripts/build-mihome.mjs
+node Surge/scripts/build-wechat.mjs
 ```
 
 - [Surge remote scripts](https://manual.nssurge.com/scripting/overview.html)
