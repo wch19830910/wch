@@ -1,6 +1,6 @@
 #!name=汽水音乐（广告与推广净化）
-#!desc=汽水音乐广告与推广净化版：处理视频及通用广告、商业弹窗、TAGS 推荐，清理我的页面广告横幅、会员试听引导、热搜与搜索活动，并在歌曲流中仅保留歌曲条目；保留上游位置查询及 DNS 配置接口拦截。原作者 ddgksf2013；规则每 6 小时检查上游，无远程 JavaScript。需 Surge iOS 5.14+ / Mac 5.9+（原生 JQ）；开启重写、MITM，并安装及信任 MITM 证书。不解锁会员或音乐版权；可能影响定位、推荐和部分页面功能，异常时请停用。不保证移除所有广告；尚未在最新版汽水音乐实机验证。
-#!author=ddgksf2013
+#!desc=仅处理beta-luna.douyin.com和api.qishui.com的指定/luna/接口：视频及通用广告、商业弹窗、TAGS推荐、我的页面广告横幅、会员试听引导、热搜、搜索活动和歌曲流推广。2026-10-27兼容修复：移除字节系共享域名配置/get_domains与/location/info拦截，不再追加tnc通配MITM；规则限定两个汽水域名及精确路径边界。参考ddgksf2013，每6小时检查上游；未审核范围变化停止更新。无远程JavaScript。需Surge iOS 5.14+ / Mac 5.9+，启用重写、MITM并信任证书。不解锁会员或版权；推荐等页面内容会精简，未在最新App实机验证，不保证所有广告均消失。
+#!author=ddgksf2013；本仓库兼容性调整
 #!homepage=https://raw.githubusercontent.com/ddgksf2013/Rewrite/refs/heads/master/AdBlock/QiShuiMusicAds.conf
 #!category=AdBlock
 #!raw-url=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/SodaMusic.sgmodule
@@ -8,37 +8,33 @@
 # 上游：https://raw.githubusercontent.com/ddgksf2013/Rewrite/refs/heads/master/AdBlock/QiShuiMusicAds.conf
 # 上游版本：V1.0.6
 # 上游规则 SHA256：4754b7eeffc2c73b61b8abc23e4a2c3a51c3fdf63f1c374277c97625c6f0a150
-# 自动生成，请修改 Surge/scripts/build-soda-music.mjs；未知语法停止更新并保留旧版。
-# 按上游 @Attention 保留原作者出处；配置不包含远程 JavaScript。
-# 原作者使用提示：使用前请卸载汽水音乐，挂载模块后再安装使用；重装前请确认需要保留的下载与数据。
-# JQ Body Rewrite 需要 Surge iOS 5.14+ 或 Surge Mac 5.9+。
-# 上游规则保留位置隐私、TAGS/搜索推荐和推广界面净化，未添加会员或版权解锁。
+# 自动生成；名称、说明和兼容范围请修改 Surge/scripts/build-soda-music.mjs。
+# 2026-10-27：排除共享域名配置与位置拦截；全部规则收窄到两个精确主机及端点，避免影响其他字节系App。
+# 上游原始快照仅供追溯，不直接安装。同步也不会重新加入上述排除项。
+# 未使用抖音的评论接口；这是合成路由/配置验证，尚未手机验证故障是否恢复。
+# 使用说明：https://github.com/wch19830910/wch/blob/main/Surge/AdBlock/SodaMusic.md
 
 [Map Local]
-# > 视频广告@ddgksf2013
-^https:\/\/[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){1,3}\/luna\/media_ads data-type=text data="" status-code=200
-# > 通用广告@ddgksf2013
-^https:\/\/[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){1,3}\/luna\/ads data-type=text data="" status-code=200
-# > 位置隐私@ddgksf2013
-^https:\/\/[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){1,3}\/location\/info data-type=text data="" status-code=200
-# > 广告弹窗@ddgksf2013
-^https:\/\/[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){1,3}\/luna\/commerce data-type=text data="" status-code=200
-# > TAGS推荐@ddgksf2013
-^https:\/\/[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){1,3}\/luna\/hashtag\/recommend data-type=text data="" status-code=200
-# > DNS处理@ddgksf2013
-^https:\/\/tnc.*zijieapi\.com\/get_domains data-type=text data="" status-code=200
+# 视频广告（ddgksf2013；本仓库限定主机与路径边界）
+^https:\/\/(?:beta-luna\.douyin\.com|api\.qishui\.com)\/luna\/media_ads(?:\?|$) data-type=text data="" status-code=200
+# 通用广告（ddgksf2013；本仓库限定主机与路径边界）
+^https:\/\/(?:beta-luna\.douyin\.com|api\.qishui\.com)\/luna\/ads(?:\?|$) data-type=text data="" status-code=200
+# 商业弹窗（ddgksf2013；本仓库限定主机与路径边界）
+^https:\/\/(?:beta-luna\.douyin\.com|api\.qishui\.com)\/luna\/commerce(?:\?|$) data-type=text data="" status-code=200
+# TAGS推荐（ddgksf2013；本仓库限定主机与路径边界）
+^https:\/\/(?:beta-luna\.douyin\.com|api\.qishui\.com)\/luna\/hashtag\/recommend(?:\?|$) data-type=text data="" status-code=200
 
 [Body Rewrite]
-# > 我的页面推广@ddgksf2013
-http-response-jq ^https:\/\/[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){1,3}\/luna\/me\? 'del(.reward_ad_banner)'
-# > 会员免费听整月VIEW@ddgksf2013
-http-response-jq ^https:\/\/[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){1,3}\/luna\/card 'del(.preview_guide)'
-# > 热门搜索@ddgksf2013
-http-response-jq ^https:\/\/[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){1,3}\/luna\/search-block 'del(.search_chart_block)'
-# > 搜索界面活动@ddgksf2013
-http-response-jq ^https:\/\/[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){1,3}\/luna\/activities 'del(.activity_map)'
-# > 音乐流推广@ddgksf2013
-http-response-jq ^https:\/\/[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){1,3}\/luna\/feed\/song-tab '.items |= map(select(.type == "track"))'
+# 我的页面广告横幅（ddgksf2013；本仓库限定主机与路径边界）
+http-response-jq ^https:\/\/(?:beta-luna\.douyin\.com|api\.qishui\.com)\/luna\/me(?:\?|$) 'del(.reward_ad_banner)'
+# 会员试听引导（ddgksf2013；本仓库限定主机与路径边界）
+http-response-jq ^https:\/\/(?:beta-luna\.douyin\.com|api\.qishui\.com)\/luna\/card(?:\?|$) 'del(.preview_guide)'
+# 热门搜索（ddgksf2013；本仓库限定主机与路径边界）
+http-response-jq ^https:\/\/(?:beta-luna\.douyin\.com|api\.qishui\.com)\/luna\/search-block(?:\?|$) 'del(.search_chart_block)'
+# 搜索界面活动（ddgksf2013；本仓库限定主机与路径边界）
+http-response-jq ^https:\/\/(?:beta-luna\.douyin\.com|api\.qishui\.com)\/luna\/activities(?:\?|$) 'del(.activity_map)'
+# 歌曲流推广（ddgksf2013；本仓库限定主机与路径边界）
+http-response-jq ^https:\/\/(?:beta-luna\.douyin\.com|api\.qishui\.com)\/luna\/feed\/song-tab(?:\?|$) '.items |= map(select(.type == "track"))'
 
 [MITM]
-hostname = %APPEND% beta-luna.douyin.com, api.qishui.com, tnc*-*.zijieapi.com
+hostname = %APPEND% beta-luna.douyin.com, api.qishui.com

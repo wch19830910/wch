@@ -7,6 +7,7 @@ on:
   push:
     paths:
       - Surge/scripts/build-soda-music.mjs
+      - Surge/tests/soda-music.test.mjs
       - .github/workflows/update-soda-music.yml
 
 permissions:
@@ -39,9 +40,12 @@ jobs:
             exit 1
           fi
           node --check Surge/scripts/build-soda-music.mjs
+          node --check Surge/tests/soda-music.test.mjs
           jq --version
       - name: 从墨鱼官方源构建并验证
         run: node Surge/scripts/build-soda-music.mjs
+      - name: 验证汽水范围和抖音兼容保护
+        run: node Surge/tests/soda-music.test.mjs
       - name: 只发布通过验证的模块和上游快照
         shell: bash
         env:
