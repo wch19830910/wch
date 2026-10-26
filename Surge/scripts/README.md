@@ -9,7 +9,7 @@
 `build-cainiao.mjs` 对应菜鸟 App 和支付宝小程序净化条目，显示名称为“菜鸟（去广告与页面净化）”。
 `build-smzdm.mjs` 对应什么值得买净化条目，显示名称为“什么值得买（去广告）”，保留 blackmatrix7、ddgksf2013 双署名。
 `build-goofish.mjs` 对应闲鱼净化条目，显示名称为“闲鱼（全净化）”，JQ 转为 Surge 原生 Body Rewrite。
-`build-soda-music.mjs` 对应汽水音乐净化条目，显示名称为“汽水音乐（广告与推广净化）”，不使用远程 JavaScript，JQ 转为 Surge 原生 Body Rewrite。
+`build-soda-music.mjs` 对应汽水音乐净化条目，显示名称为“汽水音乐（广告与推广净化）”，不使用远程 JavaScript，JQ 转为 Surge 原生 Body Rewrite。2026-10-27 起固定两个汽水主机和九个已审核 `/luna/` 端点，排除共享 `get_domains` 与位置接口，未知主机/路径/动作/JQ 变化停止更新，避免同步重新引入跨 App 拦截。
 `build-didi.mjs` 对应墨鱼 GitHub 索引推荐的 ZenmoFeiShi 滴滴完整精简版，显示名称为“滴滴出行（全净化）”。完整保留上游行为，包括隐藏安全中心入口、钱包与行程页面精简；不是保守去广告版。
 `build-weibo.mjs` 对应墨鱼微博及国际版/轻享版完整净化规则，显示名称为“微博（全净化）”；完整保留原上游皮肤状态、视频预览和界面精简行为，不是账号会员开通，也不是仅去广告。
 `build-freshippo.mjs` 对应 zirawell 独立原生 Surge 盒马完整净化模块，模块显示名称为“盒马（全净化）”。保留全部 IP 拒绝、AMDC、页面及更新查询接口拦截和远程响应脚本；详细描述包含开屏、首页与二楼、我的、购物车推荐、小程序首页的处理范围及副作用，不是仅去开屏，也不保证移除所有广告。
@@ -77,3 +77,5 @@ node Surge/scripts/build-riskbird.mjs
 需要调整 Surge 内的显示名称或描述时，修改对应构建脚本中的 `#!name` / `#!desc` 文案，保留 JavaScript 引号和逗号。不要只修改自动生成的 `.sgmodule`，因为后续同步会覆盖它。
 
 GitHub Actions 会定期运行本脚本；下载的原作者脚本不在构建时直接执行。网易云另对本仓库生成的衍生脚本运行隔离合成样本测试，不请求业务接口；检查通过不等于最新版 App 实机验证。
+
+汽水音乐兼容性测试：`node Surge/tests/soda-music.test.mjs`。验证两个精确主机与端点边界、抖音评论和共享配置等负例、JQ 内容、上游变化/下载失败不覆盖成品，以及本机 Surge 原生语法；CI 先构建再测试，全部通过后才发布。[修复说明](../AdBlock/SodaMusic.md)。

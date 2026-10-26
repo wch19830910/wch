@@ -1,60 +1,45 @@
 #!/usr/bin/env node
-// Node.js 20+、jq。把墨鱼汽水音乐配置转换成 Surge 原生 Map Local 和 JQ Body Rewrite。
+// ddgksf2013 规则的 Surge 转换；2026-10-27 缩小作用范围，移除共享配置与位置接口拦截。
 import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const SOURCE_URL = 'https://raw.githubusercontent.com/ddgksf2013/Rewrite/refs/heads/master/AdBlock/QiShuiMusicAds.conf';
+export const SOURCE_URL = 'https://raw.githubusercontent.com/ddgksf2013/Rewrite/refs/heads/master/AdBlock/QiShuiMusicAds.conf';
 const SURGE_ROOT = fileURLToPath(new URL('../', import.meta.url));
 const OUTPUT_MODULE = resolve(SURGE_ROOT, 'AdBlock/SodaMusic.sgmodule');
 const OUTPUT_SOURCE = resolve(SURGE_ROOT, 'upstream/QiShuiMusicAds.conf');
-const CHECK_ONLY = process.argv.includes('--check');
+const SOURCE_HOSTS = ['beta-luna.douyin.com', 'api.qishui.com', 'tnc*-*.zijieapi.com'];
+const HOSTS = SOURCE_HOSTS.slice(0, 2);
+const ORIGINAL_PREFIX = String.raw`^https:\/\/[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+){1,3}`;
+const SCOPED_PREFIX = String.raw`^https:\/\/(?:beta-luna\.douyin\.com|api\.qishui\.com)`;
+const TARGETS = [
+  ['视频广告', String.raw`\/luna\/media_ads`, 'reject-200', ''],
+  ['通用广告', String.raw`\/luna\/ads`, 'reject-200', ''],
+  ['商业弹窗', String.raw`\/luna\/commerce`, 'reject-200', ''],
+  ['TAGS推荐', String.raw`\/luna\/hashtag\/recommend`, 'reject-200', ''],
+  ['我的页面广告横幅', String.raw`\/luna\/me`, 'jsonjq-response-body', "'del(.reward_ad_banner)'"],
+  ['会员试听引导', String.raw`\/luna\/card`, 'jsonjq-response-body', "'del(.preview_guide)'"],
+  ['热门搜索', String.raw`\/luna\/search-block`, 'jsonjq-response-body', "'del(.search_chart_block)'"],
+  ['搜索界面活动', String.raw`\/luna\/activities`, 'jsonjq-response-body', "'del(.activity_map)'"],
+  ['歌曲流推广', String.raw`\/luna\/feed\/song-tab`, 'jsonjq-response-body', `'.items |= map(select(.type == "track"))'`],
+].map(([purpose, path, action, argument]) => ({ purpose, path, action, argument,
+  sourcePattern: ORIGINAL_PREFIX + path + (purpose === '我的页面广告横幅' ? String.raw`\?` : ''),
+}));
+const EXCLUDED = [ORIGINAL_PREFIX + String.raw`\/location\/info`, String.raw`^https:\/\/tnc.*zijieapi\.com\/get_domains`];
 
-if (process.argv.slice(2).some((argument) => argument !== '--check')) {
-  throw new Error('用法：node Surge/scripts/build-soda-music.mjs [--check]');
+function fail(line, message) { throw new Error(`上游${line ? `第 ${line} 行` : ''}：${message}；保留旧成品。`); }
+function validateJq(expression, line) {
+  const result = spawnSync('jq', ['-n', `false and (${expression.slice(1, -1)})`], { encoding: 'utf8', timeout: 10_000, maxBuffer: 1024 * 1024, stdio: ['ignore', 'pipe', 'pipe'] });
+  if (result.error || result.status !== 0) fail(line, `JQ 编译失败：${result.error?.message || result.stderr.trim()}`);
 }
-
-async function fetchSource() {
-  const response = await fetch(SOURCE_URL, {
-    signal: AbortSignal.timeout(30_000),
-    headers: { 'User-Agent': 'SodaMusic-Surge-native-builder/1.0' },
-  });
-  if (!response.ok) throw new Error(`下载失败：HTTP ${response.status} ${SOURCE_URL}`);
-  if (Number(response.headers.get('content-length')) > 1024 * 1024) throw new Error('上游配置过大；保留旧成品。');
-  const source = await response.text();
-  if (!source.trim() || Buffer.byteLength(source, 'utf8') > 1024 * 1024 || /^\s*(?:<!doctype\s+html|<html\b)/i.test(source)) {
-    throw new Error('上游配置为空、过大或返回网页；保留旧成品。');
-  }
-  return source;
-}
-
-function fail(lineNumber, message) {
-  throw new Error(`上游第 ${lineNumber} 行：${message}；保留旧成品。`);
-}
-
-function quoteJq(raw, lineNumber) {
-  let expression = raw.trim();
-  if (!expression.startsWith("'") || !expression.endsWith("'") || expression.length < 3) fail(lineNumber, 'JQ 表达式缺少完整单引号');
-  expression = expression.slice(1, -1);
-  if (!expression.trim() || expression.includes("'") || /[\r\n]/.test(expression)) fail(lineNumber, 'JQ 表达式不能无损转换为 Surge 单行参数');
-  // false and 避免实际读取/修改数据，仅让 jq 编译表达式。
-  const result = spawnSync('jq', ['-n', `false and (${expression})`], { encoding: 'utf8', timeout: 10_000, maxBuffer: 1024 * 1024, stdio: ['ignore', 'pipe', 'pipe'] });
-  if (result.error || result.status !== 0) fail(lineNumber, `JQ 编译失败（需安装 jq）：${result.error?.message || result.stderr.trim()}`);
-  return `'${expression}'`;
-}
-
-function parseSource(source) {
-  const sections = { 'Map Local': [], 'Body Rewrite': [] };
-  const counts = { 'reject-200': 0, 'jsonjq-response-body': 0 };
-  let hostnames;
-  let previousComment;
-  let version = '';
-  let author = '';
+export function parseSource(source) {
+  if (typeof source !== 'string' || !source.trim()) fail(null, '来源为空');
+  let hosts, author, version;
+  const selected = new Map(), excluded = new Set();
   for (const [index, original] of source.replace(/^\uFEFF/, '').split(/\r?\n/).entries()) {
-    const line = original.trim();
-    const lineNumber = index + 1;
+    const line = original.trim(), number = index + 1;
     if (!line) continue;
     if (line.startsWith('//')) {
       const metadata = line.match(/^\/\/\s*@(Version|Author)\s+(.+)$/);
@@ -62,92 +47,79 @@ function parseSource(source) {
       if (metadata?.[1] === 'Author') author = metadata[2].trim().replace(/^@/, '');
       continue;
     }
-    if (line.startsWith('#')) { previousComment = line; continue; }
+    if (line.startsWith('#')) continue;
     if (/^hostname\s*=/.test(line)) {
-      if (hostnames) fail(lineNumber, '出现了多份 hostname 声明');
-      hostnames = line.replace(/^hostname\s*=\s*/, '').split(',').map((host) => host.trim());
-      if (!hostnames.length || new Set(hostnames).size !== hostnames.length || hostnames.some((host) => !/^(?:[a-z0-9*-]+\.)+(?:douyin|qishui|zijieapi)\.com$/i.test(host))) {
-        fail(lineNumber, 'MITM 主机不是支持的汽水音乐域名');
-      }
-      previousComment = undefined;
+      if (hosts) fail(number, '重复 hostname');
+      hosts = line.replace(/^hostname\s*=\s*/, '').split(',').map((host) => host.trim());
+      if (hosts.length !== SOURCE_HOSTS.length || hosts.some((host, i) => host !== SOURCE_HOSTS[i])) fail(number, '上游主机范围发生未审核变化');
       continue;
     }
     const match = line.match(/^(\S+)\s+url\s+(\S+)(?:\s+(.+))?$/);
-    if (!match) fail(lineNumber, `不认识的配置语法：${line}`);
-    const [, pattern, action, argument = ''] = match;
-    if (!Object.hasOwn(counts, action)) fail(lineNumber, `不支持的命令 ${action}`);
-    try { new RegExp(pattern); } catch (error) { fail(lineNumber, `无法编译正则：${error.message}`); }
-    if (!pattern.startsWith('^https:\\/\\/')) fail(lineNumber, '规则不再以 HTTPS 开头，需人工核对');
-    let section;
-    let converted;
-    if (action === 'reject-200') {
-      if (argument) fail(lineNumber, 'reject-200 不应携带参数');
-      section = 'Map Local';
-      converted = `${pattern} data-type=text data="" status-code=200`;
-    } else {
-      section = 'Body Rewrite';
-      converted = `http-response-jq ${pattern} ${quoteJq(argument, lineNumber)}`;
+    if (!match) fail(number, '未知配置语法');
+    const [, pattern, action, raw = ''] = match, argument = raw.trim();
+    if (EXCLUDED.includes(pattern)) {
+      if (action !== 'reject-200' || argument || excluded.has(pattern)) fail(number, '已排除规则出现未审核变化');
+      excluded.add(pattern); continue;
     }
-    if (previousComment) sections[section].push(previousComment);
-    sections[section].push(converted);
-    previousComment = undefined;
-    counts[action] += 1;
+    const target = TARGETS.find((entry) => entry.sourcePattern === pattern);
+    if (!target || selected.has(pattern) || target.action !== action || target.argument !== argument) fail(number, '路径、动作、JQ或数量发生未审核变化');
+    if (action === 'jsonjq-response-body') validateJq(argument, number);
+    selected.set(pattern, target);
   }
-  if (!hostnames || !counts['reject-200'] || !counts['jsonjq-response-body'] || author !== 'ddgksf2013') {
-    throw new Error('上游缺少 hostname、有效规则或作者声明；保留旧成品。');
+  if (!hosts || author !== 'ddgksf2013' || !version || selected.size !== TARGETS.length || excluded.size !== EXCLUDED.length) fail(null, '缺少已审核的作者、主机或规则');
+  const sections = { 'Map Local': [], 'Body Rewrite': [] };
+  for (const target of TARGETS) {
+    const pattern = SCOPED_PREFIX + target.path + String.raw`(?:\?|$)`;
+    new RegExp(pattern);
+    const section = target.action === 'reject-200' ? 'Map Local' : 'Body Rewrite';
+    sections[section].push(`# ${target.purpose}（ddgksf2013；本仓库限定主机与路径边界）`);
+    sections[section].push(target.action === 'reject-200' ? `${pattern} data-type=text data="" status-code=200` : `http-response-jq ${pattern} ${target.argument}`);
   }
-  return { sections, counts, hostnames, version, author };
+  return { sections, hostnames: HOSTS, author, version, counts: { 'reject-200': 4, 'jsonjq-response-body': 5, excluded: 2 } };
 }
-
-function renderModule(source, parsed) {
+export function renderModule(source, parsed) {
   const lines = [
     '#!name=汽水音乐（广告与推广净化）',
-    '#!desc=汽水音乐广告与推广净化版：处理视频及通用广告、商业弹窗、TAGS 推荐，清理我的页面广告横幅、会员试听引导、热搜与搜索活动，并在歌曲流中仅保留歌曲条目；保留上游位置查询及 DNS 配置接口拦截。原作者 ddgksf2013；规则每 6 小时检查上游，无远程 JavaScript。需 Surge iOS 5.14+ / Mac 5.9+（原生 JQ）；开启重写、MITM，并安装及信任 MITM 证书。不解锁会员或音乐版权；可能影响定位、推荐和部分页面功能，异常时请停用。不保证移除所有广告；尚未在最新版汽水音乐实机验证。',
-    `#!author=${parsed.author}`,
+    '#!desc=仅处理beta-luna.douyin.com和api.qishui.com的指定/luna/接口：视频及通用广告、商业弹窗、TAGS推荐、我的页面广告横幅、会员试听引导、热搜、搜索活动和歌曲流推广。2026-10-27兼容修复：移除字节系共享域名配置/get_domains与/location/info拦截，不再追加tnc通配MITM；规则限定两个汽水域名及精确路径边界。参考ddgksf2013，每6小时检查上游；未审核范围变化停止更新。无远程JavaScript。需Surge iOS 5.14+ / Mac 5.9+，启用重写、MITM并信任证书。不解锁会员或版权；推荐等页面内容会精简，未在最新App实机验证，不保证所有广告均消失。',
+    `#!author=${parsed.author}；本仓库兼容性调整`,
     `#!homepage=${SOURCE_URL}`,
     '#!category=AdBlock',
-    '#!raw-url=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/SodaMusic.sgmodule',
-    '',
-    `# 上游：${SOURCE_URL}`,
-    `# 上游版本：${parsed.version || '未声明'}`,
+    '#!raw-url=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/SodaMusic.sgmodule', '',
+    `# 上游：${SOURCE_URL}`, `# 上游版本：${parsed.version}`,
     `# 上游规则 SHA256：${createHash('sha256').update(source).digest('hex')}`,
-    '# 自动生成，请修改 Surge/scripts/build-soda-music.mjs；未知语法停止更新并保留旧版。',
-    '# 按上游 @Attention 保留原作者出处；配置不包含远程 JavaScript。',
-    '# 原作者使用提示：使用前请卸载汽水音乐，挂载模块后再安装使用；重装前请确认需要保留的下载与数据。',
-    '# JQ Body Rewrite 需要 Surge iOS 5.14+ 或 Surge Mac 5.9+。',
-    '# 上游规则保留位置隐私、TAGS/搜索推荐和推广界面净化，未添加会员或版权解锁。',
+    '# 自动生成；名称、说明和兼容范围请修改 Surge/scripts/build-soda-music.mjs。',
+    '# 2026-10-27：排除共享域名配置与位置拦截；全部规则收窄到两个精确主机及端点，避免影响其他字节系App。',
+    '# 上游原始快照仅供追溯，不直接安装。同步也不会重新加入上述排除项。',
+    '# 未使用抖音的评论接口；这是合成路由/配置验证，尚未手机验证故障是否恢复。',
+    '# 使用说明：https://github.com/wch19830910/wch/blob/main/Surge/AdBlock/SodaMusic.md',
   ];
-  for (const [section, rules] of Object.entries(parsed.sections)) if (rules.length) lines.push('', `[${section}]`, ...rules);
+  for (const [section, rules] of Object.entries(parsed.sections)) lines.push('', `[${section}]`, ...rules);
   lines.push('', '[MITM]', `hostname = %APPEND% ${parsed.hostnames.join(', ')}`, '');
   return lines.join('\n');
 }
-
-async function readExisting(path) {
-  try { return await readFile(path, 'utf8'); } catch (error) {
-    if (error.code === 'ENOENT') return null;
-    throw error;
-  }
+async function fetchSource() {
+  const response = await fetch(SOURCE_URL, { signal: AbortSignal.timeout(30_000), headers: { 'User-Agent': 'Surge' } });
+  if (!response.ok || response.url !== SOURCE_URL) fail(null, `下载失败或跳转：HTTP ${response.status}`);
+  if (Number(response.headers.get('content-length')) > 1024 * 1024) fail(null, '来源过大');
+  const source = await response.text();
+  if (!source.trim() || Buffer.byteLength(source) > 1024 * 1024 || /^\s*(?:<!doctype\s+html|<html\b)/i.test(source)) fail(null, '来源为空、过大或返回网页');
+  return source;
 }
-
 async function writeIfChanged(path, content) {
-  if (await readExisting(path) === content) return false;
+  let previous;
+  try { previous = await readFile(path, 'utf8'); } catch (error) { if (error.code !== 'ENOENT') throw error; }
+  if (previous === content) return false;
   await mkdir(dirname(path), { recursive: true });
-  const temporaryPath = `${path}.tmp-${process.pid}`;
-  await writeFile(temporaryPath, content, 'utf8');
-  await rename(temporaryPath, path);
-  return true;
+  const temporary = `${path}.tmp-${process.pid}`;
+  await writeFile(temporary, content, 'utf8'); await rename(temporary, path); return true;
 }
-
-async function main() {
-  const source = await fetchSource();
-  const parsed = parseSource(source);
-  const module = renderModule(source, parsed);
-  console.log(`校验通过：${JSON.stringify(parsed.counts)}；仅使用 Surge 原生 Map Local/JQ，无远程脚本。`);
-  if (CHECK_ONLY) { console.log('只校验，不写入成品。'); return; }
-  // 解析、正则和全部 jq 编译通过后才写入；未知命令不会覆盖旧模块。
-  const changedModule = await writeIfChanged(OUTPUT_MODULE, module);
-  const changedSource = await writeIfChanged(OUTPUT_SOURCE, source);
-  console.log(`模块${changedModule ? '已更新' : '无变化'}；上游快照${changedSource ? '已更新' : '无变化'}。`);
+export async function main() {
+  if (process.argv.slice(2).some((arg) => arg !== '--check')) throw new Error('用法：node Surge/scripts/build-soda-music.mjs [--check]');
+  const source = await fetchSource(), parsed = parseSource(source), module = renderModule(source, parsed);
+  console.log(`校验通过：${JSON.stringify(parsed.counts)}；2个精确主机；无共享配置/位置拦截。`);
+  if (process.argv.includes('--check')) { console.log('只检查，不写入产物。'); return; }
+  await writeIfChanged(OUTPUT_MODULE, module); await writeIfChanged(OUTPUT_SOURCE, source);
 }
-
-await main().catch((error) => { console.error(error.message); process.exitCode = 1; });
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  await main().catch((error) => { console.error(error.message); process.exitCode = 1; });
+}
