@@ -1,0 +1,26 @@
+RiskBird — source attribution and scope notice
+
+Original interface/rule reference: 可莉 / iKeLee.
+Surge conversion reference: QingRex / LoonKissSurge.
+Selected native configuration and guarded publication: wch19830910/wch,
+2026-10-26.
+
+References:
+https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/风鸟去广告.sgmodule
+https://github.com/luestr/ProxyResource
+https://github.com/QingRex/LoonKissSurge
+
+This selected module expresses two public endpoint facts as native Surge
+Map Local responses, with exact endpoint boundaries. It preserves attribution
+and does not mirror the entire upstream plugin or embed upstream JavaScript.
+The personRecommend script is excluded; its response logic was not available
+for review and is not inferred or executed.
+
+The source index's template license is not treated as a license to relicense
+all indexed plugins or scripts. This notice records source attribution and
+does not grant additional rights in upstream material. Independent modules
+elsewhere in the repository retain their existing licenses and notices.
+
+Removing popular-company recommendations is a user-selected page cleanup.
+No membership change or claim of complete advertising removal is made.
+See Surge/AdBlock/RiskBird.md for the exact scope and verification limits.
