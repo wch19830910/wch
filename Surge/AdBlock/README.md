@@ -4,6 +4,7 @@
 
 | App | Remote module / Surge name | Upstream |
 | --- | --- | --- |
+| AWAvenue | [秋风广告拦截（Only.Ads兼容版）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/AWAvenue.sgmodule) | [TG-Twilight / AWAvenue](https://github.com/TG-Twilight/AWAvenue-Ads-Rule) |
 | Ximalaya | [喜马拉雅（全净化）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Ximalaya.sgmodule) | [ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/Ximalaya.conf) |
 | Amap | [高德地图（全净化）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Amap.sgmodule) | [ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Rewrite/master/AdBlock/AmapAds.conf) |
 | Railway12306 | [铁路12306（开屏去广告）](https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/Railway12306.sgmodule) | [ddgksf2013](https://raw.githubusercontent.com/ddgksf2013/Scripts/master/12306.js) |
@@ -31,6 +32,7 @@
 - `Update Amap` 每 6 小时单独检查高德地图规则，内容变化时重新生成 `Surge/AdBlock/Amap.sgmodule`。
 - `Update Railway12306` 每 6 小时单独检查铁路12306脚本内嵌规则，内容变化时重新生成 `Surge/AdBlock/Railway12306.sgmodule`。
 - `Update RedNote`、`Update Coolapk`、`Update NetEaseMusic` 每 6 小时分别检查小红书、酷安、网易云音乐的上游来源。
+- `Update AWAvenue` 每 6 小时检查秋风 Only.Ads 与 GPL 许可；排除四项冲突，敏感接口、新后缀/关键词变化先审查，测试通过后才发布。
 - `Update Cainiao`、`Update Smzdm`、`Update Goofish`、`Update SodaMusic` 每 6 小时分别检查菜鸟、什么值得买、闲鱼和汽水音乐的上游来源。
 - `Update DiDi` 每 6 小时检查 ZenmoFeiShi 的滴滴出行完整精简规则，保留上游全部分流、拒绝响应、JQ 和 MITM 配置。
 - `Update Weibo` 每 6 小时检查墨鱼微博规则，完整转换微博及国际版/轻享版的上游配置。
@@ -88,6 +90,8 @@ Surge 的 [MITM `auto-quic-block`](https://manual.nssurge.com/http/mitm.html) �
 
 风鸟仅处理首页轮播图和热门企业推荐，后者属于正常推荐内容精简；没有推荐老板脚本、专用开屏或“我的”横幅处理。两条精确本地 JSON 响应，一个 MITM 主机，需 Surge iOS 5.9.1+ / Mac 5.5.1+，无 JavaScript／JQ。未手机实测。[功能与更新说明](RiskBird.md)。
 
+秋风 Only.Ads 兼容版用于通用广告域名拦截，搭配本仓库 App 模块；从首次665条中排除12306、高德、微博及头条授权的四条冲突，保留661条。仅原生规则，无远程脚本或MITM；需 Surge iOS 5.14+ / Mac 5.9+，未手机实测。不要与秋风原版、其他秋风方案或多份通用大列表重复启用；排除不是整域强制DIRECT，不能保证其他订阅不再拒绝。来源、快照与修改按GPL-3.0公开，不影响其他独立模块的许可。[安装、功能与更新说明](AWAvenue.md)。
+
 ## Build
 
 在仓库根目录执行，需要 Node.js 20+；上游包含 JQ 规则时还需要 jq：
@@ -111,6 +115,7 @@ node Surge/scripts/build-zhihu.mjs
 node Surge/scripts/build-mihome.mjs
 node Surge/scripts/build-wechat.mjs
 node Surge/scripts/build-riskbird.mjs
+node Surge/scripts/build-awavenue.mjs
 ```
 
 - [Surge remote scripts](https://manual.nssurge.com/scripting/overview.html)
