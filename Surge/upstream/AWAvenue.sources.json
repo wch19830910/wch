@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "url": "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Surge-module-Only.Ads.sgmodule",
+    "sha256": "4ff8aa129f240c29ecea02c294f9bd063b0640efd7585b2540f17bd2b9645ac3",
+    "metadata": {
+      "name": "AWAvenue Ads Rule",
+      "desc": "Update time: 2026-10-22 21:27:09 UTC+8\\nHomepage: https://github.com/TG-Twilight/AWAvenue-Ads-Rule",
+      "category": "广告拦截",
+      "author": "TG-Twilight[https://github.com/TG-Twilight]",
+      "icon": "https://avatars.githubusercontent.com/u/121682528?s=144",
+      "homepage": "https://awavenue.top"
+    }
+  },
+  "license": {
+    "url": "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/LICENSE",
+    "sha256": "589ed823e9a84c56feb95ac58e7cf384626b9cbf4fda2a907bc36e103de1bad2",
+    "spdx": "GPL-3.0-only"
+  },
+  "counts": {
+    "source": 665,
+    "selected": 661,
+    "excluded": 4
+  },
+  "protectedHosts": {
+    "ad.12306.cn": "保留铁路12306专用模块的请求阶段广告占位响应",
+    "optimus-ads.amap.com": "保留高德地图专用模块的DIRECT与处理流程",
+    "sdkapp.uve.weibo.com": "保留微博专用模块按路径处理",
+    "open.snssdk.com": "头条OAuth共享授权主机，不作整域广告拒绝"
+  },
+  "excludedRules": [
+    {
+      "type": "DOMAIN",
+      "host": "ad.12306.cn",
+      "sourceLine": 24,
+      "protectedHosts": [
+        "ad.12306.cn"
+      ]
+    },
+    {
+      "type": "DOMAIN",
+      "host": "open.snssdk.com",
+      "sourceLine": 449,
+      "protectedHosts": [
+        "open.snssdk.com"
+      ]
+    },
+    {
+      "type": "DOMAIN",
+      "host": "optimus-ads.amap.com",
+      "sourceLine": 451,
+      "protectedHosts": [
+        "optimus-ads.amap.com"
+      ]
+    },
+    {
+      "type": "DOMAIN",
+      "host": "sdkapp.uve.weibo.com",
+      "sourceLine": 525,
+      "protectedHosts": [
+        "sdkapp.uve.weibo.com"
+      ]
+    }
+  ],
+  "policy": "仅使用Only.Ads；排除规则语义覆盖冲突主机的条目；新后缀/关键词及敏感共享接口需人工审查；不强制DIRECT、不合并其他通用列表；不代表手机实测或零误伤。"
+}
