@@ -1,0 +1,25 @@
+AWAvenue Only.Ads compatibility derivative
+SPDX-License-Identifier: GPL-3.0-only
+
+Original rule author: TG-Twilight / AWAvenue-Ads-Rule contributors.
+Original project: https://github.com/TG-Twilight/AWAvenue-Ads-Rule
+Source module:
+https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Surge-module-Only.Ads.sgmodule
+License: upstream GNU GPL version 3; full unchanged text in AWAvenue-GPL-3.0.txt.
+
+Modified by wch19830910/wch on 2026-10-28:
+- Remove entries matching four protected hosts (12306, Amap, Weibo and
+  Toutiao OAuth) to preserve existing application-specific handling.
+- Preserve the remaining rules' original order and native matching options.
+- Add guarded updates, provenance, compatibility tests and documentation.
+- Do not install broad DIRECT exceptions, scripts or MITM settings.
+
+Corresponding editable source, exact upstream snapshot, generator and tests:
+Surge/upstream/AWAvenue-OnlyAds.sgmodule
+Surge/upstream/AWAvenue.sources.json
+Surge/scripts/build-awavenue.mjs
+Surge/tests/awavenue.test.mjs
+The derived module, upstream snapshot and these generator/test files are
+published under GPL-3.0-only. Preserve attribution and modification notices.
+No warranty; synthetic checks do not establish current App compatibility.
+Other independent modules in this repository retain their existing licenses.
