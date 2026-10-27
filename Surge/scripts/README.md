@@ -20,6 +20,8 @@
 
 `build-riskbird.mjs` 参考可莉风鸟规则的 QingRex 转换配置，仅生成首页轮播图与热门企业推荐两项，名称“风鸟（首页广告与推荐精简）”。推荐老板脚本不接入，无远程 JavaScript 或 JQ。
 
+`build-awavenue.mjs` 从秋风官方 Only.Ads 生成“秋风广告拦截（Only.Ads兼容版）”，保留原生规则并排除四项冲突。构建器按规则语义排除覆盖受保护主机的条目，不用普通DIRECT覆盖预匹配拒绝；新增后缀/关键词及敏感共享主机变化需审查。
+
 在仓库根目录运行，需要 Node.js 20+：
 
 ```sh
@@ -41,6 +43,7 @@ node Surge/scripts/build-zhihu.mjs
 node Surge/scripts/build-mihome.mjs
 node Surge/scripts/build-wechat.mjs
 node Surge/scripts/build-riskbird.mjs
+node Surge/scripts/build-awavenue.mjs
 ```
 
 模块输出到 `Surge/AdBlock/Ximalaya.sgmodule`，原始规则快照输出到 `Surge/upstream/Ximalaya.conf`。
@@ -79,3 +82,5 @@ node Surge/scripts/build-riskbird.mjs
 GitHub Actions 会定期运行本脚本；下载的原作者脚本不在构建时直接执行。网易云另对本仓库生成的衍生脚本运行隔离合成样本测试，不请求业务接口；检查通过不等于最新版 App 实机验证。
 
 汽水音乐兼容性测试：`node Surge/tests/soda-music.test.mjs`。验证两个精确主机与端点边界、抖音评论和共享配置等负例、JQ 内容、上游变化/下载失败不覆盖成品，以及本机 Surge 原生语法；CI 先构建再测试，全部通过后才发布。[修复说明](../AdBlock/SodaMusic.md)。
+
+秋风兼容版输出 `Surge/AdBlock/AWAvenue.sgmodule`、逐字来源快照 `Surge/upstream/AWAvenue-OnlyAds.sgmodule` 和 `Surge/upstream/AWAvenue.sources.json`。模块、来源及本构建/测试源码按GPL-3.0公开，保留TG-Twilight署名和修改声明；许可全文为 `Surge/licenses/AWAvenue-GPL-3.0.txt`，NOTICE见同目录。每6小时联网校验源及许可，CI运行 `node Surge/tests/awavenue.test.mjs` 后仅允许发布以上三份产物；解析、许可或测试失败不提交。`--check`不写产物。名称和说明修改本构建器，直接改模块会被覆盖。[使用说明](../AdBlock/AWAvenue.md)。
