@@ -96,7 +96,7 @@ export function parseSource(source) {
       if (kind === 'host' ? target !== 'gwp.xiaojukeji.com' : !ALLOWED_CIDRS.has(target)) {
         fail(lineNumber, '分流主机或 CIDR 发生未审核变化');
       }
-      const nativeRule = `${kind === 'host' ? 'DOMAIN' : 'IP-CIDR'},${target},REJECT`;
+      const nativeRule = `${kind === 'host' ? 'DOMAIN' : 'IP-CIDR'},${target},REJECT${kind === 'ip-cidr' ? ',no-resolve' : ''}`;
       if (seenRules.has(nativeRule)) fail(lineNumber, '重复分流规则');
       seenRules.add(nativeRule);
       if (previousComment) sections.Rule.push(previousComment);
@@ -150,9 +150,9 @@ export function renderModule(source, parsed) {
     `# 上游更新：${parsed.metadata.update}`,
     `# 上游规则 SHA256：${createHash('sha256').update(source).digest('hex')}`,
     '# 自动生成，请修改 Surge/scripts/build-didi.mjs；未知语法或范围变化停止更新并保留旧版。',
-    '# 用户选择完整上游精简版：逐条保留上游行为，未额外添加、删减或修复上游功能。',
+    '# 用户选择完整上游精简版；IP 规则添加 no-resolve，避免提前触发 DNS。',
     '# 重要：上游会隐藏“安全中心”，缩减钱包内容、修改出行导航及行程组件；需要这些入口时请停用本模块。',
-    '# 保留上游的域名/IP 分流及 IP MITM 通配范围；未在手机实机验证，不保证当前 App 业务功能不受影响。',
+    '# IP 规则 no-resolve：未解析域名不会为匹配 IP 而主动查询；直连 IP 仍匹配，部分域名广告拦截可能减少。未在手机实测。',
     '# 原生 JQ Body Rewrite 需要 Surge iOS 5.14.0+ 或 Surge Mac 5.9.0+。',
     '# 原作者声明：仅供学习与自用，请勿用于商业或传播破解用途。',
   ];

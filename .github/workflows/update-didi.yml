@@ -7,6 +7,7 @@ on:
   push:
     paths:
       - Surge/scripts/build-didi.mjs
+      - Surge/tests/didi.test.mjs
       - .github/workflows/update-didi.yml
 
 permissions:
@@ -39,9 +40,12 @@ jobs:
             exit 1
           fi
           node --check Surge/scripts/build-didi.mjs
+          node --check Surge/tests/didi.test.mjs
           jq --version
       - name: 从墨鱼推荐的原作者源构建并验证
         run: node Surge/scripts/build-didi.mjs
+      - name: 验证规则及 DNS 行为
+        run: node Surge/tests/didi.test.mjs
       - name: 只发布通过验证的模块和上游快照
         shell: bash
         env:
