@@ -9,7 +9,7 @@
 # 原作者：奶思 / fmz200；修改日期：2026-10-26。
 # 许可证：https://github.com/wch19830910/wch/blob/main/Surge/licenses/fmz200-GPL-3.0.txt；无任何保证。
 # 原始模块：https://raw.githubusercontent.com/fmz200/wool_scripts/main/Surge/module/split/partM/Mijia.sgmodule
-# 上游 SHA256：a84c5036b1089007377ceed27b4a95a9d24e486bffa423f3312acc71c9b1ee5f
+# 上游 SHA256：7cfdc603d1d74663bec4e856bcfa59b09e63ca26040479adceac17f064106eab
 # 自动生成；显示名称和功能说明请修改 Surge/scripts/build-mihome.mjs，直接改成品会被同步覆盖。
 # 保留原作者 1 条广告配置域名拒绝、2 条本地空 JSON 响应和精确 MITM 主机；不依赖远程脚本。
 # 未扩展 recommendation 整个路径、设备控制、摄像头、账户或自动化接口。
