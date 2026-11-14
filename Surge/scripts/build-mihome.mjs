@@ -16,7 +16,7 @@ const OUTPUT_MODULE = resolve(SURGE_ROOT, 'AdBlock/MiHome.sgmodule');
 const OUTPUT_SOURCE = resolve(SURGE_ROOT, 'upstream/MiHome.sgmodule');
 const MAX_SOURCE_BYTES = 1024 * 1024;
 const SECTIONS = new Set(['Rule', 'Map Local', 'MITM']);
-const METADATA = new Set(['name', 'desc', 'author', 'category', 'homepage', 'raw-url', 'tg-channel']);
+const METADATA = new Set(['name', 'desc', 'author', 'category', 'homepage', 'raw-url', 'tg-channel', 'date']);
 const AD_RULE = 'DOMAIN,sdkconfig.ad.xiaomi.com,REJECT';
 const MAP_LINES = [
   String.raw`^https?:\/\/home\.mi\.com\/cgi-op\/api\/v1\/recommendation\/(banner|carousel\/banners|myTab|openingBanner) data-type=text data="{}" status-code=200 header="Content-Type:application/json"`,
