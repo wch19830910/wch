@@ -6,6 +6,7 @@ import { createHash } from 'node:crypto';
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { isIP } from 'node:net';
 export const SOURCE_URL = 'https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Surge-module-Only.Ads.sgmodule';
 export const LICENSE_URL = 'https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/LICENSE';
 const LICENSE_SHA256 = '589ed823e9a84c56feb95ac58e7cf384626b9cbf4fda2a907bc36e103de1bad2';
@@ -37,7 +38,7 @@ function overlapsExclusion(rule, host) {
 }
 export function parseSource(source) {
   if (typeof source !== 'string' || !source.trim()) fail('空文件');
-  const metadata = {}, rules = [], seen = new Set();
+  const metadata = {}, rules = [], skippedIPs = [], seen = new Set();
   let section;
   for (const [i, raw] of source.replace(/^\uFEFF/, '').split(/\r?\n/).entries()) {
     const line = raw.trim(); if (!line) continue;
@@ -50,6 +51,11 @@ export function parseSource(source) {
     if (line.startsWith('[')) { if (section || line !== '[Rule]') fail('出现未知或重复配置段'); section = 'Rule'; continue; }
     if (!section) fail('规则不在Rule段内');
     const p = line.split(',');
+    if (p[0] === 'IP-CIDR') {
+      const match = (p[1] || '').match(/^([^/]+)\/(0|[1-9]\d?)$/);
+      if (p.length !== 4 || p[2] !== 'REJECT' || p[3] !== 'pre-matching' || !match || isIP(match[1]) !== 4 || Number(match[2]) > 32 || seen.has(line)) fail(`第${i + 1}行IP规则无效或未经审核`);
+      seen.add(line); skippedIPs.push({ rule: line, sourceLine: i + 1 }); continue;
+    }
     if (p.length !== 5 || !['DOMAIN', 'DOMAIN-SUFFIX', 'DOMAIN-KEYWORD'].includes(p[0]) || p.slice(2).join(',') !== 'REJECT,extended-matching,pre-matching') fail(`第${i + 1}行匹配类型、动作或选项变化`);
     const [type, host] = p;
     if (!host || host !== host.toLowerCase() || host.length > 253 || !/^[a-z0-9.-]+$/.test(host) || host.includes('..')) fail('无效主机或关键词');
@@ -68,7 +74,7 @@ export function parseSource(source) {
     selected.push(rule);
   }
   if (selected.length < 450 || selected.length < rules.length * 0.8) fail('过滤后的规则数量异常');
-  return { metadata, rules, selected, excluded };
+  return { metadata, rules, selected, excluded, skippedIPs };
 }
 export function renderModule(source, parsed) {
   return [
@@ -79,7 +85,7 @@ export function renderModule(source, parsed) {
     '#!raw-url=https://raw.githubusercontent.com/wch19830910/wch/main/Surge/AdBlock/AWAvenue.sgmodule', '',
     '# SPDX-License-Identifier: GPL-3.0-only', '# 2026-10-28 修改声明：从Only.Ads排除冲突规则；其余通过审查的规则保留原顺序和选项。',
     `# 上游：${SOURCE_URL}`, `# 上游SHA256：${digest(source)}`,
-    `# 来源${parsed.rules.length}条；保留${parsed.selected.length}条；排除${parsed.excluded.length}条。`,
+    `# 来源域名${parsed.rules.length}条；保留${parsed.selected.length}条；排除${parsed.excluded.length}条；跳过IP规则${parsed.skippedIPs.length}条。`,
     '# 排除不是强制DIRECT：被排除请求继续按你已有配置分流。pre-matching拒绝不能靠普通DIRECT或调整模块顺序覆盖。',
     '# 许可、原始快照、构建与测试源码随仓库公开；无任何保证。',
     '# 许可：https://github.com/wch19830910/wch/blob/main/Surge/licenses/AWAvenue-GPL-3.0.txt',
@@ -89,7 +95,7 @@ export function renderModule(source, parsed) {
   ].join('\n');
 }
 export function renderReferences(source, parsed) {
-  return JSON.stringify({ schemaVersion: 1, source: { url: SOURCE_URL, sha256: digest(source), metadata: parsed.metadata }, license: { url: LICENSE_URL, sha256: LICENSE_SHA256, spdx: 'GPL-3.0-only' }, counts: { source: parsed.rules.length, selected: parsed.selected.length, excluded: parsed.excluded.length }, protectedHosts: EXCLUSIONS, excludedRules: parsed.excluded, policy: '仅使用Only.Ads；排除规则语义覆盖冲突主机的条目；新后缀/关键词及敏感共享接口需人工审查；不强制DIRECT、不合并其他通用列表；不代表手机实测或零误伤。' }, null, 2) + '\n';
+  return JSON.stringify({ schemaVersion: 1, source: { url: SOURCE_URL, sha256: digest(source), metadata: parsed.metadata }, license: { url: LICENSE_URL, sha256: LICENSE_SHA256, spdx: 'GPL-3.0-only' }, counts: { source: parsed.rules.length, selected: parsed.selected.length, excluded: parsed.excluded.length, skippedIPs: parsed.skippedIPs.length }, protectedHosts: EXCLUSIONS, excludedRules: parsed.excluded, skippedIPRules: parsed.skippedIPs, policy: '仅使用Only.Ads域名规则；跳过上游IP规则；排除规则语义覆盖冲突主机的条目；新后缀/关键词及敏感共享接口需人工审查；不强制DIRECT、不合并其他通用列表；不代表手机实测或零误伤。' }, null, 2) + '\n';
 }
 async function download(url, maxBytes) {
   const response = await fetch(url, { signal: AbortSignal.timeout(30_000), headers: { 'User-Agent': 'Surge' } });
