@@ -63,6 +63,15 @@ test('new exact ad hosts can update; expanded suffix/keyword rules, shared inter
  ];
  for (const changed of changes) assert.throws(() => parseSource(changed), /保留旧成品/);
 });
+test('upstream IP rules are recorded but never published; malformed IP rules stop the update', () => {
+ const base = source.split('\n').filter((line) => !line.startsWith('IP-CIDR,')).join('\n');
+ const ip = 'IP-CIDR,192.0.2.1/32,REJECT,pre-matching';
+ const parsed = parseSource(base + '\n' + ip);
+ assert.equal(parsed.skippedIPs.length, 1);
+ assert.equal(parsed.skippedIPs[0].rule, ip);
+ assert.ok(!renderModule(base, parsed).includes(ip));
+ for (const invalid of ['IP-CIDR,999.0.0.1/32,REJECT,pre-matching', 'IP-CIDR,192.0.2.1/33,REJECT,pre-matching', 'IP-CIDR,192.0.2.1/32,DIRECT,pre-matching', ip + '\n' + ip]) assert.throws(() => parseSource(base + '\n' + invalid), /保留旧成品/);
+});
 test('no native DIRECT host in the existing Amap/12306/Weibo modules is rejected', async () => {
  for (const file of ['Amap', 'Railway12306', 'Weibo']) {
   const s = await readFile(new URL(`../AdBlock/${file}.sgmodule`, import.meta.url), 'utf8');
