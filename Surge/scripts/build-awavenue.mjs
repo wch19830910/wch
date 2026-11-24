@@ -53,7 +53,7 @@ export function parseSource(source) {
     const p = line.split(',');
     if (p[0] === 'IP-CIDR') {
       const match = (p[1] || '').match(/^([^/]+)\/(0|[1-9]\d?)$/);
-      if (p.length !== 4 || p[2] !== 'REJECT' || p[3] !== 'pre-matching' || !match || isIP(match[1]) !== 4 || Number(match[2]) > 32 || seen.has(line)) fail(`第${i + 1}行IP规则无效或未经审核`);
+      if (!['REJECT,pre-matching', 'REJECT,no-resolve,pre-matching'].includes(p.slice(2).join(',')) || !match || isIP(match[1]) !== 4 || Number(match[2]) > 32 || seen.has(line)) fail(`第${i + 1}行IP规则无效或未经审核`);
       seen.add(line); skippedIPs.push({ rule: line, sourceLine: i + 1 }); continue;
     }
     if (p.length !== 5 || !['DOMAIN', 'DOMAIN-SUFFIX', 'DOMAIN-KEYWORD'].includes(p[0]) || p.slice(2).join(',') !== 'REJECT,extended-matching,pre-matching') fail(`第${i + 1}行匹配类型、动作或选项变化`);
