@@ -70,6 +70,11 @@ test('upstream IP rules are recorded but never published; malformed IP rules sto
  assert.equal(parsed.skippedIPs.length, 1);
  assert.equal(parsed.skippedIPs[0].rule, ip);
  assert.ok(!renderModule(base, parsed).includes(ip));
+ const noResolve = 'IP-CIDR,192.0.2.2/32,REJECT,no-resolve,pre-matching';
+ const parsedNew = parseSource(base + '\n' + noResolve);
+ assert.equal(parsedNew.skippedIPs[0].rule, noResolve);
+ assert.ok(!renderModule(base, parsedNew).includes(noResolve));
+ assert.throws(() => parseSource(base + '\nIP-CIDR,192.0.2.2/32,REJECT,no-resolve,unknown'), /保留旧成品/);
  for (const invalid of ['IP-CIDR,999.0.0.1/32,REJECT,pre-matching', 'IP-CIDR,192.0.2.1/33,REJECT,pre-matching', 'IP-CIDR,192.0.2.1/32,DIRECT,pre-matching', ip + '\n' + ip]) assert.throws(() => parseSource(base + '\n' + invalid), /保留旧成品/);
 });
 test('no native DIRECT host in the existing Amap/12306/Weibo modules is rejected', async () => {
