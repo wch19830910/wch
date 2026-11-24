@@ -8,7 +8,7 @@
 # SPDX-License-Identifier: GPL-3.0-only
 # 2026-10-28 修改声明：从Only.Ads排除冲突规则；其余通过审查的规则保留原顺序和选项。
 # 上游：https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Surge-module-Only.Ads.sgmodule
-# 上游SHA256：96144cf40dcd4bb8fd5f06ba354173f16454f2e250c17b175d2e6dac5c91f161
+# 上游SHA256：c7fe76236b09667b557b0fb5599ff8ece7edef9e6f14a68d3232271a7382ab45
 # 来源域名658条；保留654条；排除4条；跳过IP规则13条。
 # 排除不是强制DIRECT：被排除请求继续按你已有配置分流。pre-matching拒绝不能靠普通DIRECT或调整模块顺序覆盖。
 # 许可、原始快照、构建与测试源码随仓库公开；无任何保证。

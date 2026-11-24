@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "source": {
     "url": "https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Surge-module-Only.Ads.sgmodule",
-    "sha256": "96144cf40dcd4bb8fd5f06ba354173f16454f2e250c17b175d2e6dac5c91f161",
+    "sha256": "c7fe76236b09667b557b0fb5599ff8ece7edef9e6f14a68d3232271a7382ab45",
     "metadata": {
       "name": "AWAvenue Ads Rule",
-      "desc": "Update time: 2026-11-16 17:36:05 UTC+8\\nHomepage: https://github.com/TG-Twilight/AWAvenue-Ads-Rule",
+      "desc": "Update time: 2026-11-23 00:33:15 UTC+8\\nHomepage: https://github.com/TG-Twilight/AWAvenue-Ads-Rule",
       "category": "广告拦截",
       "author": "TG-Twilight[https://github.com/TG-Twilight]",
       "icon": "https://avatars.githubusercontent.com/u/121682528?s=144",
@@ -65,55 +65,55 @@
   ],
   "skippedIPRules": [
     {
-      "rule": "IP-CIDR,111.20.26.186/32,REJECT,pre-matching",
+      "rule": "IP-CIDR,111.20.26.186/32,REJECT,no-resolve,pre-matching",
       "sourceLine": 9
     },
     {
-      "rule": "IP-CIDR,112.84.130.73/32,REJECT,pre-matching",
+      "rule": "IP-CIDR,112.84.130.73/32,REJECT,no-resolve,pre-matching",
       "sourceLine": 10
     },
     {
-      "rule": "IP-CIDR,116.142.251.100/32,REJECT,pre-matching",
+      "rule": "IP-CIDR,116.142.251.100/32,REJECT,no-resolve,pre-matching",
       "sourceLine": 11
     },
     {
-      "rule": "IP-CIDR,116.177.251.215/32,REJECT,pre-matching",
+      "rule": "IP-CIDR,116.177.251.215/32,REJECT,no-resolve,pre-matching",
       "sourceLine": 12
     },
     {
-      "rule": "IP-CIDR,120.77.173.114/32,REJECT,pre-matching",
+      "rule": "IP-CIDR,120.77.173.114/32,REJECT,no-resolve,pre-matching",
       "sourceLine": 13
     },
     {
-      "rule": "IP-CIDR,123.56.23.22/32,REJECT,pre-matching",
+      "rule": "IP-CIDR,123.56.23.22/32,REJECT,no-resolve,pre-matching",
       "sourceLine": 14
     },
     {
-      "rule": "IP-CIDR,14.29.101.160/32,REJECT,pre-matching",
+      "rule": "IP-CIDR,14.29.101.160/32,REJECT,no-resolve,pre-matching",
       "sourceLine": 15
     },
     {
-      "rule": "IP-CIDR,14.29.101.168/32,REJECT,pre-matching",
+      "rule": "IP-CIDR,14.29.101.168/32,REJECT,no-resolve,pre-matching",
       "sourceLine": 16
     },
     {
-      "rule": "IP-CIDR,14.29.101.169/32,REJECT,pre-matching",
+      "rule": "IP-CIDR,14.29.101.169/32,REJECT,no-resolve,pre-matching",
       "sourceLine": 17
     },
     {
-      "rule": "IP-CIDR,182.254.116.116/32,REJECT,pre-matching",
+      "rule": "IP-CIDR,182.254.116.116/32,REJECT,no-resolve,pre-matching",
       "sourceLine": 18
     },
     {
-      "rule": "IP-CIDR,203.205.137.89/32,REJECT,pre-matching",
+      "rule": "IP-CIDR,203.205.137.89/32,REJECT,no-resolve,pre-matching",
       "sourceLine": 19
     },
     {
-      "rule": "IP-CIDR,218.77.192.51/32,REJECT,pre-matching",
+      "rule": "IP-CIDR,218.77.192.51/32,REJECT,no-resolve,pre-matching",
       "sourceLine": 20
     },
     {
-      "rule": "IP-CIDR,38.190.225.166/32,REJECT,pre-matching",
+      "rule": "IP-CIDR,38.190.225.166/32,REJECT,no-resolve,pre-matching",
       "sourceLine": 21
     }
   ],
